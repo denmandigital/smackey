@@ -1,0 +1,390 @@
+:root {
+  --bg: #f1efe8;
+  --ink: #1b1c20;
+  --muted: #7b7f88;
+  --accent: #a8842f;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Inward vignette: fades grid edges into the background colour */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: inset 30px 30px 80px 100px rgba(241, 239, 232, 1);
+}
+
+body.dragging {
+  cursor: grabbing;
+}
+
+body.hovering {
+  cursor: pointer;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  display: block;
+}
+
+/* Circular fade: grid items dissolve into the background at the edges */
+#fade {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse farthest-side at 50% 50%,
+      rgba(241, 239, 232, 0) 38%,
+      rgba(241, 239, 232, 0.55) 60%,
+      rgba(241, 239, 232, 0.95) 82%,
+      var(--bg) 100%);
+}
+
+/* ============================================================
+   HUD (heads-up display: studio name top-left, project name bottom-centre)
+============================================================ */
+.hud {
+  position: fixed;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hud-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 26px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.brand {
+  font-size: 13px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+}
+
+.brand small {
+  display: block;
+  color: var(--muted);
+  letter-spacing: .16em;
+  font-size: 10px;
+  margin-top: 6px;
+}
+
+.hint {
+  text-align: right;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  line-height: 1.9;
+}
+
+.hint b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.hud-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 32px;
+  display: none;
+  justify-content: center;
+}
+
+.now {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  transition: opacity .3s;
+}
+
+.now b {
+  color: var(--ink);
+  font-weight: 600;
+  display: block;
+  font-size: 14px;
+  letter-spacing: .12em;
+  margin-bottom: 5px;
+}
+
+.now span {
+  color: var(--accent);
+}
+
+/* ============================================================
+   LOADER
+============================================================ */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  transition: opacity .7s ease;
+}
+
+#loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(0, 0, 0, .12);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   CTA — "See Case Study" button centred over the centre card
+============================================================ */
+#cta {
+  position: fixed;
+  left: 50%;
+  z-index: 6;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+
+#cta.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#ctaBtn {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: rgba(255, 255, 255, .94);
+  color: #15161a;
+  border-radius: 100px;
+  padding: 14px 28px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .32);
+  transition: background .2s, transform .2s;
+}
+
+#ctaBtn:hover {
+  background: #fff;
+  transform: scale(1.04);
+}
+
+/* ============================================================
+   ZOOM — full-screen case study overlay
+============================================================ */
+#zoom {
+  position: fixed;
+  z-index: 20;
+  overflow: hidden;
+  border-radius: 30px;
+  opacity: 0;
+  pointer-events: none;
+  background-color: #15161a;
+  background-size: cover;
+  background-position: center;
+  will-change: left, top, width, height;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0);
+  transition: box-shadow 0.9s ease;
+}
+
+#zoom.open {
+  opacity: 1;
+  pointer-events: auto;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, .45);
+}
+
+#zoomClose {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 3;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgba(0, 0, 0, .4);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .28);
+  font-size: 22px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  transition: background .2s;
+}
+
+#zoomClose:hover {
+  background: rgba(0, 0, 0, .62);
+}
+
+/* Scrollable inner layer */
+#zoomScroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .25) transparent;
+  z-index: 1;
+}
+
+/* Hero: transparent full-height section revealing the background photo */
+#zoomHero {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 44px;
+}
+
+#zoomMeta {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+#zoomMeta span {
+  display: none;
+}
+
+#zoomMeta b {
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+#zoomMeta small {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .6);
+  margin-top: 6px;
+}
+
+/* Case study body: fades in after zoom animation completes */
+#zoomContent {
+  position: relative;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 72px 80px 100px;
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+
+#zoomContent.visible {
+  opacity: 1;
+}
+
+.cs-lead {
+  max-width: 680px;
+  margin: 0 auto 64px;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  padding-bottom: 64px;
+}
+
+.cs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px 64px;
+  max-width: 880px;
+  margin: 0 auto 64px;
+}
+
+.cs-block h3 {
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.cs-block p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .hud-top {
+    padding: 16px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hint {
+    text-align: left;
+  }
+
+  #zoomHero {
+    padding: 24px;
+  }
+
+  #zoomMeta b {
+    font-size: 26px;
+  }
+
+  #zoomContent {
+    padding: 48px 24px 80px;
+  }
+
+  .cs-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- prevent the dev server's static files from being cached, so reloads always get the latest -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Portfolio Grid — Concave Endless</title>
+  <link rel="stylesheet" href="grid.css" />
+</head>
+
+<body>
+  <canvas id="scene"></canvas>
+  <!-- <div id="fade"></div> -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="hud hud-top">
+    <div class="brand">Studio Portfolio<small>Concave Endless Grid · 2026</small></div>
+    <!--
+    <div class="hint">
+      <b>Drag</b> in any direction<br>
+      <b>Scroll</b> / <b>arrow keys</b> to pan<br>
+      Nearest item <b>snaps</b> to centre
+    </div>
+    -->
+  </div>
+  <div class="hud hud-bottom">
+    <div class="now" id="now"><b id="nowTitle">—</b><span id="nowMeta"></span></div>
+  </div>
+
+  <div id="cta"><button id="ctaBtn">See Case Study</button></div>
+
+  <div id="zoom" aria-hidden="true">
+    <button id="zoomClose" aria-label="Close">&times;</button>
+    <div id="zoomScroll">
+      <div id="zoomHero">
+        <div id="zoomMeta"><span id="zoomCat"></span><b id="zoomTitle"></b><small id="zoomClient"></small></div>
+      </div>
+      <article id="zoomContent"></article>
+    </div>
+  </div>
+
+  <!-- importmap must be inline (browsers don't support external import maps) -->
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="grid.js"></script>
+</body>
+
+</html>
