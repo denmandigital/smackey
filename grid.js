@@ -167,7 +167,8 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf1efe8);
+scene.background = new THREE.Color(0xfefefe);
+// scene.background = new THREE.Color(0x111111);
 
 const camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, 1, 6000);
 // Distance chosen so at z=0 the visible height == innerHeight px  →  1 world unit ≈ 1px.
@@ -444,15 +445,22 @@ function setZoomTransform(p) {
   zoom.style.transform = '';
 }
 
+let scrollToken = 0;
+
 function smoothScrollTo(el, target, ms) {
+  const token = ++scrollToken;
   const start = el.scrollTop, dist = target - start, t0 = performance.now();
   (function step(now) {
+    if (scrollToken !== token) return;
     const p = Math.min((now - t0) / ms, 1);
     const e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
     el.scrollTop = start + dist * e;
     if (p < 1) requestAnimationFrame(step);
   })(performance.now());
 }
+
+zoomScroll.addEventListener('wheel',     () => { scrollToken++; }, { passive: true });
+zoomScroll.addEventListener('touchmove', () => { scrollToken++; }, { passive: true });
 
 function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
@@ -469,6 +477,7 @@ function openZoom(p, skipHistory = false) {
   zoomMeta.style.opacity = '0';
   applyZoomGeometry();
   zoomAnim.p = 0; setZoomTransform(0);
+  zoomClose.style.opacity = '';
   zoom.style.opacity = '1';
   zoom.classList.add('open');
   zoomAnim.dir = 1; zoomAnim.active = true;
@@ -478,6 +487,7 @@ function openZoom(p, skipHistory = false) {
 function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (!skipHistory) history.pushState(null, '', location.pathname + location.search);
+  zoomClose.style.opacity = '0';
   zoomContent.classList.remove('visible');
   zoomMeta.style.transition = 'none';
   zoomMeta.style.opacity = '0';

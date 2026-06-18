@@ -1,5 +1,7 @@
 :root {
-  --bg: #f1efe8;
+  --bg-darker: #f1efe8;
+  --bg: #fefefe;
+  /* --bg: #111; */
   --ink: #1b1c20;
   --muted: #7b7f88;
   --accent: #a8842f;
@@ -24,6 +26,7 @@ body {
   -webkit-font-smoothing: antialiased;
   cursor: grab;
   touch-action: none;
+  background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, var(--bg-darker) 70%);
 }
 
 /* Inward vignette: fades grid edges into the background colour */
@@ -36,7 +39,7 @@ body::before {
   height: 100vh;
   z-index: 1;
   pointer-events: none;
-  box-shadow: inset 30px 30px 80px 100px rgba(241, 239, 232, 1);
+  box-shadow: inset 30px 30px 80px 100px var(--bg);
 }
 
 
@@ -90,8 +93,8 @@ body.hovering {
   flex-direction: column;
   height: 62px;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-radius: 30px;
   transition: height .55s cubic-bezier(.4, 0, .2, 1), box-shadow .55s ease, background .4s ease;
   box-shadow: 0 10px 10px rgba(0, 0, 0, .12);
@@ -453,18 +456,27 @@ body.hovering {
   border-radius: 50%;
   cursor: pointer;
   background: rgba(0, 0, 0, .4);
-  color: #fff;
   border: 1px solid rgba(255, 255, 255, .28);
-  font-size: 22px;
-  line-height: 1;
-  display: grid;
-  place-items: center;
   transition: background .2s;
 }
 
 #zoomClose:hover {
   background: rgba(0, 0, 0, .62);
 }
+
+#zoomClose span {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 1px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+#zoomClose span:nth-child(1) { transform: translate(-50%, -50%) rotate(45deg); }
+#zoomClose span:nth-child(2) { transform: translate(-50%, -50%) rotate(-45deg); }
 
 /* Scrollable inner layer */
 #zoomScroll {
