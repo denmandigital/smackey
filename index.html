@@ -19,21 +19,41 @@
     <div class="spinner"></div>
   </div>
 
-  <div class="hud hud-top">
-    <div class="brand">Studio Portfolio<small>Concave Endless Grid · 2026</small></div>
-    <!--
-    <div class="hint">
-      <b>Drag</b> in any direction<br>
-      <b>Scroll</b> / <b>arrow keys</b> to pan<br>
-      Nearest item <b>snaps</b> to centre
+  <nav id="nav">
+    <div id="navTop">
+      <div class="brand">Studio Portfolio<small>Concave Endless Grid · 2026</small></div>
+      <div id="navFilter">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="casestudies">&#9733; Case Studies</button>
+      </div>
+      <button id="navBurger" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
-    -->
-  </div>
+    <div id="navMenu" aria-hidden="true">
+      <div class="about-inner">
+        <div class="about-photo">
+          <img src="images/profile.jpg" alt="Steve Mackey">
+        </div>
+        <div class="about-text">
+          <h2 class="about-name">Steve Mackey</h2>
+          <p class="about-bio">Creative technologist, interactive and UX designer with twenty five years creating digital experiences for documentary, public broadcasting, and social impact.</p>
+          <div class="about-contact">
+            <a href="mailto:steve.mackey@psandco.ca">steve.mackey@psandco.ca</a>
+            <a href="https://psandco.ca" target="_blank" rel="noopener">PS&amp;Co</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- <div id="navEdge" aria-hidden="true"></div> -->
   <div class="hud hud-bottom">
     <div class="now" id="now"><b id="nowTitle">—</b><span id="nowMeta"></span></div>
   </div>
 
-  <div id="cta"><button id="ctaBtn">See Case Study</button></div>
+  <div id="cta"><button id="ctaBtn">View Case Study</button></div>
 
   <div id="zoom" aria-hidden="true">
     <button id="zoomClose" aria-label="Close">&times;</button>

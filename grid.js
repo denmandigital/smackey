@@ -1,9 +1,19 @@
 import * as THREE from 'three';
+import { PROJECTS as _PROJECTS } from './projects.js';
+
+// Fisher-Yates shuffle — new order every page load
+const PROJECTS = _PROJECTS.slice();
+for (let i = PROJECTS.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [PROJECTS[i], PROJECTS[j]] = [PROJECTS[j], PROJECTS[i]];
+}
+// Tag each project with its texture-array index (stable after shuffle)
+PROJECTS.forEach((p, i) => { p._idx = i; });
 
 /* ============================================================
    TUNABLES
 ============================================================ */
-const ITEM_W = 360;   // px — geometry/texture aspect only (16:10)
+const ITEM_W = 320;   // px — geometry/texture aspect only (16:10)
 const ITEM_H = 225;
 const RADIUS = 30;    // px — corner radius in screen pixels (constant across all sizes)
 const FOV = 42;
@@ -46,7 +56,7 @@ function buildTable(unit) {      // unit = centre width (X) or centre height (Y)
 }
 
 function computeLayout() {
-  const cW = CENTRE_FRAC * innerWidth;              // centred item rendered width
+  const cW = Math.max(320, CENTRE_FRAC * innerWidth);  // centred item rendered width (min 320px)
   const cH = cW * (ITEM_H / ITEM_W);
   PITCH_X = cW + GAP_C;                           // flat pitch (snapping granularity)
   PITCH_Y = cH + GAP_C;
@@ -66,9 +76,7 @@ function remap(f, pitch, tab) {
 }
 
 /* ============================================================
-   PORTFOLIO DATA
-   Add client, title, cat, and optionally overview/challenge/approach/outcome
-   to each entry. Leave fields as '' to show placeholder text in the case study.
+   PORTFOLIO DATA — edit content in projects.js
 ============================================================ */
 const PALETTE = [
   ['#1b3a4b', '#3b6978'], ['#4a2545', '#a4508b'], ['#2d3142', '#bfc0c0'],
@@ -77,36 +85,9 @@ const PALETTE = [
   ['#1f2d3d', '#5bc0be'], ['#2b2118', '#b08968'], ['#0f1f2e', '#48a9a6'],
 ];
 
-const PROJECTS = [
-  { file: 'index-addiction.jpg',            client: 'Centre for Motivation and Change',              title: 'Addiction. The Next Step',            cat: ''                 },
-  { file: 'index-backstory.jpg',            client: 'APTN / Mooswa Films',              title: 'Backstory',            cat: ''                 },
-  { file: 'index-bchydro.jpg',              client: 'BC Hydro',      title: 'History Revealed',             cat: ''                 },
-  { file: 'index-capturingreality.jpg',     client: 'National Film Board of Canada',              title: 'Capturing Reality',    cat: ''                 },
-  { file: 'index-cbc-vancouver.jpg',        client: 'CBC Vancouver / Rethink',           title: 'Vancouver’s Talking',        cat: ''                 },
-  { file: 'index-food-for-thought.jpg',     client: 'APTN / Mooswa Films',              title: 'Food for Thought',     cat: ''                 },
-  { file: 'index-foran.jpg',                client: 'Foran Mining',              title: 'Net Positive',                cat: ''                 },
-  { file: 'index-frontier.jpg',             client: 'Discovery / Netflix',              title: 'Frontier | Dark Providence',             cat: ''                 },
-  { file: 'index-hunting-in-canada.jpg',    client: 'APTN / Mooswa Films',              title: 'Hunting in Canada',    cat: 'Editorial'        },
-  { file: 'index-kennys.jpg',               client: 'Documentary / Relevision',              title: "Kenny's Jazz Pad",              cat: ''                 },
-  { file: 'index-legacies150.jpg',          client: 'National Film Board of Canada',              title: 'Legacies 150',         cat: 'Brand Strategy'   },
-  { file: 'index-myrefugeeclaim.jpg',       client: 'Kinbrace / UNHCR',              title: 'My Refugee Claim',     cat: 'Digital Product'  },
-  { file: 'index-nar.jpg',                  client: 'APTN / Realworld Media',           title: 'Norther Air Rescue',                  cat: ''                 },
-  { file: 'index-nativeplanet.jpg',         client: 'APTN / Realworld Media',              title: 'Native Planet',        cat: ''                 },
-  { file: 'index-pinepoint.jpg',            client: 'National Film Board of Canada',              title: 'Pinepoint',            cat: 'Data Story'       },
-  { file: 'index-powertogive.jpg',          client: 'Power to Give Foundation',              title: 'Philanthropy Reimagined',        cat: ''                 },
-  { file: 'index-powertothepeople.jpg',     client: 'APTN / Realworld Media',              title: 'Power to the People',  cat: ''                 },
-  { file: 'index-reelcanada.jpg',           client: 'Reel Canada',   title: 'A World of Canadian Film',          cat: ''                 },
-  { file: 'index-similkameen.jpg',          client: 'National Film Board',              title: 'Similkameen Crossroads',          cat: 'Environmental'    },
-  { file: 'index-smashball.jpg',            client: 'Volleyball Canada',              title: 'Smashball Trainer',            cat: ''                 },
-  { file: 'index-stashing-their-cash.jpg',  client: 'CBC News',              title: 'Stashing Their Cash',  cat: ''                 },
-  { file: 'index-the-conversation.jpg',     client: 'Telus / FNHA / Realworld Media',              title: 'The Conversation',     cat: ''                 },
-  { file: 'index-the-hub.jpg',              client: 'Centre for Civic Engagement',              title: 'The Hub',              cat: ''                 },
-  { file: 'index-truth-and-lies.jpg',       client: 'CBC News',              title: 'Truth & Lies',       cat: 'Editorial'        },
-  { file: 'index-uninterrupted.jpg',        client: 'Canada Wild Productions / Agentic',              title: 'Uninterrupted',        cat: ''                 },
-  { file: 'index-waterworlds.jpg',          client: 'APTN / Water Worlds Productions',              title: 'Water Worlds',          cat: 'Environmental'    },
-].map(p => ({ ...p, src: 'images/' + p.file }));
-
 const N = PROJECTS.length;
+let activeProjects = PROJECTS;
+let activeN = N;
 
 /* ============================================================
    COVER TEXTURE
@@ -159,6 +140,21 @@ function makeCover(p, idx, w = 1024, img = null) {
     x.font = `600 ${clientSize}px Helvetica, Arial`;
     x.fillText(p.client.toUpperCase(), cw / 2, ty);
   }
+
+  if (p.casestudy) {
+    const r = w * 0.018;
+    const sx = cw - r * 2.4, sy = r * 2.4;
+    x.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const a = (i * Math.PI) / 5 - Math.PI / 2;
+      const radius = i % 2 === 0 ? r : r * 0.42;
+      x[i === 0 ? 'moveTo' : 'lineTo'](sx + Math.cos(a) * radius, sy + Math.sin(a) * radius);
+    }
+    x.closePath();
+    x.fillStyle = 'rgba(255,255,255,.95)';
+    x.fill();
+  }
+
   return c;
 }
 
@@ -266,7 +262,7 @@ function buildPool() {
 buildPool();
 
 const pmod = (a, n) => ((a % n) + n) % n;
-const projIndex = (cx, cy) => pmod(cx * 31 + cy * 131, N);
+const projIndex = (cx, cy) => pmod(cx * 31 + cy * 131, activeN);
 
 /* ============================================================
    INTERACTION — drag / wheel / arrow keys, inertia, snap
@@ -330,7 +326,7 @@ addEventListener('touchend', onUp);
 let wheelTimer = null;
 let wheeling = false;
 addEventListener('wheel', (e) => {
-  if (zoomed) return;      // allow scroll inside #zoomScroll when overlay is open
+  if (zoomed || menuOpen) return;
   e.preventDefault();
   tween.active = false;
   wheeling = true;
@@ -364,7 +360,7 @@ canvas.addEventListener('click', (e) => {
 });
 
 addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { closeZoom(); return; }
+  if (e.key === 'Escape') { closeZoom(); closeMenu(); return; }
   if (zoomed) return;
   if (e.key === 'Enter') { openZoom(centreProject); return; }
   const ccx = Math.round(-scroll.x / PITCH_X);
@@ -396,14 +392,18 @@ const zoomScroll = document.getElementById('zoomScroll');
 const zoomContent = document.getElementById('zoomContent');
 
 function buildCaseStudy(p) {
+  const gallery = p.images && p.images.length
+    ? `<div class="cs-images">${p.images.map(src => `<img src="${src}" alt="" loading="lazy">`).join('')}</div>`
+    : '';
   return `
-    <p class="cs-lead">${p.overview || 'Case study content coming soon. Add an <code>overview</code> field to the project entry in the PROJECTS array, or replace this with imported content.'}</p>
+    <p class="cs-lead">${p.overview || 'Case study content coming soon.'}</p>
     <div class="cs-grid">
       <div class="cs-block"><h3>Challenge</h3><p>${p.challenge || 'Describe the brief, constraints, or problem space here.'}</p></div>
       <div class="cs-block"><h3>Approach</h3><p>${p.approach || 'Describe the creative or strategic approach taken.'}</p></div>
       <div class="cs-block"><h3>Outcome</h3><p>${p.outcome || 'Share results, impact, or what was delivered.'}</p></div>
       <div class="cs-block"><h3>Category</h3><p>${p.cat || '—'}</p></div>
-    </div>`;
+    </div>
+    ${gallery}`;
 }
 
 let centreProject = PROJECTS[0];
@@ -418,8 +418,10 @@ let zoomCard = { tx: 0, ty: 0, sx: 1, sy: 1 };
 
 // Place the button at the bottom-centre of the centre card
 function positionCTA() {
-  const cH = CENTRE_FRAC * innerWidth * (ITEM_H / ITEM_W);
-  cta.style.top = ((innerHeight + cH) / 2 - 34) + 'px';
+  const cW = Math.max(ITEM_W, CENTRE_FRAC * innerWidth);
+  const cH = cW * (ITEM_H / ITEM_W);
+  const cardBottom = (innerHeight + cH) / 2;
+  cta.style.top = (innerHeight > innerWidth ? cardBottom - 42 : cardBottom - 50) + 'px';
 }
 
 // Store card start + full-viewport end geometry for the FLIP animation
@@ -452,7 +454,7 @@ function smoothScrollTo(el, target, ms) {
   })(performance.now());
 }
 
-function openZoom(p) {
+function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   zoomed = true;
   document.body.classList.remove('hovering');
@@ -470,10 +472,12 @@ function openZoom(p) {
   zoom.style.opacity = '1';
   zoom.classList.add('open');
   zoomAnim.dir = 1; zoomAnim.active = true;
+  if (!skipHistory) history.pushState({ slug: p.slug }, '', '#' + p.slug);
 }
 
-function closeZoom() {
+function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
+  if (!skipHistory) history.pushState(null, '', location.pathname + location.search);
   zoomContent.classList.remove('visible');
   zoomMeta.style.transition = 'none';
   zoomMeta.style.opacity = '0';
@@ -487,8 +491,57 @@ function closeZoom() {
 }
 
 ctaBtn.addEventListener('click', () => openZoom(centreProject));
-zoomClose.addEventListener('click', closeZoom);
+zoomClose.addEventListener('click', () => closeZoom());
 positionCTA();
+
+// Burger menu toggle
+const nav = document.getElementById('nav');
+const navMenu = document.getElementById('navMenu');
+let menuOpen = false;
+
+function openMenu() {
+  menuOpen = true;
+  nav.classList.add('open');
+  navMenu.setAttribute('aria-hidden', 'false');
+  navBurger.setAttribute('aria-label', 'Close menu');
+}
+
+function closeMenu() {
+  menuOpen = false;
+  nav.classList.remove('open');
+  navMenu.setAttribute('aria-hidden', 'true');
+  navBurger.setAttribute('aria-label', 'Open menu');
+}
+
+navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
+
+// Project filter
+const filterBtns = document.querySelectorAll('.filter-btn');
+function setFilter(caseStudiesOnly) {
+  activeProjects = caseStudiesOnly ? PROJECTS.filter(p => p.casestudy) : PROJECTS;
+  activeN = activeProjects.length;
+  pool.forEach(m => { m.userData.key = null; });
+  lastCenterKey = null;
+  snapNearest(false);
+  const s = document.getElementById('scene');
+  s.classList.remove('ready');
+  requestAnimationFrame(() => s.classList.add('ready'));
+}
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    setFilter(btn.dataset.filter === 'casestudies');
+  });
+});
+
+// Back/forward navigation: close on no-hash, open on hash
+addEventListener('popstate', () => {
+  const slug = location.hash.slice(1);
+  if (!slug) { closeZoom(true); return; }
+  const p = PROJECTS.find(proj => proj.slug === slug);
+  if (p && !zoomed) openZoom(p, true);
+});
 
 /* ============================================================
    RENDER LOOP
@@ -583,7 +636,7 @@ function animate() {
     if (m.userData.key !== key) {
       m.userData.key = key;
       m.userData.cell = { x: cellX, y: cellY };
-      m.material.uniforms.map.value = textures[projIndex(cellX, cellY)];
+      m.material.uniforms.map.value = textures[activeProjects[projIndex(cellX, cellY)]._idx];
     }
   }
 
@@ -591,9 +644,10 @@ function animate() {
   const centerKey = ccx + ',' + ccy;
   if (centerKey !== lastCenterKey) {
     lastCenterKey = centerKey;
-    centreProject = PROJECTS[projIndex(ccx, ccy)];
+    centreProject = activeProjects[projIndex(ccx, ccy)];
     nowTitle.textContent = centreProject.title;
     nowMeta.textContent = centreProject.cat;
+    ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
   }
 
   // Show the "See Case Study" button only when settled on a centre card
@@ -616,4 +670,29 @@ addEventListener('resize', () => {
 });
 
 animate();
-setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
+setTimeout(() => {
+  document.getElementById('loader').classList.add('hidden');
+  requestAnimationFrame(() => document.getElementById('scene').classList.add('ready'));
+}, 300);
+
+// Deep-link: snap the grid and open the zoom for a project referenced in the URL hash
+const initSlug = location.hash.slice(1);
+if (initSlug) {
+  const initProject = PROJECTS.find(p => p.slug === initSlug);
+  if (initProject) {
+    const idx = PROJECTS.indexOf(initProject);
+    let bestCell = { cx: 0, cy: 0 }, bestDist = Infinity;
+    for (let cy = -6; cy <= 6; cy++) {
+      for (let cx = -6; cx <= 6; cx++) {
+        if (projIndex(cx, cy) === idx) {
+          const d = Math.hypot(cx, cy);
+          if (d < bestDist) { bestDist = d; bestCell = { cx, cy }; }
+        }
+      }
+    }
+    scroll.x = -bestCell.cx * PITCH_X;
+    scroll.y = -bestCell.cy * PITCH_Y;
+    // Wait two frames so the render loop sets centrePxW/centrePxH before openZoom reads them
+    requestAnimationFrame(() => requestAnimationFrame(() => openZoom(initProject, true)));
+  }
+}
