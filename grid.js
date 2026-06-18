@@ -13,6 +13,8 @@ PROJECTS.forEach((p, i) => { p._idx = i; });
 /* ============================================================
    TUNABLES
 ============================================================ */
+
+const BG_COLOR = 0xeae8e4;   // scene background, and fallback for card covers
 const ITEM_W = 320;   // px — geometry/texture aspect only (16:10)
 const ITEM_H = 225;
 const RADIUS = 30;    // px — corner radius in screen pixels (constant across all sizes)
@@ -57,6 +59,7 @@ function buildTable(unit) {      // unit = centre width (X) or centre height (Y)
 
 function computeLayout() {
   const cW = Math.max(320, CENTRE_FRAC * innerWidth);  // centred item rendered width (min 320px)
+  document.documentElement.style.setProperty('--card-w', cW + 'px');
   const cH = cW * (ITEM_H / ITEM_W);
   PITCH_X = cW + GAP_C;                           // flat pitch (snapping granularity)
   PITCH_Y = cH + GAP_C;
@@ -167,14 +170,92 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xfefefe);
-// scene.background = new THREE.Color(0x111111);
+scene.background = new THREE.Color(BG_COLOR);
 
 const camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, 1, 6000);
 // Distance chosen so at z=0 the visible height == innerHeight px  →  1 world unit ≈ 1px.
 function camDistance() { return (innerHeight / 2) / Math.tan(THREE.MathUtils.degToRad(FOV) / 2); }
 camera.position.set(0, 0, camDistance());
 camera.lookAt(0, 0, 0);
+
+/* ---------- contour / topographic line background ---------- */
+function makeContourLines() {
+  const mat = new THREE.LineBasicMaterial({
+    color: 0x1b1c20,
+    transparent: true,
+    opacity: 0.09,
+    depthWrite: false,
+    depthTest: false,
+  });
+
+  const grp = new THREE.Group();
+
+  const EXTENT  = 4000; // half-width in world units
+  const SPACING = 440;  // world units between lines
+  const N_PTS   = 400;  // vertices per line — enough to follow dish curvature smoothly
+
+  const hH = [
+    { amp: 70, freq: 1, phase: 0.00 },
+    { amp: 35, freq: 2, phase: 1.30 },
+    { amp: 17, freq: 3, phase: 2.60 },
+    { amp:  9, freq: 5, phase: 0.85 },
+    { amp:  5, freq: 7, phase: 1.75 },
+  ];
+  const vH = [
+    { amp: 70, freq: 1, phase: 0.60 },
+    { amp: 35, freq: 2, phase: 1.90 },
+    { amp: 17, freq: 3, phase: 3.20 },
+    { amp:  9, freq: 5, phase: 1.45 },
+    { amp:  5, freq: 7, phase: 2.35 },
+  ];
+
+  const n = Math.ceil(EXTENT / SPACING) * 2 + 1;
+
+  function addLine(verts) {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+    const ln = new THREE.Line(geo, mat);
+    ln.renderOrder = -1;
+    grp.add(ln);
+  }
+
+  // Horizontal contours
+  for (let i = 0; i < n; i++) {
+    const y0 = (i - Math.floor(n / 2)) * SPACING;
+    const scale = 0.72 + 0.28 * Math.sin(i * 2.399);
+    const verts = [];
+    for (let j = 0; j <= N_PTS; j++) {
+      const x = -EXTENT + (j / N_PTS) * EXTENT * 2;
+      const t = (j / N_PTS) * Math.PI * 2;
+      const dy = hH.reduce((s, h) => s + h.amp * scale * Math.sin(h.freq * t + h.phase), 0);
+      const y = y0 + dy;
+      const z = CONVEX * (x * x + y * y) - 1;
+      verts.push(x, y, z);
+    }
+    addLine(verts);
+  }
+
+  // Vertical contours
+  for (let i = 0; i < n; i++) {
+    const x0 = (i - Math.floor(n / 2)) * SPACING;
+    const scale = 0.72 + 0.28 * Math.sin(i * 2.399 + 1.1);
+    const verts = [];
+    for (let j = 0; j <= N_PTS; j++) {
+      const y = -EXTENT + (j / N_PTS) * EXTENT * 2;
+      const t = (j / N_PTS) * Math.PI * 2;
+      const dx = vH.reduce((s, h) => s + h.amp * scale * Math.sin(h.freq * t + h.phase), 0);
+      const x = x0 + dx;
+      const z = CONVEX * (x * x + y * y) - 1;
+      verts.push(x, y, z);
+    }
+    addLine(verts);
+  }
+
+  return grp;
+}
+
+const contourGroup = makeContourLines();
+scene.add(contourGroup);
 
 /* ---------- textures (start as generated art, photos swap in on load) ---------- */
 const textures = PROJECTS.map((p, i) => {
@@ -477,7 +558,7 @@ function openZoom(p, skipHistory = false) {
   zoomMeta.style.opacity = '0';
   applyZoomGeometry();
   zoomAnim.p = 0; setZoomTransform(0);
-  zoomClose.style.opacity = '';
+  zoomClose.style.opacity = '0';
   zoom.style.opacity = '1';
   zoom.classList.add('open');
   zoomAnim.dir = 1; zoomAnim.active = true;
@@ -487,7 +568,9 @@ function openZoom(p, skipHistory = false) {
 function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (!skipHistory) history.pushState(null, '', location.pathname + location.search);
+  zoomClose.style.transition = 'none';
   zoomClose.style.opacity = '0';
+  requestAnimationFrame(() => { zoomClose.style.transition = ''; });
   zoomContent.classList.remove('visible');
   zoomMeta.style.transition = 'none';
   zoomMeta.style.opacity = '0';
@@ -542,6 +625,7 @@ filterBtns.forEach(btn => {
     filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     setFilter(btn.dataset.filter === 'casestudies');
+    if (menuOpen) closeMenu();
   });
 });
 
@@ -578,6 +662,7 @@ function animate() {
       zoomContent.classList.add('visible');
       zoomMeta.style.transition = '';
       zoomMeta.style.opacity = '1';
+      zoomClose.style.opacity = '1';
       setTimeout(() => smoothScrollTo(zoomScroll, zoomScroll.clientHeight / 2, 2000), 500);
     }
     if (zoomAnim.dir < 0 && zoomAnim.p <= 0) {
@@ -639,7 +724,7 @@ function animate() {
     if (cellX === ccx && cellY === ccy) { centrePxW = ITEM_W * s; centrePxH = ITEM_H * s; }
     m.material.uniforms.uRadius.value = RADIUS / S0;
     m.material.uniforms.uHover.value = m.userData.hover;
-    m.material.uniforms.uFade.value = 1;   // edge fade handled by the body::before vignette
+    m.material.uniforms.uFade.value = 0.55 + 0.45 * fall;
 
     // Assign the right project only when this slot's cell changes
     const key = cellX + ',' + cellY;
@@ -663,6 +748,10 @@ function animate() {
   // Show the "See Case Study" button only when settled on a centre card
   const settled = !drag.active && !tween.active && !zoomed && !wheeling;
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
+
+  // Drift contour group at ~6% of grid pan speed for subtle parallax
+  contourGroup.position.x = scroll.x * 0.06;
+  contourGroup.position.y = scroll.y * 0.06;
 
   renderer.render(scene, camera);
 }

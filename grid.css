@@ -1,7 +1,6 @@
 :root {
-  --bg-darker: #f1efe8;
-  --bg: #fefefe;
-  /* --bg: #111; */
+  --bg-darker: rgb(241, 239, 232);
+  --bg: #eae8e4;
   --ink: #1b1c20;
   --muted: #7b7f88;
   --accent: #a8842f;
@@ -26,7 +25,7 @@ body {
   -webkit-font-smoothing: antialiased;
   cursor: grab;
   touch-action: none;
-  background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, var(--bg-darker) 70%);
+  background: radial-gradient(ellipse at 50% 50%, var(--bg-darker) 0%, var(--bg) 70%);
 }
 
 /* Inward vignette: fades grid edges into the background colour */
@@ -86,23 +85,26 @@ body.hovering {
 #nav {
   position: fixed;
   top: 36px;
-  left: 36px;
-  right: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--card-w, 480px);
   z-index: 10;
   display: flex;
   flex-direction: column;
   height: 62px;
   overflow: hidden;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(241, 239, 232, 0.8);
   border-radius: 30px;
-  transition: height .55s cubic-bezier(.4, 0, .2, 1), box-shadow .55s ease, background .4s ease;
+  transition: height .55s cubic-bezier(.4, 0, .2, 1), width .55s cubic-bezier(.4, 0, .2, 1), box-shadow .55s ease, background .4s ease;
   box-shadow: 0 10px 10px rgba(0, 0, 0, .12);
 }
 
 #nav.open {
+  width: calc(100vw - 72px);
   box-shadow: 0 8px 40px rgba(0, 0, 0, .18);
-  background: var(--bg);
+  background: rgb(234, 232, 228);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   height: calc(100vh - 72px);
@@ -456,8 +458,8 @@ body.hovering {
   border-radius: 50%;
   cursor: pointer;
   background: rgba(0, 0, 0, .4);
-  border: 1px solid rgba(255, 255, 255, .28);
-  transition: background .2s;
+  border: none;
+  transition: background .2s, opacity .35s ease;
 }
 
 #zoomClose:hover {
@@ -600,7 +602,13 @@ body.hovering {
     top: 12px;
     left: 12px;
     right: 12px;
+    width: auto;
+    transform: none;
     height: 54px;
+  }
+
+  #nav.open {
+    width: auto;
   }
 
   #navEdge {
