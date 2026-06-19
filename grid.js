@@ -472,6 +472,7 @@ const zoomClient = document.getElementById('zoomClient');
 const zoomClose = document.getElementById('zoomClose');
 const zoomScroll = document.getElementById('zoomScroll');
 const zoomContent = document.getElementById('zoomContent');
+const zoomHeroBg = document.getElementById('zoomHeroBg');
 
 function buildCaseStudy(p) {
   const gallery = p.images && p.images.length
@@ -542,12 +543,19 @@ function smoothScrollTo(el, target, ms) {
 
 zoomScroll.addEventListener('wheel',     () => { scrollToken++; }, { passive: true });
 zoomScroll.addEventListener('touchmove', () => { scrollToken++; }, { passive: true });
+zoomScroll.addEventListener('scroll', () => {
+  const progress = Math.min(zoomScroll.scrollTop / zoomScroll.clientHeight, 1);
+  zoomHeroBg.style.transform = `scale(${1 + progress * 0.12})`;
+}, { passive: true });
 
 function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   zoomed = true;
   document.body.classList.remove('hovering');
-  zoom.style.backgroundImage = `url("${p.src}")`;
+  zoomHeroBg.style.backgroundImage = `url("${p.src}")`;
+  zoomHeroBg.style.transform = 'scale(1)';
+  zoomHeroBg.classList.remove('fading');
+  zoom.classList.remove('fading');
   zoomCat.textContent = p.cat || '';
   zoomTitle.textContent = p.title;
   zoomClient.textContent = p.client || '';
@@ -568,6 +576,10 @@ function openZoom(p, skipHistory = false) {
 function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (!skipHistory) history.pushState(null, '', location.pathname + location.search);
+  // Freeze parallax immediately so the card sits exactly where the panel will land
+  prlxX = 0; prlxY = 0;
+  zoomHeroBg.classList.add('fading');
+  zoom.classList.add('fading');
   zoomClose.style.transition = 'none';
   zoomClose.style.opacity = '0';
   requestAnimationFrame(() => { zoomClose.style.transition = ''; });
@@ -608,6 +620,26 @@ function closeMenu() {
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
 
+// Brand icon: spin while nav is hovered, freeze at current angle on leave
+const brandIcon = document.querySelector('.brand-icon');
+let spinAngle = 0, spinRaf = null, spinLast = null;
+const SPIN_DEG_PER_SEC = 60;
+
+function spinStep(ts) {
+  if (spinLast === null) spinLast = ts;
+  spinAngle += SPIN_DEG_PER_SEC * (ts - spinLast) / 1000;
+  spinLast = ts;
+  brandIcon.style.transform = `rotate(${spinAngle}deg)`;
+  spinRaf = requestAnimationFrame(spinStep);
+}
+
+brandIcon.addEventListener('mouseenter', () => {
+  if (!spinRaf) { spinLast = null; spinRaf = requestAnimationFrame(spinStep); }
+});
+brandIcon.addEventListener('mouseleave', () => {
+  if (spinRaf) { cancelAnimationFrame(spinRaf); spinRaf = null; }
+});
+
 // Project filter
 const filterBtns = document.querySelectorAll('.filter-btn');
 function setFilter(caseStudiesOnly) {
@@ -620,21 +652,41 @@ function setFilter(caseStudiesOnly) {
   s.classList.remove('ready');
   requestAnimationFrame(() => s.classList.add('ready'));
 }
+function activateFilter(filter) {
+  filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+  setFilter(filter === 'casestudies');
+}
 filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    setFilter(btn.dataset.filter === 'casestudies');
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const filter = btn.dataset.filter;
+    activateFilter(filter);
+    const url = filter === 'casestudies' ? location.pathname + '?casestudies' : location.pathname;
+    history.pushState({ filter }, '', url);
     if (menuOpen) closeMenu();
   });
 });
 
-// Back/forward navigation: close on no-hash, open on hash
+// Intercept any in-content filter links (e.g. about bio)
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href*="casestudies"]:not(.filter-btn)');
+  if (!a) return;
+  e.preventDefault();
+  activateFilter('casestudies');
+  history.pushState({ filter: 'casestudies' }, '', location.pathname + '?casestudies');
+  if (menuOpen) closeMenu();
+});
+
+// Back/forward navigation
 addEventListener('popstate', () => {
   const slug = location.hash.slice(1);
-  if (!slug) { closeZoom(true); return; }
-  const p = PROJECTS.find(proj => proj.slug === slug);
-  if (p && !zoomed) openZoom(p, true);
+  if (slug) {
+    const p = PROJECTS.find(proj => proj.slug === slug);
+    if (p && !zoomed) openZoom(p, true);
+  } else {
+    if (zoomed) closeZoom(true);
+  }
+  activateFilter(location.search.includes('casestudies') ? 'casestudies' : 'all');
 });
 
 /* ============================================================
@@ -645,6 +697,10 @@ const nowTitle = document.getElementById('nowTitle');
 const nowMeta = document.getElementById('nowMeta');
 let lastCenterKey = null;
 let lastT = performance.now();
+let prlxX = 0, prlxY = 0;   // smoothed mouse parallax (-1..1)
+
+// Sync filter from URL on load (must be after lastCenterKey is declared)
+if (location.search.includes('casestudies')) activateFilter('casestudies');
 
 function animate() {
   requestAnimationFrame(animate);
@@ -688,7 +744,7 @@ function animate() {
   const ccy = Math.round(-scroll.y / PITCH_Y);
 
   raycaster.setFromCamera(mouse, camera);
-  const hit = (!drag.active) ? raycaster.intersectObjects(pool, false)[0] : null;
+  const hit = (!drag.active && !zoomed) ? raycaster.intersectObjects(pool, false)[0] : null;
   const hitObj = hit ? hit.object : null;
   if (hitObj !== hovered) {
     hovered = hitObj;
@@ -710,14 +766,14 @@ function animate() {
 
     // Slight concave dish: centre furthest from camera, edges curve toward you
     const z = CONVEX * (x * x + y * y);
-    m.position.set(x, y, z);
+    const fall = falloff(Math.hypot(x, y));
+    const pShift = 10 + (1 - fall) * 20;   // 10 at centre → 30 at edge
+    m.position.set(x + prlxX * -pShift, y + prlxY * -pShift, z);
     m.rotation.y = -Math.atan(2 * CONVEX * x);
     m.rotation.x = Math.atan(2 * CONVEX * y);
 
-    const fall = falloff(Math.hypot(x, y));
-
-    // Hover lift
-    const target = (m === hovered) ? 1 : 0;
+    // Hover lift — disabled while zoom panel is open or closing
+    const target = (!zoomed && m === hovered) ? 1 : 0;
     m.userData.hover += (target - m.userData.hover) * 0.18;
     const s = S0 * fall * (1 + m.userData.hover * 0.05);
     m.scale.set(ITEM_W * s, ITEM_H * s, 1);
@@ -749,9 +805,15 @@ function animate() {
   const settled = !drag.active && !tween.active && !zoomed && !wheeling;
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
 
-  // Drift contour group at ~6% of grid pan speed for subtle parallax
-  contourGroup.position.x = scroll.x * 0.06;
-  contourGroup.position.y = scroll.y * 0.06;
+  // Smooth mouse toward current position (~3% per frame); frozen at 0 while zoom panel is active
+  if (!zoomed) {
+    prlxX += (mouse.x - prlxX) * 0.03;
+    prlxY += (mouse.y - prlxY) * 0.03;
+  }
+
+  // Cards shift gently with mouse; contour lines shift more (feel further away)
+  contourGroup.position.x = scroll.x * 0.06 + prlxX * -28;
+  contourGroup.position.y = scroll.y * 0.06 + prlxY * -28;
 
   renderer.render(scene, camera);
 }
@@ -764,6 +826,7 @@ addEventListener('resize', () => {
   computeLayout();
   buildPool();
   positionCTA();
+  snapNearest(false);
   lastCenterKey = null;
   if (zoomed) { applyZoomGeometry(); setZoomTransform(zoomAnim.p); }  // refit to new viewport
 });
