@@ -1,0 +1,50 @@
+@use 'breakpoints' as *;
+
+@include mobile {
+	body::before {
+		box-shadow: inset 0 0 30px 40px rgba(241, 239, 232, 1);
+	}
+
+	#nav {
+		top: 12px;
+		left: 12px;
+		right: 12px;
+		width: auto;
+		transform: none;
+		height: 54px;
+
+		&.open {
+			width: auto;
+			height: calc(100vh - 24px);
+		}
+	}
+
+	#navTop {
+		height: 54px;
+		padding: 0 14px 0 20px;
+	}
+
+	#navMenu {
+		padding: 0 24px 36px;
+		align-items: flex-start;
+	}
+
+	.about-photo {
+		aspect-ratio: 1;
+		border-radius: 30px;
+		margin-bottom: 2rem;
+
+		img { mix-blend-mode: luminosity; }
+	}
+
+	.hint { text-align: left; }
+
+	#zoomHero { padding: 24px; }
+
+#zoomContent { padding: 48px 24px 80px; }
+
+	.cs-grid {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+}

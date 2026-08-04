@@ -1,0 +1,37 @@
+#cta {
+	position: fixed;
+	left: 50%;
+	z-index: 6;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.35s ease;
+
+	&.show {
+		opacity: 1;
+		pointer-events: auto;
+	}
+}
+
+#ctaBtn {
+	font: inherit;
+	cursor: pointer;
+	border: none;
+	background: rgba(255, 255, 255, 0.94);
+	color: #15161a;
+	border-radius: 100px;
+	padding: 14px 24px;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.32);
+	transition:
+		background 0.2s,
+		transform 0.2s;
+
+	&:hover {
+		background: #fff;
+		transform: scale(1.04);
+	}
+}

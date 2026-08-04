@@ -1,0 +1,48 @@
+.hud {
+	position: fixed;
+	pointer-events: none;
+	z-index: 5;
+}
+
+.hint {
+	text-align: right;
+	color: var(--muted);
+	font-size: 11px;
+	letter-spacing: 0.13em;
+	text-transform: uppercase;
+	line-height: 1.9;
+
+	b {
+		color: var(--ink);
+		font-weight: 600;
+	}
+}
+
+.hud-bottom {
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 24px 32px;
+	display: none;
+	justify-content: center;
+}
+
+.now {
+	text-align: center;
+	color: var(--muted);
+	font-size: 11px;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	transition: opacity 0.3s;
+
+	b {
+		color: var(--ink);
+		font-weight: 600;
+		display: block;
+		font-size: 14px;
+		letter-spacing: 0.12em;
+		margin-bottom: 5px;
+	}
+
+	span { color: var(--accent); }
+}

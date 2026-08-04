@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { PROJECTS as _PROJECTS } from './projects.js';
+import { createSMBlock } from './SMBlock.js';
+
+const _caseStudyModules = import.meta.glob('./case-studies/*.js');
 
 // Fisher-Yates shuffle — new order every page load
 const PROJECTS = _PROJECTS.slice();
@@ -130,7 +133,7 @@ function makeCover(p, idx, w = 1024, img = null) {
   }
 
   // Vertically + horizontally centred label: title → client
-  const titleSize = w * 0.066, clientSize = w * 0.026, titleClientGap = w * 0.010;
+  const titleSize = w * 0.066, clientSize = w * (innerWidth <= 640 ? 0.0286 : 0.026), titleClientGap = w * 0.010;
   const totalH = titleSize + (p.client ? titleClientGap + clientSize : 0);
   let ty = ch / 2 - totalH / 2;
   x.textAlign = 'center'; x.textBaseline = 'top';
@@ -140,13 +143,16 @@ function makeCover(p, idx, w = 1024, img = null) {
   ty += titleSize + titleClientGap;
   if (p.client) {
     x.fillStyle = 'rgba(255,255,255,.6)';
-    x.font = `600 ${clientSize}px Helvetica, Arial`;
+    x.font = `500 ${clientSize}px Helvetica, Arial`;
+    x.letterSpacing = '1px';
     x.fillText(p.client.toUpperCase(), cw / 2, ty);
+    x.letterSpacing = '0px';
   }
 
   if (p.casestudy) {
-    const r = w * 0.018;
-    const sx = cw - r * 2.4, sy = r * 2.4;
+    const r = w * (innerWidth <= 640 ? 0.026 : 0.018);
+    const pad = innerWidth <= 640 ? 3.4 : 2.4;
+    const sx = cw - r * pad, sy = r * pad;
     x.beginPath();
     for (let i = 0; i < 10; i++) {
       const a = (i * Math.PI) / 5 - Math.PI / 2;
@@ -425,12 +431,17 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2(-2, -2);
 let hovered = null;
 addEventListener('mousemove', (e) => {
+  if (innerWidth <= 640) return;
   const p = pt(e);
   mouse.x = (p.x / innerWidth) * 2 - 1;
   mouse.y = -(p.y / innerHeight) * 2 + 1;
 });
 canvas.addEventListener('click', (e) => {
   if (zoomed || drag.moved > 6) return;
+  if (innerWidth <= 640) {
+    mouse.x = (e.clientX / innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+  }
   raycaster.setFromCamera(mouse, camera);
   const hit = raycaster.intersectObjects(pool, false)[0];
   if (!hit) return;
@@ -442,7 +453,7 @@ canvas.addEventListener('click', (e) => {
 });
 
 addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { closeZoom(); closeMenu(); return; }
+  if (e.key === 'Escape') { if (zoomed) zoomClose.click(); else closeMenu(); return; }
   if (zoomed) return;
   if (e.key === 'Enter') { openZoom(centreProject); return; }
   const ccx = Math.round(-scroll.x / PITCH_X);
@@ -472,21 +483,66 @@ const zoomClient = document.getElementById('zoomClient');
 const zoomClose = document.getElementById('zoomClose');
 const zoomScroll = document.getElementById('zoomScroll');
 const zoomContent = document.getElementById('zoomContent');
+const zoomHero   = document.getElementById('zoomHero');
 const zoomHeroBg = document.getElementById('zoomHeroBg');
 
-function buildCaseStudy(p) {
-  const gallery = p.images && p.images.length
-    ? `<div class="cs-images">${p.images.map(src => `<img src="${src}" alt="" loading="lazy">`).join('')}</div>`
-    : '';
-  return `
-    <p class="cs-lead">${p.overview || 'Case study content coming soon.'}</p>
-    <div class="cs-grid">
-      <div class="cs-block"><h3>Challenge</h3><p>${p.challenge || 'Describe the brief, constraints, or problem space here.'}</p></div>
-      <div class="cs-block"><h3>Approach</h3><p>${p.approach || 'Describe the creative or strategic approach taken.'}</p></div>
-      <div class="cs-block"><h3>Outcome</h3><p>${p.outcome || 'Share results, impact, or what was delivered.'}</p></div>
-      <div class="cs-block"><h3>Category</h3><p>${p.cat || '—'}</p></div>
-    </div>
-    ${gallery}`;
+function blockStyle(b, extra = {}) {
+  const props = {};
+  if (b.span)   props['--span']    = b.span;
+  if (b.spanMd) props['--span-md'] = b.spanMd;
+  if (b.spanSm) props['--span-sm'] = b.spanSm;
+  if (b.aspect) props['--aspect']  = b.aspect;
+  Object.assign(props, extra);
+  const s = Object.entries(props).map(([k, v]) => `${k}:${v}`).join(';');
+  return s ? ` style="${s}"` : '';
+}
+
+function renderBlock(b) {
+  const span = blockStyle(b);
+  if (b.type === 'container') {
+    return `<div class="cs-container"${span}>${(b.children || []).map(renderBlock).join('')}</div>`;
+  }
+  if (b.type === 'text') {
+    const mod = b.variant === 'callout' ? ' cs-block--callout' : b.variant === 'intro' ? ' cs-block--intro' : '';
+    const bodyHtml = /^\s*</.test(b.body) ? b.body : `<p>${b.body}</p>`;
+    return `<div class="cs-block${mod}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}</div>`;
+  }
+  if (b.type === 'image') {
+    return `<figure class="cs-block cs-block--image"${span}><img src="${b.src}" alt="${b.alt || ''}" loading="lazy"></figure>`;
+  }
+  if (b.type === 'video') {
+    const attrs = b.autoplay ? 'autoplay muted loop playsinline' : 'controls playsinline';
+    const mod = b.autoplay ? ' cs-block--video-autoplay' : '';
+    return `<figure class="cs-block cs-block--video${mod}"${span}><video src="${b.src}" ${attrs}></video></figure>`;
+  }
+  if (b.type === 'vimeo') {
+    let vimeoSrc = b.src;
+    const sep = vimeoSrc.includes('?') ? '&' : '?';
+    if (b.autoplay) {
+      vimeoSrc += `${sep}autoplay=1&loop=1&muted=1&background=1`;
+    } else {
+      vimeoSrc += `${sep}title=0&byline=0&portrait=0`;
+    }
+    return `<figure class="cs-block cs-block--vimeo"${span}><iframe src="${vimeoSrc}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></figure>`;
+  }
+  if (b.type === 'spacer') {
+    const h = typeof b.height === 'number' ? `${b.height}px` : (b.height || '40px');
+    return `<div class="cs-block cs-block--spacer"${blockStyle(b, { height: h })}></div>`;
+  }
+  return '';
+}
+
+async function loadCaseStudyHtml(p) {
+  const loader = _caseStudyModules[`./case-studies/${p.slug}.js`];
+  if (loader) {
+    const { blocks } = await loader();
+    const lead = blocks.find(b => b.type === 'text' && b.variant === 'lead');
+    const rest = blocks.filter(b => !(b.type === 'text' && b.variant === 'lead'));
+    const leadHtml = lead ? `<p class="cs-lead">${lead.body}</p>` : '';
+    const bodyHtml = rest.map(renderBlock).join('');
+    return leadHtml + `<div class="cs-body">${bodyHtml}</div>`;
+  }
+  return '<p class="cs-lead">Case study content coming soon.</p>';
 }
 
 let centreProject = PROJECTS[0];
@@ -494,6 +550,7 @@ let centrePxW = CENTRE_FRAC * innerWidth;   // actual screen px width of centre 
 let centrePxH = centrePxW * (ITEM_H / ITEM_W);
 let zoomed = false;          // true while open OR animating (blocks grid interaction)
 let ctaShown = false;
+let zoomSlug = null;         // slug of currently open project (guards async content loads)
 
 // rAF-driven zoom: p = 0 (matches the centre card) → 1 (full inset)
 const zoomAnim = { active: false, p: 0, dir: 1, dur: 0.55 };
@@ -510,11 +567,14 @@ function positionCTA() {
 // Store card start + full-viewport end geometry for the FLIP animation
 function applyZoomGeometry() {
   const cW = centrePxW, cH = centrePxH;
+  const mobile = innerWidth <= 640;
+  const zm = mobile ? 16 : GAP_C;
   zoomCard = {
     l0: (innerWidth  - cW) / 2,  t0: (innerHeight - cH) / 2,  w0: cW,  h0: cH,
-    l1: GAP_C,                   t1: GAP_C,
-    w1: innerWidth  - 2 * GAP_C, h1: innerHeight - 2 * GAP_C,
+    l1: zm,                      t1: zm,
+    w1: innerWidth  - 2 * zm,    h1: innerHeight - 2 * zm,
   };
+  zoomHero.style.height = mobile ? cH + 'px' : '';
 }
 
 function setZoomTransform(p) {
@@ -556,14 +616,23 @@ function openZoom(p, skipHistory = false) {
   zoomHeroBg.style.transform = 'scale(1)';
   zoomHeroBg.classList.remove('fading');
   zoom.classList.remove('fading');
+  zoom.style.backgroundColor = p.accentColourPrimary;
+  zoomContent.style.backgroundColor = p.accentColourPrimary;
+  zoomContent.style.transform = 'translateY(0)';
   zoomCat.textContent = p.cat || '';
   zoomTitle.textContent = p.title;
   zoomClient.textContent = p.client || '';
-  zoomContent.innerHTML = buildCaseStudy(p);
+  zoomSlug = p.slug;
+  zoomContent.innerHTML = '';
+  loadCaseStudyHtml(p).then(html => {
+    if (zoomSlug === p.slug) { zoomContent.innerHTML = html; observeBlocks(); }
+  });
   zoomContent.classList.remove('visible');
+  zoomContent.style.transform = 'translateY(0)';
   zoomScroll.scrollTop = 0;
   zoomMeta.style.transition = 'none';
   zoomMeta.style.opacity = '0';
+  zoomMeta.style.transform = 'translateY(0)';
   applyZoomGeometry();
   zoomAnim.p = 0; setZoomTransform(0);
   zoomClose.style.opacity = '0';
@@ -573,8 +642,27 @@ function openZoom(p, skipHistory = false) {
   if (!skipHistory) history.pushState({ slug: p.slug }, '', '#' + p.slug);
 }
 
+let csObserver = null;
+function observeBlocks() {
+  if (csObserver) csObserver.disconnect();
+  const els = zoomContent.querySelectorAll('.cs-block, .cs-container');
+  if (!els.length) return;
+  csObserver = new IntersectionObserver((entries) => {
+    entries
+      .filter(e => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+      .forEach((entry, i) => {
+        entry.target.style.transitionDelay = `${i * 60}ms`;
+        entry.target.classList.add('cs-visible');
+        csObserver.unobserve(entry.target);
+      });
+  }, { root: zoomScroll, threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(el => csObserver.observe(el));
+}
+
 function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
+  if (csObserver) { csObserver.disconnect(); csObserver = null; }
   if (!skipHistory) history.pushState(null, '', location.pathname + location.search);
   // Freeze parallax immediately so the card sits exactly where the panel will land
   prlxX = 0; prlxY = 0;
@@ -586,12 +674,20 @@ function closeZoom(skipHistory = false) {
   zoomContent.classList.remove('visible');
   zoomMeta.style.transition = 'none';
   zoomMeta.style.opacity = '0';
-  smoothScrollTo(zoomScroll, 0, 400);
-  // Close target is the default (non-hovered) card size
-  const cW = CENTRE_FRAC * innerWidth, cH = cW * (ITEM_H / ITEM_W);
+  zoomMeta.style.transform = 'translateY(0)';
+  zoomHeroBg.style.transform = 'scale(1)';
+  const mobile = innerWidth <= 640;
+  if (mobile) {
+    zoomScroll.scrollTop = 0;
+  } else {
+    smoothScrollTo(zoomScroll, 0, 400);
+  }
+  // Close target is the default (non-hovered) card size — same min-width guard as the render loop
+  const cW = Math.max(ITEM_W, CENTRE_FRAC * innerWidth), cH = cW * (ITEM_H / ITEM_W);
   zoomCard.l0 = (innerWidth - cW) / 2;
   zoomCard.t0 = (innerHeight - cH) / 2;
   zoomCard.w0 = cW; zoomCard.h0 = cH;
+  zoomHero.style.height = mobile ? cH + 'px' : '';
   zoomAnim.dir = -1; zoomAnim.active = true;
 }
 
@@ -620,24 +716,85 @@ function closeMenu() {
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
 
-// Brand icon: spin while nav is hovered, freeze at current angle on leave
-const brandIcon = document.querySelector('.brand-icon');
-let spinAngle = 0, spinRaf = null, spinLast = null;
-const SPIN_DEG_PER_SEC = 60;
+document.querySelectorAll('a.js-email').forEach(a => {
+  a.href = `mailto:${a.dataset.u}@${a.dataset.d}`;
+});
 
-function spinStep(ts) {
-  if (spinLast === null) spinLast = ts;
-  spinAngle += SPIN_DEG_PER_SEC * (ts - spinLast) / 1000;
-  spinLast = ts;
-  brandIcon.style.transform = `rotate(${spinAngle}deg)`;
-  spinRaf = requestAnimationFrame(spinStep);
+// Brand cube — Three.js SM monogram, spins only on hover
+const brandCanvas = document.getElementById('brandCanvas');
+const brandRenderer = new THREE.WebGLRenderer({ canvas: brandCanvas, antialias: true, alpha: true });
+brandRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+brandRenderer.setSize(30, 30);
+
+const brandScene = new THREE.Scene();
+const brandCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+brandCamera.position.set(0, 0, 2.2);
+brandScene.add(new THREE.AmbientLight(0xffffff, 1.4));
+const brandLight = new THREE.DirectionalLight(0xffffff, 1.2);
+brandLight.position.set(2, 3, 3);
+brandScene.add(brandLight);
+
+const brandCube = createSMBlock({ size: 1 });
+brandCube.rotation.y = -Math.PI / 4;  // S+M corner facing forward at rest
+brandScene.add(brandCube);
+brandRenderer.render(brandScene, brandCamera);  // draw static frame immediately
+
+let brandRaf = null, brandReturnRaf = null, brandYRaf = null, brandTargetY = 0, brandTargetX = 0;
+
+function brandDrift() {
+  const dy = brandTargetY - brandCube.position.y;
+  const dx = brandTargetX - brandCube.position.x;
+  brandCube.position.y += dy * 0.06;
+  brandCube.position.x += dx * 0.06;
+  if (!brandRaf && !brandReturnRaf) brandRenderer.render(brandScene, brandCamera);
+  brandYRaf = (Math.abs(dy) > 0.0002 || Math.abs(dx) > 0.0002) ? requestAnimationFrame(brandDrift) : null;
 }
 
-brandIcon.addEventListener('mouseenter', () => {
-  if (!spinRaf) { spinLast = null; spinRaf = requestAnimationFrame(spinStep); }
+addEventListener('mousemove', e => {
+  brandTargetY = (0.5 - e.clientY / innerHeight) * 0.14;
+  brandTargetX = (e.clientX / innerWidth - 0.5) * 0.14;
+  if (!brandRaf && !brandReturnRaf && !brandYRaf) brandDrift();
 });
-brandIcon.addEventListener('mouseleave', () => {
-  if (spinRaf) { cancelAnimationFrame(spinRaf); spinRaf = null; }
+
+function brandSpin() {
+  brandRaf = requestAnimationFrame(brandSpin);
+  brandCube.rotation.y -= 0.015 * (1 + 0.70 * Math.cos(4 * brandCube.rotation.y));
+  brandCube.position.y += (brandTargetY - brandCube.position.y) * 0.06;
+  brandCube.position.x += (brandTargetX - brandCube.position.x) * 0.06;
+  brandRenderer.render(brandScene, brandCamera);
+}
+
+function brandReturn() {
+  // S-left M-right orientation repeats every π — find the nearest one
+  const n = Math.round((brandCube.rotation.y + Math.PI / 4) / Math.PI);
+  const target = -Math.PI / 4 + n * Math.PI;
+  const from = brandCube.rotation.y;
+  const dist = target - from;
+  let t = 0;
+  (function step() {
+    t = Math.min(t + 0.055, 1);
+    brandCube.rotation.y = from + dist * (1 - Math.pow(1 - t, 3));
+    brandCube.position.y += (brandTargetY - brandCube.position.y) * 0.06;
+    brandCube.position.x += (brandTargetX - brandCube.position.x) * 0.06;
+    brandRenderer.render(brandScene, brandCamera);
+    brandReturnRaf = t < 1 ? requestAnimationFrame(step) : null;
+  })();
+}
+
+brandCanvas.addEventListener('mouseenter', () => {
+  if (brandReturnRaf) { cancelAnimationFrame(brandReturnRaf); brandReturnRaf = null; }
+  if (!brandRaf) brandSpin();
+});
+brandCanvas.addEventListener('mouseleave', () => {
+  if (brandRaf) { cancelAnimationFrame(brandRaf); brandRaf = null; }
+  brandReturn();
+});
+brandCanvas.addEventListener('click', () => {
+  if (zoomed) closeZoom();
+  if (menuOpen) closeMenu();
+  activateFilter('all');
+  startTween(0, 0);
+  history.pushState(null, '', location.pathname);
 });
 
 // Project filter
@@ -716,10 +873,12 @@ function animate() {
     if (zoomAnim.dir > 0 && zoomAnim.p >= 1) {
       zoomAnim.active = false;
       zoomContent.classList.add('visible');
+      zoomContent.style.transform = 'translateY(-30px)';
       zoomMeta.style.transition = '';
       zoomMeta.style.opacity = '1';
+      zoomMeta.style.transform = 'translateY(-30px)';
       zoomClose.style.opacity = '1';
-      setTimeout(() => smoothScrollTo(zoomScroll, zoomScroll.clientHeight / 2, 2000), 500);
+      if (innerWidth > 640) setTimeout(() => smoothScrollTo(zoomScroll, zoomScroll.clientHeight / 2, 2000), 1000);
     }
     if (zoomAnim.dir < 0 && zoomAnim.p <= 0) {
       zoomAnim.active = false;
@@ -805,8 +964,8 @@ function animate() {
   const settled = !drag.active && !tween.active && !zoomed && !wheeling;
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
 
-  // Smooth mouse toward current position (~3% per frame); frozen at 0 while zoom panel is active
-  if (!zoomed) {
+  // Smooth mouse toward current position (~3% per frame); frozen at 0 while zoom panel is active or on mobile
+  if (!zoomed && innerWidth > 640) {
     prlxX += (mouse.x - prlxX) * 0.03;
     prlxY += (mouse.y - prlxY) * 0.03;
   }
@@ -834,15 +993,68 @@ addEventListener('resize', () => {
 animate();
 setTimeout(() => {
   document.getElementById('loader').classList.add('hidden');
-  requestAnimationFrame(() => document.getElementById('scene').classList.add('ready'));
+  if (location.hash || location.search) {
+    requestAnimationFrame(() => canvas.classList.add('ready'));
+  }
 }, 300);
+
+// Intro overlay — skip on deep links only
+const intro = document.getElementById('intro');
+const introEnter = document.getElementById('introEnter');
+
+if (location.hash || location.search) {
+  intro.style.display = 'none';
+} else {
+  // Spinning cube renderer
+  const introCanvas = document.getElementById('introCanvas');
+  const introRenderer = new THREE.WebGLRenderer({ canvas: introCanvas, antialias: true, alpha: true });
+  introRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  introRenderer.setSize(96, 96);
+
+  const introScene = new THREE.Scene();
+  const introCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  introCamera.position.set(0, 0, 2.2);
+
+  introScene.add(new THREE.AmbientLight(0xffffff, 1.4));
+  const introLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  introLight.position.set(2, 3, 3);
+  introScene.add(introLight);
+
+  const block = createSMBlock({ size: 1 });
+  introScene.add(block);
+
+  // Speed pulses with the geometry: slow at S+M corners, fast through face-on views.
+  // cos(4y) completes one slow→fast cycle every π/2 rad, matching the face spacing.
+  block.rotation.y = -Math.PI / 4;  // start at S+M corner (slow phase)
+
+  let introTargetY = 0;
+  intro.addEventListener('mousemove', e => {
+    introTargetY = (0.5 - e.clientY / innerHeight) * 0.14;
+  });
+
+  let introRaf;
+  (function spinBlock() {
+    introRaf = requestAnimationFrame(spinBlock);
+    block.rotation.y -= 0.015 * (1 + 0.70 * Math.cos(4 * block.rotation.y));
+    block.position.y += (introTargetY - block.position.y) * 0.06;
+    introRenderer.render(introScene, introCamera);
+  })();
+
+  introEnter.addEventListener('click', () => {
+    intro.classList.add('leaving');
+    canvas.classList.add('ready');
+    cancelAnimationFrame(introRaf);
+    introRenderer.dispose();
+    intro.addEventListener('transitionend', () => { intro.style.display = 'none'; }, { once: true });
+  });
+}
 
 // Deep-link: snap the grid and open the zoom for a project referenced in the URL hash
 const initSlug = location.hash.slice(1);
 if (initSlug) {
   const initProject = PROJECTS.find(p => p.slug === initSlug);
   if (initProject) {
-    const idx = PROJECTS.indexOf(initProject);
+    const idx = activeProjects.indexOf(initProject);
     let bestCell = { cx: 0, cy: 0 }, bestDist = Infinity;
     for (let cy = -6; cy <= 6; cy++) {
       for (let cx = -6; cx <= 6; cx++) {
