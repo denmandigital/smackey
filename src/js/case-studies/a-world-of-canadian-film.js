@@ -16,8 +16,9 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'Reel Canada' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website' },
       { type: 'text', span: 6, heading: 'Year',    body: '2023' },
-      { type: 'text', span: 6, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
+      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],
   },
   { type: 'spacer', span: 12, height: 40 },
@@ -50,27 +51,27 @@ export const blocks = [
 
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/case-studies/reelcanada/cs-reelcanada-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-responsive.png' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/case-studies/reelcanada/cs-reelcanada-01a.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/case-studies/reelcanada/cs-reelcanada-01b.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-01a.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-01b.png' },
   
-  { type: 'video', span: 12, autoplay: true, src: 'assets/case-studies/reelcanada/cs-reelcanada_tableau.mp4' },
+  { type: 'video', span: 12, autoplay: true, src: 'assets/projects/reelcanada/cs-reelcanada_tableau.mp4' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/case-studies/reelcanada/cs-reelcanada-careers.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/case-studies/reelcanada/cs-reelcanada-careers-quiz.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-careers.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-careers-quiz.png' },
 
 
   
   // Full-width screenshots
-  { type: 'image', span: 12, src: 'assets/case-studies/reelcanada/cs-reelcanada-education.png' },
-  { type: 'image', span: 12, src: 'assets/case-studies/reelcanada/cs-reelcanada-02.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-education.png' },
+  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-02.jpg' },
 
 
   // Three equal images — 4 + 4 + 4
-  // { type: 'image', span: 4, src: 'assets/case-studies/reelcanada/cs-reelcanada-07.jpg' },
-  // { type: 'image', span: 4, src: 'assets/case-studies/reelcanada/cs-reelcanada-08.jpg' },
-  // { type: 'image', span: 4, src: 'assets/case-studies/reelcanada/cs-reelcanada-09.jpg' },
+  // { type: 'image', span: 4, src: 'assets/projects/reelcanada/cs-reelcanada-07.jpg' },
+  // { type: 'image', span: 4, src: 'assets/projects/reelcanada/cs-reelcanada-08.jpg' },
+  // { type: 'image', span: 4, src: 'assets/projects/reelcanada/cs-reelcanada-09.jpg' },
 
   // Video
   { type: 'vimeo', span: 12, aspect: '16/10.66', src: 'https://player.vimeo.com/video/810732633' },

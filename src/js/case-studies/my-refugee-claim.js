@@ -16,8 +16,9 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'Kinbrace / UNHCR' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website' },
       { type: 'text', span: 6, heading: 'Year',    body: '2023' },
-      { type: 'text', span: 6, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
+      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],
   },
   { type: 'spacer', span: 12, height: 40 },
@@ -59,17 +60,17 @@ export const blocks = [
 
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/case-studies/myrefugeeclaim/cs-mrc-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-responsive.png' },
 
   
-  { type: 'image', span: 12, src: 'assets/case-studies/myrefugeeclaim/cs-mrc-illustrations-2.png' },
+  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-illustrations-2.png' },
   
   { type: 'vimeo', span: 12, aspect: '16/11.15', autoplay: true, src: 'https://player.vimeo.com/video/812203483' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/case-studies/myrefugeeclaim/cs-mrc-readytours-01.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/case-studies/myrefugeeclaim/cs-mrc-readytours-02.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-readytours-01.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-readytours-02.png' },
   
-  { type: 'image', span: 12, src: 'assets/case-studies/myrefugeeclaim/cs-mrc-basisofclaimform.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-basisofclaimform.jpg' },
   
   { type: 'vimeo', span: 12, aspect: '16/10.66', src: 'https://player.vimeo.com/video/812199615' },
   

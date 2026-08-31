@@ -521,7 +521,7 @@ function renderBlock(b) {
     if (b.autoplay) {
       vimeoSrc += `${sep}autoplay=1&loop=1&muted=1&background=1`;
     } else {
-      vimeoSrc += `${sep}title=0&byline=0&portrait=0`;
+      vimeoSrc += `${sep}title=0&byline=0&portrait=0&play_button_position=center`;
     }
     return `<figure class="cs-block cs-block--vimeo"${span}><iframe src="${vimeoSrc}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></figure>`;
   }
