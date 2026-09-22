@@ -138,12 +138,12 @@ function makeCover(p, idx, w = 1024, img = null) {
   let ty = ch / 2 - totalH / 2;
   x.textAlign = 'center'; x.textBaseline = 'top';
   x.fillStyle = '#fff';
-  x.font = `600 ${titleSize}px Helvetica, Arial`;
+  x.font = `800 ${titleSize}px "Open Sans", Helvetica, Arial`;
   x.fillText(p.title, cw / 2, ty);
   ty += titleSize + titleClientGap;
   if (p.client) {
     x.fillStyle = 'rgba(255,255,255,.6)';
-    x.font = `500 ${clientSize}px Helvetica, Arial`;
+    x.font = `500 ${clientSize}px "Open Sans", Helvetica, Arial`;
     x.letterSpacing = '1px';
     x.fillText(p.client.toUpperCase(), cw / 2, ty);
     x.letterSpacing = '0px';
@@ -163,6 +163,84 @@ function makeCover(p, idx, w = 1024, img = null) {
     x.fillStyle = 'rgba(255,255,255,.95)';
     x.fill();
   }
+
+  return c;
+}
+
+function makeIntroTexture(w = 1024) {
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = Math.round(w * (ITEM_H / ITEM_W));
+  const ctx = c.getContext('2d');
+  const cw = c.width, ch = c.height;
+
+  ctx.fillStyle = '#f5f3ef';
+  ctx.fillRect(0, 0, cw, ch);
+
+  const nameSize  = Math.round(cw * 0.088);
+  const roleSize  = Math.round(cw * 0.030);
+  const tagSize   = Math.round(cw * 0.030);
+  const instrSize = Math.round(cw * 0.022);
+  const gap       = cw * 0.018;
+  const divGap    = gap * 1.4;
+  const divLen    = cw * 0.10;
+
+  // Measure tag lines first so we can vertically centre the whole block
+  ctx.font = `400 ${tagSize}px "Open Sans", Helvetica, Arial`;
+  //const tagText  = 'An archive of works spanning more than two decades.';
+  const tagText  = 'A personal archive spanning more than two decades.';
+  const tagMaxW  = cw * 0.52;
+  const tagWords = tagText.split(' ');
+  const tagLines = [];
+  let tagLine = '';
+  for (const word of tagWords) {
+    const test = tagLine ? tagLine + ' ' + word : word;
+    if (ctx.measureText(test).width > tagMaxW && tagLine) { tagLines.push(tagLine); tagLine = word; }
+    else { tagLine = test; }
+  }
+  if (tagLine) tagLines.push(tagLine);
+
+  const tagBlockH = tagLines.length * tagSize * 1.45;
+  const totalH = nameSize + gap * 0.5 + roleSize
+    + divGap + 1 + divGap
+    + tagBlockH
+    + divGap + 1 + divGap
+    + instrSize;
+
+  let y = (ch - totalH) / 2;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = `700 ${nameSize}px "Open Sans", Helvetica, Arial`;
+  ctx.fillText('Steve Mackey', cw / 2, y);
+  y += nameSize + gap * 0.5;
+
+  ctx.fillStyle = 'rgba(0,0,0,0.40)';
+  ctx.font = `500 ${roleSize}px "Open Sans", Helvetica, Arial`;
+  ctx.letterSpacing = '1.5px';
+  ctx.fillText('EXPERIENCE DESIGNER & TECHNOLOGIST', cw / 2, y);
+  ctx.letterSpacing = '0px';
+  y += roleSize + divGap;
+
+  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cw / 2 - divLen / 2, y); ctx.lineTo(cw / 2 + divLen / 2, y); ctx.stroke();
+  y += 1 + divGap;
+
+  ctx.fillStyle = 'rgba(0,0,0,0.50)';
+  ctx.font = `400 ${tagSize}px "Open Sans", Helvetica, Arial`;
+  tagLines.forEach((ln, i) => ctx.fillText(ln, cw / 2, y + i * tagSize * 1.45));
+  y += tagBlockH + divGap;
+
+  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cw / 2 - divLen / 2, y); ctx.lineTo(cw / 2 + divLen / 2, y); ctx.stroke();
+  y += 1 + divGap;
+
+  ctx.fillStyle = 'rgba(0,0,0,0.28)';
+  ctx.font = `400 ${instrSize}px "Open Sans", Helvetica, Arial`;
+  ctx.fillText('Scroll in any direction to explore', cw / 2, y);
 
   return c;
 }
@@ -278,6 +356,13 @@ PROJECTS.forEach((p, i) => {
   };
   img.onerror = () => console.warn('Card image not found, using generated art:', p.src);
   img.src = p.src;
+});
+
+const introTexture = new THREE.CanvasTexture(makeIntroTexture());
+introTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+document.fonts.ready.then(() => {
+  introTexture.image = makeIntroTexture();
+  introTexture.needsUpdate = true;
 });
 
 /* ---------- rounded-rect shader material ---------- */
@@ -448,14 +533,14 @@ canvas.addEventListener('click', (e) => {
   const c = hit.object.userData.cell;
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
-  if (c.x === ccx && c.y === ccy) openZoom(centreProject);   // centre card → zoom
+  if (c.x === ccx && c.y === ccy && centreProject) openZoom(centreProject);   // centre card → zoom
   else startTween(-c.x * PITCH_X, -c.y * PITCH_Y);           // otherwise snap to centre
 });
 
 addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { if (zoomed) zoomClose.click(); else closeMenu(); return; }
   if (zoomed) return;
-  if (e.key === 'Enter') { openZoom(centreProject); return; }
+  if (e.key === 'Enter' && centreProject) { openZoom(centreProject); return; }
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
   let nx = ccx, ny = ccy;
@@ -505,7 +590,10 @@ function renderBlock(b) {
   if (b.type === 'text') {
     const mod = b.variant === 'callout' ? ' cs-block--callout' : b.variant === 'intro' ? ' cs-block--intro' : '';
     const bodyHtml = /^\s*</.test(b.body) ? b.body : `<p>${b.body}</p>`;
-    return `<div class="cs-block${mod}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}</div>`;
+    const btnHtml = (b.variant === 'intro' && b.url)
+      ? `<a class="cs-project-link" href="${b.url}" target="_blank" rel="noopener noreferrer">View the work</a>`
+      : '';
+    return `<div class="cs-block${mod}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}${btnHtml}</div>`;
   }
   if (b.type === 'image') {
     return `<figure class="cs-block cs-block--image"${span}><img src="${b.src}" alt="${b.alt || ''}" loading="lazy"></figure>`;
@@ -624,6 +712,9 @@ function openZoom(p, skipHistory = false) {
   zoomClient.textContent = p.client || '';
   zoomSlug = p.slug;
   zoomContent.innerHTML = '';
+  
+  document.documentElement.style.setProperty('--text-colour', p.textColour === 'light' ? 'var(--text-light)' : 'var(--text-dark)');
+  
   loadCaseStudyHtml(p).then(html => {
     if (zoomSlug === p.slug) { zoomContent.innerHTML = html; observeBlocks(); }
   });
@@ -799,7 +890,9 @@ brandCanvas.addEventListener('click', () => {
 
 // Project filter
 const filterBtns = document.querySelectorAll('.filter-btn');
+let filterCaseStudies = false;
 function setFilter(caseStudiesOnly) {
+  filterCaseStudies = caseStudiesOnly;
   activeProjects = caseStudiesOnly ? PROJECTS.filter(p => p.casestudy) : PROJECTS;
   activeN = activeProjects.length;
   pool.forEach(m => { m.userData.key = null; });
@@ -946,7 +1039,9 @@ function animate() {
     if (m.userData.key !== key) {
       m.userData.key = key;
       m.userData.cell = { x: cellX, y: cellY };
-      m.material.uniforms.map.value = textures[activeProjects[projIndex(cellX, cellY)]._idx];
+      m.material.uniforms.map.value = (cellX === 0 && cellY === 0 && !filterCaseStudies)
+        ? introTexture
+        : textures[activeProjects[projIndex(cellX, cellY)]._idx];
     }
   }
 
@@ -954,14 +1049,20 @@ function animate() {
   const centerKey = ccx + ',' + ccy;
   if (centerKey !== lastCenterKey) {
     lastCenterKey = centerKey;
-    centreProject = activeProjects[projIndex(ccx, ccy)];
-    nowTitle.textContent = centreProject.title;
-    nowMeta.textContent = centreProject.cat;
-    ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
+    if (ccx === 0 && ccy === 0 && !filterCaseStudies) {
+      centreProject = null;
+      nowTitle.textContent = '';
+      nowMeta.textContent = 'Scroll in any direction to explore';
+    } else {
+      centreProject = activeProjects[projIndex(ccx, ccy)];
+      nowTitle.textContent = centreProject.title;
+      nowMeta.textContent = centreProject.cat;
+      ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
+    }
   }
 
-  // Show the "See Case Study" button only when settled on a centre card
-  const settled = !drag.active && !tween.active && !zoomed && !wheeling;
+  // Show the CTA button only when settled on a non-intro centre card
+  const settled = !drag.active && !tween.active && !zoomed && !wheeling && (ccx !== 0 || ccy !== 0);
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
 
   // Smooth mouse toward current position (~3% per frame); frozen at 0 while zoom panel is active or on mobile
@@ -993,61 +1094,8 @@ addEventListener('resize', () => {
 animate();
 setTimeout(() => {
   document.getElementById('loader').classList.add('hidden');
-  if (location.hash || location.search) {
-    requestAnimationFrame(() => canvas.classList.add('ready'));
-  }
+  requestAnimationFrame(() => canvas.classList.add('ready'));
 }, 300);
-
-// Intro overlay — skip on deep links only
-const intro = document.getElementById('intro');
-const introEnter = document.getElementById('introEnter');
-
-if (location.hash || location.search) {
-  intro.style.display = 'none';
-} else {
-  // Spinning cube renderer
-  const introCanvas = document.getElementById('introCanvas');
-  const introRenderer = new THREE.WebGLRenderer({ canvas: introCanvas, antialias: true, alpha: true });
-  introRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  introRenderer.setSize(96, 96);
-
-  const introScene = new THREE.Scene();
-  const introCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-  introCamera.position.set(0, 0, 2.2);
-
-  introScene.add(new THREE.AmbientLight(0xffffff, 1.4));
-  const introLight = new THREE.DirectionalLight(0xffffff, 1.2);
-  introLight.position.set(2, 3, 3);
-  introScene.add(introLight);
-
-  const block = createSMBlock({ size: 1 });
-  introScene.add(block);
-
-  // Speed pulses with the geometry: slow at S+M corners, fast through face-on views.
-  // cos(4y) completes one slow→fast cycle every π/2 rad, matching the face spacing.
-  block.rotation.y = -Math.PI / 4;  // start at S+M corner (slow phase)
-
-  let introTargetY = 0;
-  intro.addEventListener('mousemove', e => {
-    introTargetY = (0.5 - e.clientY / innerHeight) * 0.14;
-  });
-
-  let introRaf;
-  (function spinBlock() {
-    introRaf = requestAnimationFrame(spinBlock);
-    block.rotation.y -= 0.015 * (1 + 0.70 * Math.cos(4 * block.rotation.y));
-    block.position.y += (introTargetY - block.position.y) * 0.06;
-    introRenderer.render(introScene, introCamera);
-  })();
-
-  introEnter.addEventListener('click', () => {
-    intro.classList.add('leaving');
-    canvas.classList.add('ready');
-    cancelAnimationFrame(introRaf);
-    introRenderer.dispose();
-    intro.addEventListener('transitionend', () => { intro.style.display = 'none'; }, { once: true });
-  });
-}
 
 // Deep-link: snap the grid and open the zoom for a project referenced in the URL hash
 const initSlug = location.hash.slice(1);

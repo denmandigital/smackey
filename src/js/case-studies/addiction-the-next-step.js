@@ -7,6 +7,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'intro',
     body: 'Addiction. The Next Step is a rich media, interactive toolkit that delivers world-class therapy and support directly to families struggling with substance use disorder. The project was produced in conjunction with the documentary, <em>Wasted: An Alcoholic Therapist’s Fight for Recovery in a Flawed Treatment System</em>, which examines the enormous changes happening in addiction research and treatment, and details therapist Mike Pond’s alcoholism and recovery using compassionate, evidence-based methods created by the Center for Motivation and Change.',
+    url: 'https://addictionthenextstep.com/crisis-toolkit/'
   },
   {
     type: 'container',
@@ -26,7 +27,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/addiction/addiction-responsive.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/10.66', src: 'https://player.vimeo.com/video/225482597' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9.1', src: 'https://player.vimeo.com/video/225482597' },
   
   { type: 'image', span: 12, src: 'assets/projects/addiction/screens-perspective_addiction.jpg' },
   

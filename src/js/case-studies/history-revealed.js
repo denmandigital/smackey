@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>BC Hydro worked with Indigenous communities in the Peace Region of British Columbia to preserve the unique physical record of their history from the impacts of the Site C hydroelectric project. More than 500 archaeological sites were established and hundreds of thousands of artifacts uncovered and presented in a  exhibition which traveled to the remote indigenous communities involved, before finding a permanent home at Fort St. John North Peace Museum.</p><p>The focus of our work within the exhibition was the development of an immersive touch-screen application that lets users explore the growing database of thousands of artifacts found at archeological sites around the river.',
+    body: 'BC Hydro worked with Indigenous communities in the Peace Region of British Columbia to preserve the unique physical record of their history from the impacts of the Site C hydroelectric project. More than 500 archaeological sites were established and hundreds of thousands of artifacts uncovered and presented in a  exhibition which traveled to the remote indigenous communities involved, before finding a permanent home at Fort St. John North Peace Museum.</p><p>The focus of our work within the exhibition was the development of an immersive touch-screen application that lets users explore the growing database of thousands of artifacts found at archeological sites around the river.',
   },
   {
     type: 'container',

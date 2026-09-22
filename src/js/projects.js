@@ -9,7 +9,7 @@
      casestudy — true if a matching case-studies/<slug>.js exists
      cat       — short category label (optional)
      accentColourPrimary   — primary accent colour for this project (hex)
-     accentColourSecondary — secondary accent colour for this project (hex)
+     textColour — secondary accent colour for this project (hex)
 ============================================================ */
 
 function toSlug(title) {
@@ -29,7 +29,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#2a2e3b',
-    accentColourSecondary: '#e09f41',
+    textColour: 'light',
   },
   {
     file:      'index-backstory.jpg',
@@ -39,7 +39,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#e36d3f',
-    accentColourSecondary: '#220c03',
+    textColour: 'light',
   },
   {
     file:      'index-bchydro.jpg',
@@ -49,27 +49,27 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#912816',
-    accentColourSecondary: '#4973a8',
+    textColour: 'light',
   },
   {
     file:      'index-capturingreality.jpg',
     client:    'National Film Board of Canada',
     title:     'Capturing Reality',
-    year:      '',
+    year:      '2014',
     casestudy: false,
     cat:       '',
-    accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    accentColourPrimary:   '#dfa421',
+    textColour: 'dark',
   },
   {
     file:      'index-cbc-vancouver.jpg',
     client:    'CBC Vancouver / Rethink',
-    title:     "Vancouver's Talking",
-    year:      '',
+    title:     "Vancouver’s Talking",
+    year:      '2018',
     casestudy: false,
     cat:       '',
-    accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    accentColourPrimary:   '#76b7da',
+    textColour: 'dark',
   },
   {
     file:      'index-food-for-thought.jpg',
@@ -79,7 +79,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-foran.jpg',
@@ -89,7 +89,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-frontier.jpg',
@@ -99,7 +99,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-hunting-in-canada.jpg',
@@ -109,7 +109,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       'Editorial',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-kennys.jpg',
@@ -119,7 +119,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-legacies150.jpg',
@@ -129,7 +129,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       'Brand Strategy',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-myrefugeeclaim.jpg',
@@ -139,7 +139,7 @@ export const PROJECTS = [
     casestudy: true,
     cat:       'Digital Product',
     accentColourPrimary:   '#709093',
-    accentColourSecondary: '#F5F4EE',
+    textColour: '#F5F4EE',
   },
   {
     file:      'index-nar.jpg',
@@ -149,7 +149,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-nativeplanet.jpg',
@@ -159,7 +159,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-pinepoint.jpg',
@@ -169,7 +169,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       'Data Story',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-powertogive.jpg',
@@ -179,7 +179,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-powertothepeople.jpg',
@@ -189,7 +189,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-reelcanada.jpg',
@@ -199,7 +199,7 @@ export const PROJECTS = [
     casestudy: true,
     cat:       '',
     accentColourPrimary:   '#042C56',
-    accentColourSecondary: '#F9C22E',
+    textColour: 'light',
   },
   {
     file:      'index-similkameen.jpg',
@@ -209,7 +209,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       'Environmental',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-smashball.jpg',
@@ -219,7 +219,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-stashing-their-cash.jpg',
@@ -229,7 +229,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-the-conversation.jpg',
@@ -239,7 +239,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-the-hub.jpg',
@@ -249,7 +249,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-truth-and-lies.jpg',
@@ -259,7 +259,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       'Editorial',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-uninterrupted.jpg',
@@ -269,7 +269,7 @@ export const PROJECTS = [
     casestudy: false,
     cat:       '',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
   {
     file:      'index-waterworlds.jpg',
@@ -279,6 +279,6 @@ export const PROJECTS = [
     casestudy: false,
     cat:       'Environmental',
     accentColourPrimary:   '#ffffff',
-    accentColourSecondary: '#cccccc',
+    textColour: 'light',
   },
 ].map(p => ({ ...p, src: 'assets/' + p.file, slug: toSlug(p.title) }));

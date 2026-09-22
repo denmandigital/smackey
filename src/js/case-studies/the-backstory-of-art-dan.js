@@ -7,6 +7,7 @@ export const blocks = [
     variant: 'intro',
     spanSm: 12,
     body: '<p>Art Napoleon and Dan Hayes are the hosts of APTN’s food and lifestyle series, Moosemeat & Marmalade. One is a blue-blooded, classically trained chef from London, the other a rough and tumble indigenous bush cook from the Moberly Lake reservation in Northern Canada. Each week they explore culture, culinary traditions, and really good food together. And while they both share a deep passion for hunting, fishing, and food, their radically different backgrounds mean they don’t always see eye to eye.</p><p>The Backstory of Art & Dan promotes the show through a side-by-side biography of each man’s life, told through their own unique heartfelt anecdotes, family photos and videos, and other artifacts of a life lived.</p>',
+    url: 'https://moosemeatandmarmalade.com/backstory/'
   },
   {
     type: 'container',

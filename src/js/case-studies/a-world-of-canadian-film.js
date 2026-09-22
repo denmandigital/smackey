@@ -7,6 +7,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'intro',
     body: 'Reel Canada promotes Canadian film through national education programs and workforce development initiatives, reaching tens of thousands of teachers and students and millions of Canadians each year.',
+    url: 'https://reelcanada.ca'
   },
   {
     type: 'container',
@@ -37,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'We started with a comprehensive content and technology audit of Reel Canada’s previous websites. Working with their key stakeholders, we helped determine the most valued content by core audiences and analytics. These insights allowed us to remove out-dated and irrelevant content, reorganize their internal program structure, and shift topical content to their social channels.',
+    body: 'We started with a comprehensive content and technology audit of Reel Canada’s previous web platforms. Working with their key stakeholders, we helped determine the most valued content by core audiences and analytics. These insights allowed us to remove out-dated and irrelevant content, reorganize their internal program structure, and shift topical content to their social channels.',
   },
 
   // Outcome callout — full width
@@ -74,5 +75,5 @@ export const blocks = [
   // { type: 'image', span: 4, src: 'assets/projects/reelcanada/cs-reelcanada-09.jpg' },
 
   // Video
-  { type: 'vimeo', span: 12, aspect: '16/10.66', src: 'https://player.vimeo.com/video/810732633' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/10.66', src: 'https://player.vimeo.com/video/810732633' },
 ];

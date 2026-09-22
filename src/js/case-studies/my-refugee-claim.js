@@ -7,6 +7,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'intro',
     body: 'My Refugee Claim is a digital resource created to help refugee claimants get informed, connected, and prepared as they navigate Canada’s complex refugee protection process.',
+    url: 'https://myrefugeeclaim.ca'
   },
   {
     type: 'container',
