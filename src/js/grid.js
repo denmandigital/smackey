@@ -348,8 +348,10 @@ const textures = PROJECTS.map((p, i) => {
   return t;
 });
 
+// Keep Image refs alive so decoded pixel data isn't freed; used for zero-flash zoom bg
+const _bgPreloads = new Map(PROJECTS.map(p => [p.src, new Image()]));
 PROJECTS.forEach((p, i) => {
-  const img = new Image();
+  const img = _bgPreloads.get(p.src);
   img.onload = () => {
     textures[i].image = makeCover(p, i, 1024, img);
     textures[i].needsUpdate = true;
@@ -700,6 +702,8 @@ function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   zoomed = true;
   document.body.classList.remove('hovering');
+  // backgroundImage, backgroundColor already pre-painted in the render loop while hidden;
+  // set again here as a safety net for edge cases (deep links, popstate)
   zoomHeroBg.style.backgroundImage = `url("${p.src}")`;
   zoomHeroBg.style.transform = 'scale(1)';
   zoomHeroBg.classList.remove('fading');
@@ -1058,6 +1062,16 @@ function animate() {
       nowTitle.textContent = centreProject.title;
       nowMeta.textContent = centreProject.cat;
       ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
+      // Pre-paint the zoom hero while the panel is hidden (opacity:0) so the image
+      // is already rendered when openZoom makes it visible — eliminates colour flash
+      zoomHeroBg.style.backgroundImage = `url("${centreProject.src}")`;
+      zoom.style.backgroundColor = centreProject.accentColourPrimary;
+      zoomContent.style.backgroundColor = centreProject.accentColourPrimary;
+      // Decode this and adjacent images so they're always ready
+      [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx, dy]) => {
+        const np = activeProjects[projIndex(ccx + dx, ccy + dy)];
+        _bgPreloads.get(np?.src)?.decode?.().catch(() => {});
+      });
     }
   }
 

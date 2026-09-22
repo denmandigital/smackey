@@ -139,7 +139,7 @@ export const PROJECTS = [
     casestudy: true,
     cat:       'Digital Product',
     accentColourPrimary:   '#709093',
-    textColour: '#F5F4EE',
+    textColour: 'light',
   },
   {
     file:      'index-nar.jpg',
