@@ -7,6 +7,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'intro',
     body: 'Intro text goes here.',
+    url: '',
   },
   {
     type: 'container',
@@ -26,7 +27,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/xxx/xxx-responsive.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/10.66', src: 'https://player.vimeo.com/video/225482597' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1008938152' },
   
   { type: 'image', span: 12, src: 'assets/projects/xxx/screens-perspective_xxx.jpg' },
   

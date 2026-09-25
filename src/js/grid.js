@@ -598,7 +598,8 @@ function renderBlock(b) {
     return `<div class="cs-block${mod}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}${btnHtml}</div>`;
   }
   if (b.type === 'image') {
-    return `<figure class="cs-block cs-block--image"${span}><img src="${b.src}" alt="${b.alt || ''}" loading="lazy"></figure>`;
+    const contain = b.contain ? ' cs-block--image-contain' : '';
+    return `<figure class="cs-block cs-block--image${contain}"${span}><img src="${b.src}" alt="${b.alt || ''}" loading="lazy"></figure>`;
   }
   if (b.type === 'video') {
     const attrs = b.autoplay ? 'autoplay muted loop playsinline' : 'controls playsinline';
@@ -711,13 +712,14 @@ function openZoom(p, skipHistory = false) {
   zoom.style.backgroundColor = p.accentColourPrimary;
   zoomContent.style.backgroundColor = p.accentColourPrimary;
   zoomContent.style.transform = 'translateY(0)';
-  zoomCat.textContent = p.cat || '';
+  zoomCat.textContent = p.category.join(', ');
   zoomTitle.textContent = p.title;
   zoomClient.textContent = p.client || '';
   zoomSlug = p.slug;
   zoomContent.innerHTML = '';
   
   document.documentElement.style.setProperty('--text-colour', p.textColour === 'light' ? 'var(--text-light)' : 'var(--text-dark)');
+  document.documentElement.style.setProperty('--accent-colour', p.textColour === 'dark' ? 'var(--ink)' : p.accentColourPrimary);
   
   loadCaseStudyHtml(p).then(html => {
     if (zoomSlug === p.slug) { zoomContent.innerHTML = html; observeBlocks(); }
@@ -1060,13 +1062,16 @@ function animate() {
     } else {
       centreProject = activeProjects[projIndex(ccx, ccy)];
       nowTitle.textContent = centreProject.title;
-      nowMeta.textContent = centreProject.cat;
+      nowMeta.textContent = centreProject.category.join(', ');
       ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
-      // Pre-paint the zoom hero while the panel is hidden (opacity:0) so the image
-      // is already rendered when openZoom makes it visible — eliminates colour flash
-      zoomHeroBg.style.backgroundImage = `url("${centreProject.src}")`;
-      zoom.style.backgroundColor = centreProject.accentColourPrimary;
-      zoomContent.style.backgroundColor = centreProject.accentColourPrimary;
+      // Pre-paint the zoom hero while the panel is hidden so the image is already
+      // rendered when openZoom makes it visible — skip when zoomed so a resize
+      // can't overwrite the open project's colours with a different project's.
+      if (!zoomed) {
+        zoomHeroBg.style.backgroundImage = `url("${centreProject.src}")`;
+        zoom.style.backgroundColor = centreProject.accentColourPrimary;
+        zoomContent.style.backgroundColor = centreProject.accentColourPrimary;
+      }
       // Decode this and adjacent images so they're always ready
       [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx, dy]) => {
         const np = activeProjects[projIndex(ccx + dx, ccy + dy)];
@@ -1117,15 +1122,21 @@ if (initSlug) {
   const initProject = PROJECTS.find(p => p.slug === initSlug);
   if (initProject) {
     const idx = activeProjects.indexOf(initProject);
-    let bestCell = { cx: 0, cy: 0 }, bestDist = Infinity;
+    let bestCell = null, bestDist = Infinity;
     for (let cy = -6; cy <= 6; cy++) {
       for (let cx = -6; cx <= 6; cx++) {
+        // Skip (0,0) when not in casestudies mode — that cell renders the intro card, not a project
+        if (cx === 0 && cy === 0 && !filterCaseStudies) continue;
         if (projIndex(cx, cy) === idx) {
           const d = Math.hypot(cx, cy);
           if (d < bestDist) { bestDist = d; bestCell = { cx, cy }; }
         }
       }
     }
+    if (!bestCell) bestCell = { cx: 1, cy: 0 };  // fallback: shouldn't happen with N≤26
+    // Cancel any tween started by activateFilter (e.g. ?casestudies on load) so it can't
+    // override the scroll position we're about to set.
+    tween.active = false;
     scroll.x = -bestCell.cx * PITCH_X;
     scroll.y = -bestCell.cy * PITCH_Y;
     // Wait two frames so the render loop sets centrePxW/centrePxH before openZoom reads them

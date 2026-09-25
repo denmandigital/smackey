@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Reel Canada’s previous web platforms had grown unwieldy and disorganized over the years. Navigation was confusing, and key activities like finding films in their catalogue were drawn out and complicated. Data, including their comprehensive film library, lived in inflexible and obsolete forms.',
+    body: 'Reel Canada’s previous web platforms had grown unwieldy and disorganized over the years. Navigation was confusing, and key activities like finding films in their catalogue were drawn out and complicated. Data, including their comprehensive film library, lived multiple places with no single source of truth.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
