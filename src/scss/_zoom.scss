@@ -3,6 +3,10 @@
 #zoom {
 	--border-radius-cs-block: 1.75rem;
 
+	@include mobile {
+		--border-radius-cs-block: 0.875rem;
+	}
+
 	position: fixed;
 	z-index: 20;
 	overflow: hidden;

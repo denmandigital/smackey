@@ -1,51 +1,121 @@
+@use 'breakpoints' as *;
+
 #intro {
 	position: fixed;
-	inset: 0;
-	z-index: 31;
-	display: grid;
-	place-items: center;
-	background: rgba(234, 232, 228, 0.97);
-	transition: opacity 0.7s ease;
-
-	&.leaving {
-		opacity: 0;
-		pointer-events: none;
-	}
-}
-
-.intro-inner {
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: var(--card-w);
+	height: calc(var(--card-w) * 225 / 320);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 28px;
+	justify-content: center;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.3s ease;  // hide: immediate, no delay
+	z-index: 6;
 	text-align: center;
-	padding: 0 24px;
+
+	&.show {
+		opacity: 1;
+		pointer-events: auto;
+		transition: opacity 0.4s ease 0.3s;  // show: wait 0.3s for watermark to fade out first
+	}
 }
 
-#introCanvas {
+#introMonogram {
+	width: 40px;
+	height: 40px;
+	margin-bottom: 10px;
 	display: block;
+	
+	@include mobile {
+		margin-bottom: 10px;
+	}
+	@include tablet {
+		width: 50px;
+		height: 50px;
+	}
+	@include desktop {
+		margin-bottom: 20px;
+		width: 80px;
+		height: 80px;
+	}
+	@include extra-wide {
+		width: 100px;
+		height: 100px;
+	}
 }
 
-.intro-tagline {
-	font-size: 18px;
-	font-weight: 400;
+.intro-tag {
+	font-size: clamp(15px, 1.3vw, 19px);
+	color: rgba(0, 0, 0, 0.65);
 	line-height: 1.55;
-	color: var(--ink);
-	max-width: 400px;
+	margin: 0 0 10px;
+	font-weight: 500;
+	// max-width: 340px;
+
+	@include mobile {
+		font-size: 14px;
+	}
 }
 
-#introEnter {
-	background: var(--ink);
-	color: #fff;
+.intro-name {
+	font-size: clamp(11px, 0.95vw, 13px);
+	color: rgba(0, 0, 0, 0.5);
+	letter-spacing: 0.02em;
+	margin: 0 0 20px;
+
+	@include mobile {
+		font-size: 11px;
+		margin-bottom: 16px;
+	}
+}
+
+#introAboutBtn {
+	font: inherit;
+	cursor: pointer;
 	border: none;
+	background: rgba(255, 255, 255, 0.94);
+	color: #15161a;
 	border-radius: 100px;
-	padding: 13px 40px;
-	font-size: 11px;
+	padding: 14px 24px;
+	font-size: 12px;
 	font-weight: 600;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
-	cursor: pointer;
-	transition: opacity 0.2s;
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.32);
+	transition: background 0.2s, transform 0.2s;
+	margin-bottom: 20px;
 
-	&:hover { opacity: 0.7; }
+	&:hover {
+		background: #fff;
+		transform: scale(1.04);
+	}
+
+	@include mobile {
+		padding: 12px 20px;
+		margin-bottom: 14px;
+	}
+	@include desktop {
+		margin-top: 20px;
+	}
+	@include wide {
+		margin-top: 30px;
+	}
+	@include extra-wide {
+		margin-top: 40px;
+	}
+}
+
+.intro-scroll {
+	font-size: clamp(9px, 0.75vw, 11px);
+	color: rgba(0, 0, 0, 0.3);
+	letter-spacing: 0.04em;
+	margin: 0;
+
+	@include mobile {
+		font-size: 9px;
+	}
 }

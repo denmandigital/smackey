@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <meta name="description" content="Portfolio of Steve Mackey — designer and creative technologist. Work spanning interactive storytelling, cultural institutions, mission-driven organisations, and global brands. 2000–present." />
+  <meta id="metaDesc" name="description" content="Portfolio of Steve Mackey — designer and creative technologist. Work spanning interactive storytelling, cultural institutions, mission-driven organisations, and global brands. 2000–present." />
   <link rel="canonical" href="https://smackey.org" />
 
   <link rel="icon" type="image/png" href="/dist/favicon-96x96.png" sizes="96x96" />
@@ -24,13 +24,13 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://smackey.org" />
-  <meta property="og:title" content="Steve Mackey — Experience Designer &amp; Technologist" />
-  <meta property="og:description" content="A collection of works from 2000–present spanning interactive storytelling, cultural institutions, mission-driven organisations, and global brands." />
+  <meta id="metaOgTitle" property="og:title" content="Steve Mackey — Experience Designer &amp; Technologist" />
+  <meta id="metaOgDesc" property="og:description" content="A collection of works from 2000–present spanning interactive storytelling, cultural institutions, mission-driven organisations, and global brands." />
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Steve Mackey — Experience Designer &amp; Technologist" />
-  <meta name="twitter:description" content="A collection of works from 2000–present spanning interactive storytelling, cultural institutions, mission-driven organisations, and global brands." />
+  <meta id="metaTwTitle" name="twitter:title" content="Steve Mackey — Experience Designer &amp; Technologist" />
+  <meta id="metaTwDesc" name="twitter:description" content="A collection of works from 2000–present spanning interactive storytelling, cultural institutions, mission-driven organisations, and global brands." />
 
   <!-- Structured data -->
   <script type="application/ld+json">
@@ -99,6 +99,14 @@
 
   <div id="cta"><button id="ctaBtn">View Case Study</button></div>
 
+  <div id="intro" aria-hidden="true">
+    <canvas id="introMonogram" aria-label="SM monogram"></canvas>
+    <p class="intro-tag">A personal archive of digital work spanning<br>more than two decades.</p>
+    <p class="intro-name">Steve Mackey — Experience Designer &amp; Technologist</p>
+    <button id="introAboutBtn">About Me</button>
+    <p class="intro-scroll">Scroll any direction to explore.</p>
+  </div>
+
   <div id="zoom" aria-hidden="true">
     <div id="zoomScroll">
       <div id="zoomHero">
@@ -109,6 +117,12 @@
     </div>
     <button id="zoomClose" aria-label="Close"><span></span><span></span></button>
   </div>
+
+  <div id="canvas-backdrop" aria-hidden="true"></div>
+
+  <section id="project-grid-html" aria-label="Project archive">
+    <div class="pg-grid"><!-- populated by grid.js --></div>
+  </section>
 
   <script type="module" src="/src/js/grid.js"></script>
 </body>

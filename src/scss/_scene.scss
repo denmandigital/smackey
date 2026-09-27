@@ -3,6 +3,7 @@
 	inset: 0;
 	display: block;
 	opacity: 0;
+	z-index: 2;
 
 	&.ready {
 		animation: scene-in 1.2s ease forwards;
@@ -14,9 +15,24 @@
 		opacity: 0;
 		transform: scale(0.9);
 	}
+
 	to {
 		opacity: 1;
 		transform: scale(1);
+	}
+}
+
+
+/* Covers the HTML project grid while the canvas fades in; hidden without JS so the grid shows */
+#canvas-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 1;
+	background: var(--bg);
+	pointer-events: none;
+
+	body:not(.js) & {
+		display: none;
 	}
 }
 
@@ -24,7 +40,7 @@
 #fade {
 	position: fixed;
 	inset: 0;
-	z-index: 2;
+	z-index: 3;
 	pointer-events: none;
 	background: radial-gradient(ellipse farthest-side at 50% 50%, rgba(241, 239, 232, 0) 38%, rgba(241, 239, 232, 0.55) 60%, rgba(241, 239, 232, 0.95) 82%, var(--bg) 100%);
 }

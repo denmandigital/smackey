@@ -1,6 +1,7 @@
 $sm: 640px;
 $md: 1024px;
 $lg: 1280px;
+$xl: 1440px;
 
 @mixin mobile {
 	@media (max-width: $sm) { @content; }
@@ -24,4 +25,8 @@ $lg: 1280px;
 
 @mixin wide {
 	@media (min-width: $lg) { @content; }
+}
+
+@mixin extra-wide {
+	@media (min-width: $xl) { @content; }
 }

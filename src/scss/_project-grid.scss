@@ -1,0 +1,146 @@
+@use 'breakpoints' as *;
+
+/* -------------------------------------------------------
+   HTML project grid — progressive enhancement / no-JS fallback
+   Hidden immediately when JS loads (body gets .js class).
+   Without JS: canvas UI hides, grid becomes the primary UI.
+------------------------------------------------------- */
+
+/* No-JS: make the page scrollable and hide the canvas UI */
+body:not(.js) {
+	overflow: auto;
+	height: auto;
+	cursor: default;
+
+	#scene,
+	#loader,
+	#fade,
+	.hud,
+	#cta,
+	#intro,
+	#nav { display: none; }
+}
+
+#project-grid-html {
+	padding: 40px 20px 60px;
+
+	.pg-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 12px;
+		max-width: 1600px;
+		margin: 0 auto;
+
+		@include tablet-down {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@include mobile {
+			grid-template-columns: 1fr;
+			gap: 10px;
+		}
+	}
+}
+
+.pg-card {
+	aspect-ratio: 320 / 225;
+	border-radius: 20px;
+	overflow: hidden;
+	position: relative;
+	background-color: var(--pg-accent, #2a2e3b);
+
+	@include mobile {
+		border-radius: 14px;
+	}
+
+	&-link {
+		display: block;
+		width: 100%;
+		height: 100%;
+		text-decoration: none;
+		position: relative;
+	}
+
+	&-img {
+		position: absolute;
+		inset: 0;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	&-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.1) 55%, transparent 100%);
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		padding: 20px;
+
+		@include mobile {
+			padding: 14px;
+		}
+	}
+
+	&-tags {
+		display: flex;
+		gap: 5px;
+		flex-wrap: wrap;
+		margin-bottom: 8px;
+	}
+
+	&-year,
+	&-cat {
+		font-size: 9px;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.75);
+		background: rgba(255, 255, 255, 0.15);
+		border-radius: 100px;
+		padding: 3px 8px;
+		white-space: nowrap;
+	}
+
+	&-year {
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	&-title {
+		font-size: clamp(14px, 1.3vw, 20px);
+		font-weight: 800;
+		color: #fff;
+		letter-spacing: -0.01em;
+		line-height: 1.2;
+		margin: 0 0 4px;
+	}
+
+	&-client {
+		font-size: 10px;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.55);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		margin: 0;
+	}
+
+	&--casestudy &-overlay::before {
+		content: '★ Case Study';
+		position: absolute;
+		top: 14px;
+		right: 14px;
+		font-size: 9px;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.8);
+		background: rgba(255, 255, 255, 0.15);
+		border-radius: 100px;
+		padding: 4px 9px;
+	}
+}

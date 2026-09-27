@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { PROJECTS as _PROJECTS } from './projects.js';
 import { createSMBlock } from './SMBlock.js';
 
+document.body.classList.add('js');
+
 const _caseStudyModules = import.meta.glob('./case-studies/*.js');
 
 // Fisher-Yates shuffle — new order every page load
@@ -133,7 +135,7 @@ function makeCover(p, idx, w = 1024, img = null) {
   }
 
   // Vertically + horizontally centred label: title → client
-  const titleSize = w * 0.066, clientSize = w * (innerWidth <= 640 ? 0.0286 : 0.026), titleClientGap = w * 0.010;
+  const titleSize = w * 0.066, clientSize = w * (innerWidth <= 640 ? 0.0286 : 0.026), titleClientGap = w * 0.015;
   const totalH = titleSize + (p.client ? titleClientGap + clientSize : 0);
   let ty = ch / 2 - totalH / 2;
   x.textAlign = 'center'; x.textBaseline = 'top';
@@ -172,77 +174,22 @@ function makeIntroTexture(w = 1024) {
   c.width = w;
   c.height = Math.round(w * (ITEM_H / ITEM_W));
   const ctx = c.getContext('2d');
-  const cw = c.width, ch = c.height;
+  ctx.fillStyle = '#f5f3ef';
+  ctx.fillRect(0, 0, c.width, c.height);
+  return c;
+}
 
+function drawIntroCanvas(wmOpacity) {
+  const ctx = introBaseCanvas.getContext('2d');
+  const cw = introBaseCanvas.width, ch = introBaseCanvas.height;
   ctx.fillStyle = '#f5f3ef';
   ctx.fillRect(0, 0, cw, ch);
-
-  const nameSize  = Math.round(cw * 0.088);
-  const roleSize  = Math.round(cw * 0.030);
-  const tagSize   = Math.round(cw * 0.030);
-  const instrSize = Math.round(cw * 0.022);
-  const gap       = cw * 0.018;
-  const divGap    = gap * 1.4;
-  const divLen    = cw * 0.10;
-
-  // Measure tag lines first so we can vertically centre the whole block
-  ctx.font = `400 ${tagSize}px "Open Sans", Helvetica, Arial`;
-  //const tagText  = 'An archive of works spanning more than two decades.';
-  const tagText  = 'A personal archive spanning more than two decades.';
-  const tagMaxW  = cw * 0.52;
-  const tagWords = tagText.split(' ');
-  const tagLines = [];
-  let tagLine = '';
-  for (const word of tagWords) {
-    const test = tagLine ? tagLine + ' ' + word : word;
-    if (ctx.measureText(test).width > tagMaxW && tagLine) { tagLines.push(tagLine); tagLine = word; }
-    else { tagLine = test; }
+  if (wmOpacity > 0.001 && wmStamp) {
+    const sz = Math.min(cw, ch) * 0.38;
+    ctx.globalAlpha = wmOpacity * 0.13;
+    ctx.drawImage(wmStamp, (cw - sz) / 2, (ch - sz) / 2, sz, sz);
+    ctx.globalAlpha = 1;
   }
-  if (tagLine) tagLines.push(tagLine);
-
-  const tagBlockH = tagLines.length * tagSize * 1.45;
-  const totalH = nameSize + gap * 0.5 + roleSize
-    + divGap + 1 + divGap
-    + tagBlockH
-    + divGap + 1 + divGap
-    + instrSize;
-
-  let y = (ch - totalH) / 2;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-
-  ctx.fillStyle = '#1a1a1a';
-  ctx.font = `700 ${nameSize}px "Open Sans", Helvetica, Arial`;
-  ctx.fillText('Steve Mackey', cw / 2, y);
-  y += nameSize + gap * 0.5;
-
-  ctx.fillStyle = 'rgba(0,0,0,0.40)';
-  ctx.font = `500 ${roleSize}px "Open Sans", Helvetica, Arial`;
-  ctx.letterSpacing = '1.5px';
-  ctx.fillText('EXPERIENCE DESIGNER & TECHNOLOGIST', cw / 2, y);
-  ctx.letterSpacing = '0px';
-  y += roleSize + divGap;
-
-  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(cw / 2 - divLen / 2, y); ctx.lineTo(cw / 2 + divLen / 2, y); ctx.stroke();
-  y += 1 + divGap;
-
-  ctx.fillStyle = 'rgba(0,0,0,0.50)';
-  ctx.font = `400 ${tagSize}px "Open Sans", Helvetica, Arial`;
-  tagLines.forEach((ln, i) => ctx.fillText(ln, cw / 2, y + i * tagSize * 1.45));
-  y += tagBlockH + divGap;
-
-  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(cw / 2 - divLen / 2, y); ctx.lineTo(cw / 2 + divLen / 2, y); ctx.stroke();
-  y += 1 + divGap;
-
-  ctx.fillStyle = 'rgba(0,0,0,0.28)';
-  ctx.font = `400 ${instrSize}px "Open Sans", Helvetica, Arial`;
-  ctx.fillText('Scroll in any direction to explore', cw / 2, y);
-
-  return c;
 }
 
 /* ============================================================
@@ -360,12 +307,10 @@ PROJECTS.forEach((p, i) => {
   img.src = p.src;
 });
 
-const introTexture = new THREE.CanvasTexture(makeIntroTexture());
+let wmStamp = null;  // set after intro monogram scene is ready (below)
+let introBaseCanvas = makeIntroTexture();
+const introTexture = new THREE.CanvasTexture(introBaseCanvas);
 introTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-document.fonts.ready.then(() => {
-  introTexture.image = makeIntroTexture();
-  introTexture.needsUpdate = true;
-});
 
 /* ---------- rounded-rect shader material ---------- */
 const VERT = `
@@ -536,6 +481,7 @@ canvas.addEventListener('click', (e) => {
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
   if (c.x === ccx && c.y === ccy && centreProject) openZoom(centreProject);   // centre card → zoom
+  else if (c.x === ccx && c.y === ccy && ccx === 0 && ccy === 0 && !filterCaseStudies) openMenu(); // intro card → about
   else startTween(-c.x * PITCH_X, -c.y * PITCH_Y);           // otherwise snap to centre
 });
 
@@ -562,6 +508,7 @@ addEventListener('keydown', (e) => {
 ============================================================ */
 const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
+const introEl = document.getElementById('intro');
 const zoom = document.getElementById('zoom');
 const zoomMeta = document.getElementById('zoomMeta');
 const zoomCat = document.getElementById('zoomCat');
@@ -641,6 +588,7 @@ let centrePxW = CENTRE_FRAC * innerWidth;   // actual screen px width of centre 
 let centrePxH = centrePxW * (ITEM_H / ITEM_W);
 let zoomed = false;          // true while open OR animating (blocks grid interaction)
 let ctaShown = false;
+let introShown = false;
 let zoomSlug = null;         // slug of currently open project (guards async content loads)
 
 // rAF-driven zoom: p = 0 (matches the centre card) → 1 (full inset)
@@ -699,6 +647,23 @@ zoomScroll.addEventListener('scroll', () => {
   zoomHeroBg.style.transform = `scale(${1 + progress * 0.12})`;
 }, { passive: true });
 
+const DEFAULT_TITLE = 'Steve Mackey — Experience Designer & Technologist';
+const DEFAULT_DESC  = document.getElementById('metaDesc').content;
+const metaDesc    = document.getElementById('metaDesc');
+const metaOgTitle = document.getElementById('metaOgTitle');
+const metaOgDesc  = document.getElementById('metaOgDesc');
+const metaTwTitle = document.getElementById('metaTwTitle');
+const metaTwDesc  = document.getElementById('metaTwDesc');
+
+function setPageMeta(title, desc) {
+  document.title = title;
+  metaDesc.content    = desc;
+  metaOgTitle.content = title;
+  metaOgDesc.content  = desc;
+  metaTwTitle.content = title;
+  metaTwDesc.content  = desc;
+}
+
 function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   zoomed = true;
@@ -736,6 +701,10 @@ function openZoom(p, skipHistory = false) {
   zoom.style.opacity = '1';
   zoom.classList.add('open');
   zoomAnim.dir = 1; zoomAnim.active = true;
+  setPageMeta(
+    `${p.title} — ${p.client || 'Steve Mackey'}`,
+    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — experience designer and creative technologist.` : `${p.title} — a project by Steve Mackey, experience designer and creative technologist.`
+  );
   if (!skipHistory) history.pushState({ slug: p.slug }, '', '#' + p.slug);
 }
 
@@ -761,6 +730,7 @@ function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (csObserver) { csObserver.disconnect(); csObserver = null; }
   if (!skipHistory) history.pushState(null, '', location.pathname + location.search);
+  setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
   // Freeze parallax immediately so the card sits exactly where the panel will land
   prlxX = 0; prlxY = 0;
   zoomHeroBg.classList.add('fading');
@@ -812,6 +782,8 @@ function closeMenu() {
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
+document.getElementById('introAboutBtn').addEventListener('click', () => openMenu());
+introEl.addEventListener('click', () => openMenu());
 
 document.querySelectorAll('a.js-email').forEach(a => {
   a.href = `mailto:${a.dataset.u}@${a.dataset.d}`;
@@ -836,7 +808,47 @@ brandCube.rotation.y = -Math.PI / 4;  // S+M corner facing forward at rest
 brandScene.add(brandCube);
 brandRenderer.render(brandScene, brandCamera);  // draw static frame immediately
 
+// Intro monogram — larger SM cube, mouse-follow rendered inside animate()
+const introMonogramCanvas = document.getElementById('introMonogram');
+const introRenderer = new THREE.WebGLRenderer({ canvas: introMonogramCanvas, antialias: true, alpha: true });
+introRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+introRenderer.setSize(80, 80, false);
+const introScene = new THREE.Scene();
+const introCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+introCamera.position.set(0, 0, 2.2);
+introScene.add(new THREE.AmbientLight(0xffffff, 1.4));
+const introLight = new THREE.DirectionalLight(0xffffff, 1.2);
+introLight.position.set(2, 3, 3);
+introScene.add(introLight);
+const introCube = createSMBlock({ size: 1 });
+introCube.rotation.y = -Math.PI / 4;
+introScene.add(introCube);
+
+// Render the monogram once to an offscreen canvas for use as a texture watermark
+wmStamp = (() => {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 256;
+  const sc = new THREE.Scene();
+  sc.add(new THREE.AmbientLight(0xffffff, 1.4));
+  const dl = new THREE.DirectionalLight(0xffffff, 1.2);
+  dl.position.set(2, 3, 3);
+  sc.add(dl);
+  const cube = createSMBlock({ size: 1 });
+  cube.rotation.y = -Math.PI / 4;
+  sc.add(cube);
+  const cam = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  cam.position.set(0, 0, 2.2);
+  const r = new THREE.WebGLRenderer({ canvas: c, antialias: true, alpha: true });
+  r.setSize(256, 256, false);
+  r.render(sc, cam);
+  r.dispose();
+  return c;
+})();
+
+let wmOpacity = 0;
+
 let brandRaf = null, brandReturnRaf = null, brandYRaf = null, brandTargetY = 0, brandTargetX = 0;
+let introTargetY = 0, introTargetX = 0;
 
 function brandDrift() {
   const dy = brandTargetY - brandCube.position.y;
@@ -851,6 +863,8 @@ addEventListener('mousemove', e => {
   brandTargetY = (0.5 - e.clientY / innerHeight) * 0.14;
   brandTargetX = (e.clientX / innerWidth - 0.5) * 0.14;
   if (!brandRaf && !brandReturnRaf && !brandYRaf) brandDrift();
+  introTargetY = brandTargetY * 1.5;
+  introTargetX = brandTargetX * 1.5;
 });
 
 function brandSpin() {
@@ -1084,6 +1098,22 @@ function animate() {
   const settled = !drag.active && !tween.active && !zoomed && !wheeling && (ccx !== 0 || ccy !== 0);
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
 
+  const introSettled = !drag.active && !tween.active && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !filterCaseStudies;
+  if (introSettled !== introShown) {
+    introShown = introSettled;
+    introEl.setAttribute('aria-hidden', String(!introSettled));
+    introEl.classList.toggle('show', introSettled);
+  }
+
+  // Watermark: fade in when intro card is off-centre, fade out when at centre
+  const wmTarget = (ccx === 0 && ccy === 0 && !filterCaseStudies) ? 0 : 1;
+  const prevWm = wmOpacity;
+  wmOpacity += (wmTarget - wmOpacity) * 0.07;
+  if (Math.abs(wmOpacity - prevWm) > 0.001) {
+    drawIntroCanvas(wmOpacity);
+    introTexture.needsUpdate = true;
+  }
+
   // Smooth mouse toward current position (~3% per frame); frozen at 0 while zoom panel is active or on mobile
   if (!zoomed && innerWidth > 640) {
     prlxX += (mouse.x - prlxX) * 0.03;
@@ -1094,6 +1124,9 @@ function animate() {
   contourGroup.position.x = scroll.x * 0.06 + prlxX * -28;
   contourGroup.position.y = scroll.y * 0.06 + prlxY * -28;
 
+  introCube.position.y += (introTargetY - introCube.position.y) * 0.035;
+  introCube.position.x += (introTargetX - introCube.position.x) * 0.035;
+  if (introShown) introRenderer.render(introScene, introCamera);
   renderer.render(scene, camera);
 }
 
@@ -1115,6 +1148,43 @@ setTimeout(() => {
   document.getElementById('loader').classList.add('hidden');
   requestAnimationFrame(() => canvas.classList.add('ready'));
 }, 300);
+
+// HTML project grid — SEO / progressive enhancement
+(function buildProjectGrid() {
+  const grid = document.querySelector('#project-grid-html .pg-grid');
+  if (!grid) return;
+  const sorted = [..._PROJECTS].sort((a, b) => {
+    if (a.year === null && b.year === null) return 0;
+    if (a.year === null) return 1;
+    if (b.year === null) return -1;
+    return b.year - a.year;
+  });
+  grid.innerHTML = sorted.map(p => {
+    const yearTag = p.year ? `<span class="pg-card-year">${p.year}</span>` : '';
+    const catTags = p.category.map(c => `<span class="pg-card-cat">${c}</span>`).join('');
+    const clientHtml = p.client ? `<p class="pg-card-client">${p.client}</p>` : '';
+    const csClass = p.casestudy ? ' pg-card--casestudy' : '';
+    return `<article class="pg-card${csClass}" style="--pg-accent:${p.accentColourPrimary}">
+  <a href="#${p.slug}" class="pg-card-link">
+    <div class="pg-card-img"><img src="${p.src}" alt="${p.title}${p.client ? ' — ' + p.client : ''}" loading="lazy"></div>
+    <div class="pg-card-overlay">
+      <div class="pg-card-tags">${yearTag}${catTags}</div>
+      <h2 class="pg-card-title">${p.title}</h2>
+      ${clientHtml}
+    </div>
+  </a>
+</article>`;
+  }).join('');
+
+  grid.addEventListener('click', e => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    e.preventDefault();
+    const slug = link.getAttribute('href').slice(1);
+    const p = _PROJECTS.find(pr => pr.slug === slug);
+    if (p) openZoom(p);
+  });
+})();
 
 // Deep-link: snap the grid and open the zoom for a project referenced in the URL hash
 const initSlug = location.hash.slice(1);

@@ -22,7 +22,6 @@ export const blocks = [
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
     ],
   },
-  { type: 'spacer', span: 12, height: 40 },
 
   { type: 'image', span: 12, src: 'assets/projects/xxx/xxx-responsive.png' },
   
