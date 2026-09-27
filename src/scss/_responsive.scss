@@ -17,16 +17,37 @@
 			width: auto;
 			height: calc(100vh - 24px);
 		}
+
+		&.filter-open #filterMenu {
+			overflow-y: auto;
+		}
 	}
 
 	#navTop {
 		height: 54px;
-		padding: 0 15px;
+		padding: 0 12px;
+	}
+
+	.filter-btn {
+		font-size: 11px;
+		letter-spacing: 0.03em;
+		padding: 5px 8px;
+
+		.filter-btn-star { display: none; }
+	}
+
+	.nav-actions {
+		gap: 14px;
 	}
 
 	#navMenu {
 		padding: 0 24px 36px;
 		align-items: flex-start;
+	}
+
+	.about-inner {
+		width: 100%;
+		margin: 1.5rem auto;
 	}
 
 	.about-photo {

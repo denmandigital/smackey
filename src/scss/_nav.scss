@@ -32,6 +32,7 @@
 		#navMenu {
 			opacity: 1;
 			pointer-events: auto;
+			transition: opacity 0.3s ease 0.5s;
 		}
 
 		#navBurger {

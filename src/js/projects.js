@@ -227,7 +227,7 @@ export const PROJECTS = [
     year:      2021,
     casestudy: false,
     category:  ['Website', 'Interactive Documentary'],
-    industry:  ['Art & Culture', 'Media'],
+    industry:  ['Arts & Culture', 'Media'],
     accentColourPrimary:   '#695f6a',
     textColour: 'light',
   },

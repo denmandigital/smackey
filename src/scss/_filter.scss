@@ -11,6 +11,9 @@
 	box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
 
 	#filterMenu {
+		height: auto;
+		overflow: visible;
+		padding: 24px 25px 24px;
 		opacity: 1;
 		pointer-events: auto;
 	}
@@ -21,7 +24,9 @@
 }
 
 #filterMenu {
-	padding: 4px 25px 24px;
+	padding: 0;
+	height: 0;
+	overflow: hidden;
 	opacity: 0;
 	pointer-events: none;
 	transition: opacity 0.3s ease;
@@ -75,12 +80,12 @@
 	}
 }
 
-#filterFooter {
+#filterHeader {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding-top: 4px;
-	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	padding-bottom: 4px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 #filterClearBtn {
@@ -94,7 +99,10 @@
 	border: none;
 	cursor: pointer;
 	padding: 4px 0;
-	transition: color 0.15s ease;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: color 0.15s ease, opacity 0.15s ease;
 
 	&:hover {
 		color: var(--ink);

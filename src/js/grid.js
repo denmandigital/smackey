@@ -789,8 +789,10 @@ function openMenu() {
   nav.classList.add('open');
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
-  const firstFocusable = navMenu.querySelector('a[href], button');
-  if (firstFocusable) firstFocusable.focus();
+  if (innerWidth > 640) {
+    const firstFocusable = navMenu.querySelector('a[href], button');
+    if (firstFocusable) firstFocusable.focus();
+  }
 }
 
 function closeMenu() {
@@ -798,7 +800,7 @@ function closeMenu() {
   nav.classList.remove('open');
   navMenu.setAttribute('aria-hidden', 'true');
   navBurger.setAttribute('aria-label', 'Open menu');
-  navBurger.focus();
+  if (innerWidth > 640) navBurger.focus();
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
@@ -923,6 +925,8 @@ brandCanvas.addEventListener('mouseleave', () => {
 brandCanvas.addEventListener('click', () => {
   if (zoomed) closeZoom();
   if (menuOpen) closeMenu();
+  if (filterPanelOpen) closeFilterPanel();
+  clearChipFilters();
   activateFilter('all');
   startTween(0, 0);
   history.pushState(null, '', location.pathname);
@@ -983,6 +987,7 @@ function activateFilter(filter) {
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
+    clearChipFilters();
     activateFilter(btn.dataset.filter);
     const url = btn.dataset.filter === 'casestudies' ? location.pathname + '?casestudies' : location.pathname;
     history.pushState({ filter: btn.dataset.filter }, '', url);
@@ -1024,7 +1029,24 @@ function updateFilterBadge() {
   filterBadgeEl.classList.toggle('visible', count > 0);
   // Keep clear button in sync
   const clearBtn = document.getElementById('filterClearBtn');
-  if (clearBtn) clearBtn.style.display = count > 0 ? '' : 'none';
+  if (clearBtn) {
+    clearBtn.style.opacity = count > 0 ? '1' : '0';
+    clearBtn.style.visibility = count > 0 ? 'visible' : 'hidden';
+    clearBtn.style.pointerEvents = count > 0 ? 'auto' : 'none';
+  }
+}
+
+function filterNavHeight() {
+  filterMenuEl.style.maxHeight = '';  // clear so scrollHeight is unconstrained
+  const navTopH = document.getElementById('navTop').offsetHeight;
+  const naturalH = navTopH + filterMenuEl.scrollHeight + 8;
+  const maxH = innerWidth <= 640 ? innerHeight - 24 : innerHeight - 80;
+  const targetH = Math.min(naturalH, maxH);
+  // Only cap filterMenu when the nav itself is hitting the viewport limit
+  if (targetH < naturalH) {
+    filterMenuEl.style.maxHeight = (targetH - navTopH - 8) + 'px';
+  }
+  return { navTopH, targetH };
 }
 
 function openFilterPanel() {
@@ -1037,10 +1059,10 @@ function openFilterPanel() {
   nav.style.transition = 'none';
   nav.style.height = '2000px';       // overflow:hidden keeps this invisible
   void nav.offsetHeight;             // force reflow — children now have room
-  const targetH = 62 + filterMenuEl.scrollHeight + 8;
-  nav.style.height = '62px';        // snap to closed height as animation start point
-  void nav.offsetHeight;            // force reflow — establishes "from" for transition
-  nav.style.transition = '';        // restore transition
+  const { navTopH, targetH } = filterNavHeight();
+  nav.style.height = navTopH + 'px'; // snap to closed height as animation start point
+  void nav.offsetHeight;             // force reflow — establishes "from" for transition
+  nav.style.transition = '';         // restore transition
   nav.style.height = targetH + 'px'; // animate open
 }
 
@@ -1048,6 +1070,7 @@ function closeFilterPanel() {
   filterPanelOpen = false;
   nav.classList.remove('filter-open');
   filterMenuEl.setAttribute('aria-hidden', 'true');
+  filterMenuEl.style.maxHeight = '';
   nav.style.height = '';
 }
 
@@ -1078,11 +1101,11 @@ function buildFilterMenu() {
   <div class="filter-chips" role="group" aria-labelledby="filter-label-industry">${indChips}</div>
 </div>`;
 
-  const footer = `<div id="filterFooter">
-  <button id="filterClearBtn" style="display:none">Clear all</button>
+  const header = `<div id="filterHeader">
+  <button id="filterClearBtn">Clear all</button>
 </div>`;
 
-  filterMenuEl.innerHTML = dateSection + catSection + indSection + footer;
+  filterMenuEl.innerHTML = header + dateSection + catSection + indSection;
 
   filterMenuEl.addEventListener('click', e => {
     const chip = e.target.closest('.filter-chip');
@@ -1129,19 +1152,24 @@ function buildFilterMenu() {
         chip.classList.toggle('active', indOn); chip.setAttribute('aria-pressed', String(indOn));
       }
       applyFilters();
-      nav.style.height = (62 + filterMenuEl.scrollHeight + 8) + 'px';
+      const { targetH } = filterNavHeight();
+      nav.style.height = targetH + 'px';
       setTimeout(closeFilterPanel, 900);
       return;
     }
     if (e.target.id === 'filterClearBtn') {
-      filterCategories.clear();
-      filterIndustries.clear();
-      filterDateRange = null;
-      filterMenuEl.querySelectorAll('.filter-chip').forEach(c => {
-        c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
-      });
+      clearChipFilters();
       applyFilters();
     }
+  });
+}
+
+function clearChipFilters() {
+  filterCategories.clear();
+  filterIndustries.clear();
+  filterDateRange = null;
+  filterMenuEl.querySelectorAll('.filter-chip').forEach(c => {
+    c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
   });
 }
 
@@ -1251,6 +1279,11 @@ function animate() {
     m.material.uniforms.uRadius.value = RADIUS / S0;
     m.material.uniforms.uHover.value = m.userData.hover;
     m.material.uniforms.uFade.value = 0.55 + 0.45 * fall;
+    // Mobile: fade the intro card to transparent when centred, opaque when scrolled away
+    if (innerWidth <= 640 && cellX === 0 && cellY === 0 && !hasActiveFilters() && activeN > 0) {
+      const scrollDist = Math.hypot(scroll.x / PITCH_X, scroll.y / PITCH_Y);
+      m.material.uniforms.uFade.value *= Math.min(scrollDist * 2.5, 1);
+    }
 
     // Assign the right project only when this slot's cell changes
     const key = cellX + ',' + cellY;
@@ -1304,7 +1337,7 @@ function animate() {
   const settled = !drag.active && !tween.active && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
 
-  const introSettled = !drag.active && !tween.active && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
+  const introSettled = !(drag.active && drag.moved > 3) && !tween.active && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
