@@ -487,7 +487,19 @@ canvas.addEventListener('click', (e) => {
 
 addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { if (zoomed) zoomClose.click(); else closeMenu(); return; }
-  if (zoomed) return;
+  if (zoomed) {
+    if (e.key === 'Tab') {
+      const focusable = [...zoom.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])')];
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    return;
+  }
   if (e.key === 'Enter' && centreProject) { openZoom(centreProject); return; }
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
@@ -590,6 +602,7 @@ let zoomed = false;          // true while open OR animating (blocks grid intera
 let ctaShown = false;
 let introShown = false;
 let zoomSlug = null;         // slug of currently open project (guards async content loads)
+let zoomTriggerEl = null;    // element focused before zoom opened; restored on close
 
 // rAF-driven zoom: p = 0 (matches the centre card) → 1 (full inset)
 const zoomAnim = { active: false, p: 0, dir: 1, dur: 0.55 };
@@ -667,6 +680,8 @@ function setPageMeta(title, desc) {
 function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   zoomed = true;
+  zoomTriggerEl = document.activeElement;
+  zoom.setAttribute('aria-hidden', 'false');
   document.body.classList.remove('hovering');
   // backgroundImage, backgroundColor already pre-painted in the render loop while hidden;
   // set again here as a safety net for edge cases (deep links, popstate)
@@ -774,6 +789,8 @@ function openMenu() {
   nav.classList.add('open');
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
+  const firstFocusable = navMenu.querySelector('a[href], button');
+  if (firstFocusable) firstFocusable.focus();
 }
 
 function closeMenu() {
@@ -781,6 +798,7 @@ function closeMenu() {
   nav.classList.remove('open');
   navMenu.setAttribute('aria-hidden', 'true');
   navBurger.setAttribute('aria-label', 'Open menu');
+  navBurger.focus();
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
@@ -949,6 +967,10 @@ function applyFilters() {
   const s = document.getElementById('scene');
   s.classList.remove('ready');
   requestAnimationFrame(() => s.classList.add('ready'));
+  const announcer = document.getElementById('filterAnnouncer');
+  if (announcer) announcer.textContent = activeN === 0
+    ? 'No projects match the selected filters'
+    : `Showing ${activeN} project${activeN === 1 ? '' : 's'}`;
 }
 
 // Archive / ★ Case Studies nav buttons
@@ -1010,7 +1032,16 @@ function openFilterPanel() {
   filterPanelOpen = true;
   nav.classList.add('filter-open');
   filterMenuEl.setAttribute('aria-hidden', 'false');
-  nav.style.height = (62 + filterMenuEl.scrollHeight + 8) + 'px';
+  // Interrupt any ongoing height transition and measure at unconstrained height
+  // so flex children aren't squeezed mid-animation (e.g. switching from about menu).
+  nav.style.transition = 'none';
+  nav.style.height = '2000px';       // overflow:hidden keeps this invisible
+  void nav.offsetHeight;             // force reflow — children now have room
+  const targetH = 62 + filterMenuEl.scrollHeight + 8;
+  nav.style.height = '62px';        // snap to closed height as animation start point
+  void nav.offsetHeight;            // force reflow — establishes "from" for transition
+  nav.style.transition = '';        // restore transition
+  nav.style.height = targetH + 'px'; // animate open
 }
 
 function closeFilterPanel() {
@@ -1023,28 +1054,28 @@ function closeFilterPanel() {
 function buildFilterMenu() {
   const now = new Date().getFullYear();
   const dateSection = `<div class="filter-section">
-  <span class="filter-section-label">Date</span>
-  <div class="filter-chips">
-    <button class="filter-chip" data-daterange="recent">${now - 4}–${now}</button>
-    <button class="filter-chip" data-daterange="mid">${now - 10}–${now - 5}</button>
-    <button class="filter-chip" data-daterange="older">${now - 11} &amp; earlier</button>
+  <span class="filter-section-label" id="filter-label-date">Date</span>
+  <div class="filter-chips" role="group" aria-labelledby="filter-label-date">
+    <button class="filter-chip" data-daterange="recent" aria-pressed="false">${now - 4}–${now}</button>
+    <button class="filter-chip" data-daterange="mid" aria-pressed="false">${now - 10}–${now - 5}</button>
+    <button class="filter-chip" data-daterange="older" aria-pressed="false">${now - 11} &amp; earlier</button>
   </div>
 </div>`;
 
   const catChips = ALL_CATEGORIES.map(c =>
-    `<button class="filter-chip" data-category="${c}">${c}</button>`
+    `<button class="filter-chip" data-category="${c}" aria-pressed="false">${c}</button>`
   ).join('');
   const catSection = `<div class="filter-section">
-  <span class="filter-section-label">Project type</span>
-  <div class="filter-chips">${catChips}</div>
+  <span class="filter-section-label" id="filter-label-type">Project type</span>
+  <div class="filter-chips" role="group" aria-labelledby="filter-label-type">${catChips}</div>
 </div>`;
 
   const indChips = ALL_INDUSTRIES.map(i =>
-    `<button class="filter-chip" data-industry="${i}">${i}</button>`
+    `<button class="filter-chip" data-industry="${i}" aria-pressed="false">${i}</button>`
   ).join('');
   const indSection = `<div class="filter-section">
-  <span class="filter-section-label">Industry</span>
-  <div class="filter-chips">${indChips}</div>
+  <span class="filter-section-label" id="filter-label-industry">Industry</span>
+  <div class="filter-chips" role="group" aria-labelledby="filter-label-industry">${indChips}</div>
 </div>`;
 
   const footer = `<div id="filterFooter">
@@ -1065,28 +1096,37 @@ function buildFilterMenu() {
         // Date clears categories + industries, then toggles
         filterCategories.clear();
         filterIndustries.clear();
-        filterMenuEl.querySelectorAll('[data-category], [data-industry]').forEach(c => c.classList.remove('active'));
+        filterMenuEl.querySelectorAll('[data-category], [data-industry]').forEach(c => {
+          c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
+        });
         const range = chip.dataset.daterange;
         filterDateRange = (filterDateRange === range) ? null : range;
-        filterMenuEl.querySelectorAll('[data-daterange]').forEach(c =>
-          c.classList.toggle('active', c.dataset.daterange === filterDateRange)
-        );
+        filterMenuEl.querySelectorAll('[data-daterange]').forEach(c => {
+          const on = c.dataset.daterange === filterDateRange;
+          c.classList.toggle('active', on); c.setAttribute('aria-pressed', String(on));
+        });
       } else if (chip.dataset.category) {
         // Category clears date + industries, then multi-toggles within
         filterDateRange = null;
         filterIndustries.clear();
-        filterMenuEl.querySelectorAll('[data-daterange], [data-industry]').forEach(c => c.classList.remove('active'));
+        filterMenuEl.querySelectorAll('[data-daterange], [data-industry]').forEach(c => {
+          c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
+        });
         const c = chip.dataset.category;
         filterCategories.has(c) ? filterCategories.delete(c) : filterCategories.add(c);
-        chip.classList.toggle('active', filterCategories.has(c));
+        const catOn = filterCategories.has(c);
+        chip.classList.toggle('active', catOn); chip.setAttribute('aria-pressed', String(catOn));
       } else if (chip.dataset.industry) {
         // Industry clears date + categories, then multi-toggles within
         filterDateRange = null;
         filterCategories.clear();
-        filterMenuEl.querySelectorAll('[data-daterange], [data-category]').forEach(c => c.classList.remove('active'));
+        filterMenuEl.querySelectorAll('[data-daterange], [data-category]').forEach(c => {
+          c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
+        });
         const i = chip.dataset.industry;
         filterIndustries.has(i) ? filterIndustries.delete(i) : filterIndustries.add(i);
-        chip.classList.toggle('active', filterIndustries.has(i));
+        const indOn = filterIndustries.has(i);
+        chip.classList.toggle('active', indOn); chip.setAttribute('aria-pressed', String(indOn));
       }
       applyFilters();
       nav.style.height = (62 + filterMenuEl.scrollHeight + 8) + 'px';
@@ -1097,7 +1137,9 @@ function buildFilterMenu() {
       filterCategories.clear();
       filterIndustries.clear();
       filterDateRange = null;
-      filterMenuEl.querySelectorAll('.filter-chip.active').forEach(c => c.classList.remove('active'));
+      filterMenuEl.querySelectorAll('.filter-chip').forEach(c => {
+        c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
+      });
       applyFilters();
     }
   });
@@ -1144,13 +1186,16 @@ function animate() {
       zoomMeta.style.opacity = '1';
       zoomMeta.style.transform = 'translateY(-30px)';
       zoomClose.style.opacity = '1';
+      zoomClose.focus();
       if (innerWidth > 640) setTimeout(() => smoothScrollTo(zoomScroll, zoomScroll.clientHeight / 2, 2000), 1000);
     }
     if (zoomAnim.dir < 0 && zoomAnim.p <= 0) {
       zoomAnim.active = false;
       zoom.classList.remove('open');
       zoom.style.opacity = '';
+      zoom.setAttribute('aria-hidden', 'true');
       zoomed = false;
+      if (zoomTriggerEl) { zoomTriggerEl.focus(); zoomTriggerEl = null; }
     }
   }
 

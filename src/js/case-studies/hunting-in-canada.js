@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'APTN’s Moosemeat & Marmalade, hosts Art Napoleon and Dan Hayes create amazing dishes that reflect their diverse cultures and culinary traditions. They are both passionate cooks with deep love of food and a keen interest in where it comes from. Both men also grew up hunting and the show often follows them into the field to procure 100% natural food. Exploring these themes, this experience explores the history and changing nature of hunting in Canada.',
+    body: 'APTN’s Moosemeat & Marmalade, hosts Art Napoleon and Dan Hayes create amazing dishes that reflect their diverse cultures and culinary traditions. They are both passionate cooks with a deep love of food and a keen interest in where it comes from. Both men also grew up hunting and the show often follows them into the field to procure 100% natural food. Exploring these themes, this experience explores the history and changing nature of hunting in Canada.',
   },
   {
     type: 'container',

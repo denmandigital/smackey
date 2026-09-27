@@ -122,7 +122,8 @@
 
 	span { display: none; }
 
-	b {
+	#zoomTitle {
+		margin: 0;
 		font-size: clamp(26px, 4.5vw, 72px);
 		font-weight: 800;
 		letter-spacing: -0.02em;
