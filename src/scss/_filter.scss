@@ -1,0 +1,163 @@
+@use 'breakpoints' as *;
+
+/* -------------------------------------------------------
+   Filter panel — drops down from the nav bar
+------------------------------------------------------- */
+
+#nav.filter-open {
+	background: rgb(234, 232, 228);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+
+	#filterMenu {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	#navFilterBtn {
+		opacity: 1;
+	}
+}
+
+#filterMenu {
+	padding: 4px 25px 24px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.filter-section {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.filter-section-label {
+	font-size: 9px;
+	font-weight: 700;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: rgba(0, 0, 0, 0.35);
+}
+
+.filter-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+
+.filter-chip {
+	font: inherit;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--ink);
+	background: rgba(0, 0, 0, 0.07);
+	border: none;
+	border-radius: 100px;
+	padding: 6px 14px;
+	cursor: pointer;
+	transition: background 0.15s ease, color 0.15s ease;
+	white-space: nowrap;
+
+	&:hover {
+		background: rgba(0, 0, 0, 0.12);
+	}
+
+	&.active {
+		background: var(--ink);
+		color: var(--bg);
+	}
+}
+
+#filterFooter {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 4px;
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#filterClearBtn {
+	font: inherit;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: rgba(0, 0, 0, 0.4);
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 4px 0;
+	transition: color 0.15s ease;
+
+	&:hover {
+		color: var(--ink);
+	}
+}
+
+/* Filter button in nav top row */
+#navFilterBtn {
+	width: 22px;
+	height: 44px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	position: relative;
+	color: var(--ink);
+	flex-shrink: 0;
+
+	circle {
+		fill: var(--bg);
+		transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	&:hover {
+		circle:nth-of-type(1) { transform: translateX(-2px); }
+		circle:nth-of-type(2) { transform: translateX(3px); }
+		circle:nth-of-type(3) { transform: translateX(2px); }
+	}
+
+	svg {
+		display: block;
+		overflow: visible;
+	}
+}
+
+/* Active filter count badge */
+#filterBadge {
+	display: none;
+	position: absolute;
+	top: -1px;
+	right: -3px;
+	width: 14px;
+	height: 14px;
+	background: var(--ink);
+	color: var(--bg);
+	border-radius: 100px;
+	font-size: 8px;
+	font-weight: 700;
+	align-items: center;
+	justify-content: center;
+
+	&.visible {
+		display: flex;
+	}
+}
+
+/* Right-side button group in nav */
+.nav-actions {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	flex-shrink: 0;
+}

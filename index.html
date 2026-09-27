@@ -68,11 +68,27 @@
         <a class="filter-btn active" href="index.html" data-filter="all">Archive</a>
         <a class="filter-btn" href="index.html?casestudies" data-filter="casestudies">&#9733; Case Studies</a>
       </div>
-      <button id="navBurger" aria-label="Open menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="nav-actions">
+        <button id="navFilterBtn" aria-label="Filter projects">
+          <svg width="22" height="15" viewBox="0 0 22 15" fill="none" aria-hidden="true">
+            <line x1="0" y1="0.75" x2="22" y2="0.75" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+            <circle cx="7" cy="0.75" r="2.5" stroke="currentColor" stroke-width="1"/>
+            <line x1="0" y1="7.5" x2="22" y2="7.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+            <circle cx="15" cy="7.5" r="2.5" stroke="currentColor" stroke-width="1"/>
+            <line x1="0" y1="14.25" x2="22" y2="14.25" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+            <circle cx="9" cy="14.25" r="2.5" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          <span id="filterBadge" aria-hidden="true"></span>
+        </button>
+        <button id="navBurger" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+    <div id="filterMenu" aria-hidden="true">
+      <!-- populated by grid.js -->
     </div>
     <div id="navMenu" aria-hidden="true">
       <div class="about-inner">

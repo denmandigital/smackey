@@ -382,7 +382,7 @@ function buildPool() {
 buildPool();
 
 const pmod = (a, n) => ((a % n) + n) % n;
-const projIndex = (cx, cy) => pmod(cx * 31 + cy * 131, activeN);
+const projIndex = (cx, cy) => activeN > 0 ? pmod(cx * 31 + cy * 131, activeN) : 0;
 
 /* ============================================================
    INTERACTION — drag / wheel / arrow keys, inertia, snap
@@ -481,7 +481,7 @@ canvas.addEventListener('click', (e) => {
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
   if (c.x === ccx && c.y === ccy && centreProject) openZoom(centreProject);   // centre card → zoom
-  else if (c.x === ccx && c.y === ccy && ccx === 0 && ccy === 0 && !filterCaseStudies) openMenu(); // intro card → about
+  else if (c.x === ccx && c.y === ccy && ccx === 0 && ccy === 0 && !hasActiveFilters()) openMenu(); // intro card → about
   else startTween(-c.x * PITCH_X, -c.y * PITCH_Y);           // otherwise snap to centre
 });
 
@@ -765,10 +765,12 @@ positionCTA();
 // Burger menu toggle
 const nav = document.getElementById('nav');
 const navMenu = document.getElementById('navMenu');
+const navBurger = document.getElementById('navBurger');
 let menuOpen = false;
 
 function openMenu() {
   menuOpen = true;
+  closeFilterPanel();
   nav.classList.add('open');
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
@@ -908,36 +910,65 @@ brandCanvas.addEventListener('click', () => {
   history.pushState(null, '', location.pathname);
 });
 
-// Project filter
-const filterBtns = document.querySelectorAll('.filter-btn');
+// ── Filter system ──────────────────────────────────────────
+const ALL_CATEGORIES = [...new Set(_PROJECTS.flatMap(p => p.category))].filter(Boolean).sort();
+const ALL_INDUSTRIES  = [...new Set(_PROJECTS.flatMap(p => p.industry))].filter(Boolean).sort();
+
 let filterCaseStudies = false;
-function setFilter(caseStudiesOnly) {
-  filterCaseStudies = caseStudiesOnly;
-  activeProjects = caseStudiesOnly ? PROJECTS.filter(p => p.casestudy) : PROJECTS;
+let filterCategories  = new Set(); // multi-select within; cleared when date selected
+let filterIndustries  = new Set(); // multi-select within; cleared when date selected
+let filterDateRange   = null;      // null | 'recent' | 'mid' | 'older' — selecting clears categories + industry
+
+const hasActiveFilters = () => filterCaseStudies || filterCategories.size > 0 || filterIndustries.size > 0 || filterDateRange !== null;
+
+function computeActiveProjects() {
+  let result = PROJECTS.slice(); // preserve page-load shuffle order
+  if (filterCaseStudies) result = result.filter(p => p.casestudy);
+  if (filterCategories.size) result = result.filter(p => p.category.some(c => filterCategories.has(c)));
+  if (filterIndustries.size) result = result.filter(p => p.industry.some(i => filterIndustries.has(i)));
+  if (filterDateRange) {
+    const now = new Date().getFullYear();
+    result = result.filter(p => {
+      if (p.year === null) return false;
+      if (filterDateRange === 'recent') return p.year >= now - 4;
+      if (filterDateRange === 'mid')    return p.year >= now - 10 && p.year <= now - 5;
+      if (filterDateRange === 'older')  return p.year <= now - 11;
+      return true;
+    });
+  }
+  return result;
+}
+
+function applyFilters() {
+  activeProjects = computeActiveProjects();
   activeN = activeProjects.length;
   pool.forEach(m => { m.userData.key = null; });
   lastCenterKey = null;
   snapNearest(false);
+  updateFilterBadge();
   const s = document.getElementById('scene');
   s.classList.remove('ready');
   requestAnimationFrame(() => s.classList.add('ready'));
 }
+
+// Archive / ★ Case Studies nav buttons
+const filterBtns = document.querySelectorAll('.filter-btn');
 function activateFilter(filter) {
   filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
-  setFilter(filter === 'casestudies');
+  filterCaseStudies = (filter === 'casestudies');
+  applyFilters();
 }
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
-    const filter = btn.dataset.filter;
-    activateFilter(filter);
-    const url = filter === 'casestudies' ? location.pathname + '?casestudies' : location.pathname;
-    history.pushState({ filter }, '', url);
+    activateFilter(btn.dataset.filter);
+    const url = btn.dataset.filter === 'casestudies' ? location.pathname + '?casestudies' : location.pathname;
+    history.pushState({ filter: btn.dataset.filter }, '', url);
     if (menuOpen) closeMenu();
   });
 });
 
-// Intercept any in-content filter links (e.g. about bio)
+// Intercept in-content casestudies links (e.g. about bio)
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href*="casestudies"]:not(.filter-btn)');
   if (!a) return;
@@ -957,6 +988,128 @@ addEventListener('popstate', () => {
     if (zoomed) closeZoom(true);
   }
   activateFilter(location.search.includes('casestudies') ? 'casestudies' : 'all');
+});
+
+// ── Filter panel ────────────────────────────────────────────
+const navFilterBtn  = document.getElementById('navFilterBtn');
+const filterMenuEl  = document.getElementById('filterMenu');
+const filterBadgeEl = document.getElementById('filterBadge');
+let filterPanelOpen = false;
+
+function updateFilterBadge() {
+  const count = filterCategories.size + filterIndustries.size + (filterDateRange ? 1 : 0);
+  filterBadgeEl.textContent = count || '';
+  filterBadgeEl.classList.toggle('visible', count > 0);
+  // Keep clear button in sync
+  const clearBtn = document.getElementById('filterClearBtn');
+  if (clearBtn) clearBtn.style.display = count > 0 ? '' : 'none';
+}
+
+function openFilterPanel() {
+  if (menuOpen) closeMenu();
+  filterPanelOpen = true;
+  nav.classList.add('filter-open');
+  filterMenuEl.setAttribute('aria-hidden', 'false');
+  nav.style.height = (62 + filterMenuEl.scrollHeight + 8) + 'px';
+}
+
+function closeFilterPanel() {
+  filterPanelOpen = false;
+  nav.classList.remove('filter-open');
+  filterMenuEl.setAttribute('aria-hidden', 'true');
+  nav.style.height = '';
+}
+
+function buildFilterMenu() {
+  const now = new Date().getFullYear();
+  const dateSection = `<div class="filter-section">
+  <span class="filter-section-label">Date</span>
+  <div class="filter-chips">
+    <button class="filter-chip" data-daterange="recent">${now - 4}–${now}</button>
+    <button class="filter-chip" data-daterange="mid">${now - 10}–${now - 5}</button>
+    <button class="filter-chip" data-daterange="older">${now - 11} &amp; earlier</button>
+  </div>
+</div>`;
+
+  const catChips = ALL_CATEGORIES.map(c =>
+    `<button class="filter-chip" data-category="${c}">${c}</button>`
+  ).join('');
+  const catSection = `<div class="filter-section">
+  <span class="filter-section-label">Project type</span>
+  <div class="filter-chips">${catChips}</div>
+</div>`;
+
+  const indChips = ALL_INDUSTRIES.map(i =>
+    `<button class="filter-chip" data-industry="${i}">${i}</button>`
+  ).join('');
+  const indSection = `<div class="filter-section">
+  <span class="filter-section-label">Industry</span>
+  <div class="filter-chips">${indChips}</div>
+</div>`;
+
+  const footer = `<div id="filterFooter">
+  <button id="filterClearBtn" style="display:none">Clear all</button>
+</div>`;
+
+  filterMenuEl.innerHTML = dateSection + catSection + indSection + footer;
+
+  filterMenuEl.addEventListener('click', e => {
+    const chip = e.target.closest('.filter-chip');
+    if (chip) {
+      if (filterCaseStudies) {
+        filterCaseStudies = false;
+        filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+        history.pushState({ filter: 'all' }, '', location.pathname);
+      }
+      if (chip.dataset.daterange) {
+        // Date clears categories + industries, then toggles
+        filterCategories.clear();
+        filterIndustries.clear();
+        filterMenuEl.querySelectorAll('[data-category], [data-industry]').forEach(c => c.classList.remove('active'));
+        const range = chip.dataset.daterange;
+        filterDateRange = (filterDateRange === range) ? null : range;
+        filterMenuEl.querySelectorAll('[data-daterange]').forEach(c =>
+          c.classList.toggle('active', c.dataset.daterange === filterDateRange)
+        );
+      } else if (chip.dataset.category) {
+        // Category clears date + industries, then multi-toggles within
+        filterDateRange = null;
+        filterIndustries.clear();
+        filterMenuEl.querySelectorAll('[data-daterange], [data-industry]').forEach(c => c.classList.remove('active'));
+        const c = chip.dataset.category;
+        filterCategories.has(c) ? filterCategories.delete(c) : filterCategories.add(c);
+        chip.classList.toggle('active', filterCategories.has(c));
+      } else if (chip.dataset.industry) {
+        // Industry clears date + categories, then multi-toggles within
+        filterDateRange = null;
+        filterCategories.clear();
+        filterMenuEl.querySelectorAll('[data-daterange], [data-category]').forEach(c => c.classList.remove('active'));
+        const i = chip.dataset.industry;
+        filterIndustries.has(i) ? filterIndustries.delete(i) : filterIndustries.add(i);
+        chip.classList.toggle('active', filterIndustries.has(i));
+      }
+      applyFilters();
+      nav.style.height = (62 + filterMenuEl.scrollHeight + 8) + 'px';
+      setTimeout(closeFilterPanel, 900);
+      return;
+    }
+    if (e.target.id === 'filterClearBtn') {
+      filterCategories.clear();
+      filterIndustries.clear();
+      filterDateRange = null;
+      filterMenuEl.querySelectorAll('.filter-chip.active').forEach(c => c.classList.remove('active'));
+      applyFilters();
+    }
+  });
+}
+
+buildFilterMenu();
+
+navFilterBtn.addEventListener('click', () => filterPanelOpen ? closeFilterPanel() : openFilterPanel());
+
+// Close filter panel on outside click
+document.addEventListener('pointerdown', e => {
+  if (filterPanelOpen && !nav.contains(e.target)) closeFilterPanel();
 });
 
 /* ============================================================
@@ -1059,9 +1212,13 @@ function animate() {
     if (m.userData.key !== key) {
       m.userData.key = key;
       m.userData.cell = { x: cellX, y: cellY };
-      m.material.uniforms.map.value = (cellX === 0 && cellY === 0 && !filterCaseStudies)
-        ? introTexture
-        : textures[activeProjects[projIndex(cellX, cellY)]._idx];
+      if (activeN === 0) {
+        m.material.uniforms.map.value = introTexture;
+      } else {
+        m.material.uniforms.map.value = (cellX === 0 && cellY === 0 && !hasActiveFilters())
+          ? introTexture
+          : textures[activeProjects[projIndex(cellX, cellY)]._idx];
+      }
     }
   }
 
@@ -1069,7 +1226,11 @@ function animate() {
   const centerKey = ccx + ',' + ccy;
   if (centerKey !== lastCenterKey) {
     lastCenterKey = centerKey;
-    if (ccx === 0 && ccy === 0 && !filterCaseStudies) {
+    if (activeN === 0) {
+      centreProject = null;
+      nowTitle.textContent = 'No results';
+      nowMeta.textContent = 'Try a different filter combination';
+    } else if (ccx === 0 && ccy === 0 && !hasActiveFilters()) {
       centreProject = null;
       nowTitle.textContent = '';
       nowMeta.textContent = 'Scroll in any direction to explore';
@@ -1095,10 +1256,10 @@ function animate() {
   }
 
   // Show the CTA button only when settled on a non-intro centre card
-  const settled = !drag.active && !tween.active && !zoomed && !wheeling && (ccx !== 0 || ccy !== 0);
+  const settled = !drag.active && !tween.active && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
 
-  const introSettled = !drag.active && !tween.active && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !filterCaseStudies;
+  const introSettled = !drag.active && !tween.active && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
@@ -1106,7 +1267,7 @@ function animate() {
   }
 
   // Watermark: fade in when intro card is off-centre, fade out when at centre
-  const wmTarget = (ccx === 0 && ccy === 0 && !filterCaseStudies) ? 0 : 1;
+  const wmTarget = (ccx === 0 && ccy === 0 && !hasActiveFilters()) ? 0 : 1;
   const prevWm = wmOpacity;
   wmOpacity += (wmTarget - wmOpacity) * 0.07;
   if (Math.abs(wmOpacity - prevWm) > 0.001) {
@@ -1196,7 +1357,7 @@ if (initSlug) {
     for (let cy = -6; cy <= 6; cy++) {
       for (let cx = -6; cx <= 6; cx++) {
         // Skip (0,0) when not in casestudies mode — that cell renders the intro card, not a project
-        if (cx === 0 && cy === 0 && !filterCaseStudies) continue;
+        if (cx === 0 && cy === 0 && !hasActiveFilters()) continue;
         if (projIndex(cx, cy) === idx) {
           const d = Math.hypot(cx, cy);
           if (d < bestDist) { bestDist = d; bestCell = { cx, cy }; }
