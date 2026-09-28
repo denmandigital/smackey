@@ -6,8 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>The Centre for Civic Engagement is a charity that aims to generate dialogue and debate on Canada’s future. They organize the Munk Debates – a high profile public lecture and educational discussion series on major public policy issues facing Canada and the world.</p><p>In 2021 they brought together leading Canadian journalists, pundits, and editors to create <em>The Hub</em>, a digital first publication providing original news and analysis exploring economics, culture, technology, geopolitics, public policy, law and governance, and a platform for vigorous debate among competing visions of Canada’s future.</p>',
-    url: '',
+    body: '<p>The Centre for Civic Engagement is a charity that aims to generate dialogue and debate on Canada’s future. They organize the Munk Debates – a high profile public lecture and educational discussion series on major public policy issues facing Canada and the world.</p><p>In 2021 they brought together leading Canadian journalists, pundits, and editors to create <em>The Hub</em>, a digital first publication providing original news and analysis exploring economics, culture, technology, geopolitics, public policy, law and governance, and a platform for debate among competing visions of Canada’s future.</p>',
   },
   {
     type: 'container',
