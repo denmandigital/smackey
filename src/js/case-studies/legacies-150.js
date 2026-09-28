@@ -31,6 +31,7 @@ export const blocks = [
     type: 'text',
     span: 6, spanSm: 12,
     variant: 'callout',
+    center: true,
     body: '<h2>Convictions</h2><p>A century ago, Peter Wiebe’s Mennonite ancestors left Canada for Mexico. Now, his family is making a return trip.</p>',
   },
   { type: 'spacer', span: 12, height: 20 },
@@ -39,6 +40,7 @@ export const blocks = [
     type: 'text',
     span: 6, spanSm: 12,
     variant: 'callout',
+    center: true,
     body: '<h2>Tetepiskat</h2><p>From her family’s ancestral hunting camp, Natasha Kanapé Fontaine sends a message across time and generations.</p>',
   },
   { type: 'spacer', span: 12, height: 20 },
@@ -47,6 +49,7 @@ export const blocks = [
     type: 'text',
     span: 6, spanSm: 12,
     variant: 'callout',
+    center: true,
     body: '<h2>Portrait of a Family</h2><p>David McKinstry and his husband didn’t plan to set a legal precedent. They just wanted kids to call their own.</p>',
   },
   { type: 'spacer', span: 12, height: 20 },
@@ -55,13 +58,14 @@ export const blocks = [
     type: 'text',
     span: 6, spanSm: 12,
     variant: 'callout',
+    center: true,
     body: '<h2>The Cache</h2><p>Bonnie and Michelline Ammaaq live north of the Arctic Circle in Igloolik, but in 1986 they left... or rather, returned to the land.</p>',
   },
   { type: 'spacer', span: 12, height: 20 },
   { type: 'image', span: 12, src: 'assets/projects/legacies150/screens-perspective_legacies.jpg' },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/10.66', src: 'https://player.vimeo.com/video/236637593' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/8.9', src: 'https://player.vimeo.com/video/236637593' },
   
   
 ];

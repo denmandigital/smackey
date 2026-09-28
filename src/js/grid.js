@@ -550,11 +550,12 @@ function renderBlock(b) {
   }
   if (b.type === 'text') {
     const mod = b.variant === 'callout' ? ' cs-block--callout' : b.variant === 'intro' ? ' cs-block--intro' : '';
+    const center = (b.variant === 'callout' && b.center) ? ' cs-block--v-center' : '';
     const bodyHtml = /^\s*</.test(b.body) ? b.body : `<p>${b.body}</p>`;
     const btnHtml = (b.variant === 'intro' && b.url)
       ? `<a class="cs-project-link" href="${b.url}" target="_blank" rel="noopener noreferrer">View the work</a>`
       : '';
-    return `<div class="cs-block${mod}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}${btnHtml}</div>`;
+    return `<div class="cs-block${mod}${center}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}${btnHtml}</div>`;
   }
   if (b.type === 'image') {
     const contain = b.contain ? ' cs-block--image-contain' : '';
@@ -1279,8 +1280,8 @@ function animate() {
     m.material.uniforms.uRadius.value = RADIUS / S0;
     m.material.uniforms.uHover.value = m.userData.hover;
     m.material.uniforms.uFade.value = 0.55 + 0.45 * fall;
-    // Mobile: fade the intro card to transparent when centred, opaque when scrolled away
-    if (innerWidth <= 640 && cellX === 0 && cellY === 0 && !hasActiveFilters() && activeN > 0) {
+    // Mobile/tablet: fade the intro card to transparent when centred, opaque when scrolled away
+    if (innerWidth < 1280 && cellX === 0 && cellY === 0 && !hasActiveFilters() && activeN > 0) {
       const scrollDist = Math.hypot(scroll.x / PITCH_X, scroll.y / PITCH_Y);
       m.material.uniforms.uFade.value *= Math.min(scrollDist * 2.5, 1);
     }
