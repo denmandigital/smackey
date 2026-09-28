@@ -1,3 +1,5 @@
+@use "breakpoints" as *;
+
 #nav {
 	position: fixed;
 	top: 36px;
@@ -137,7 +139,13 @@
 	&:hover span { width: 22px; }
 }
 
+#nav.brand-hidden .brand {
+	opacity: 0;
+	pointer-events: none;
+}
+
 .brand {
+	transition: opacity 0.4s ease;
 	font-size: 13px;
 	letter-spacing: 0.3em;
 	text-transform: uppercase;
@@ -154,5 +162,19 @@
 		letter-spacing: 0.16em;
 		font-size: 10px;
 		margin-top: 6px;
+	}
+}
+
+@include tablet-up {
+	#navFilter {
+		position: static;
+		left: auto;
+		transform: none;
+	}
+
+	.brand {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 }

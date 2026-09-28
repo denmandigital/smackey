@@ -1338,6 +1338,7 @@ function animate() {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
     introEl.classList.toggle('show', introSettled);
+    nav.classList.toggle('brand-hidden', introSettled);
   }
 
   // Watermark: fade in when intro card is off-centre, fade out when at centre
