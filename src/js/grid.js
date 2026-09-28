@@ -113,10 +113,6 @@ function makeCover(p, idx, w = 1024, img = null) {
     let dw, dh;
     if (ir > cr) { dh = ch; dw = ch * ir; } else { dw = cw; dh = cw / ir; }
     x.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
-    const sg = x.createLinearGradient(0, 0, 0, ch * 0.58);
-    sg.addColorStop(0, 'rgba(6,7,9,0)');
-    sg.addColorStop(1, 'rgba(6,7,9,0)');
-    x.fillStyle = sg; x.fillRect(0, 0, cw, ch);
   } else {
     const [a, b] = PALETTE[idx % PALETTE.length];
     const g = x.createLinearGradient(0, 0, cw, ch);
@@ -326,7 +322,6 @@ varying vec2 vUv;
 uniform sampler2D map;
 uniform vec2  uSize;
 uniform float uRadius;
-uniform float uHover;
 uniform float uFade;
 float sdRoundRect(vec2 p, vec2 b, float r){
   vec2 q = abs(p) - b + r;
@@ -348,7 +343,6 @@ function makeMaterial() {
       map:     { value: textures[0] },
       uSize:   { value: new THREE.Vector2(ITEM_W, ITEM_H) },
       uRadius: { value: RADIUS },
-      uHover:  { value: 0 },
       uFade:   { value: 1 },
     },
     vertexShader: VERT,
@@ -382,7 +376,10 @@ function buildPool() {
 buildPool();
 
 const pmod = (a, n) => ((a % n) + n) % n;
-const projIndex = (cx, cy) => activeN > 0 ? pmod(cx * 31 + cy * 131, activeN) : 0;
+const projIndex = (cx, cy) => {
+  if (activeN === 0) return 0;
+  return pmod(cx * 31 + cy * 131, activeN);
+};
 
 /* ============================================================
    INTERACTION — drag / wheel / arrow keys, inertia, snap
@@ -661,7 +658,7 @@ zoomScroll.addEventListener('scroll', () => {
   zoomHeroBg.style.transform = `scale(${1 + progress * 0.12})`;
 }, { passive: true });
 
-const DEFAULT_TITLE = 'Steve Mackey — Experience Designer & Technologist';
+const DEFAULT_TITLE = 'Steve Mackey — Experience Design Leader & Technologist';
 const DEFAULT_DESC  = document.getElementById('metaDesc').content;
 const metaDesc    = document.getElementById('metaDesc');
 const metaOgTitle = document.getElementById('metaOgTitle');
@@ -719,7 +716,7 @@ function openZoom(p, skipHistory = false) {
   zoomAnim.dir = 1; zoomAnim.active = true;
   setPageMeta(
     `${p.title} — ${p.client || 'Steve Mackey'}`,
-    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — experience designer and creative technologist.` : `${p.title} — a project by Steve Mackey, experience designer and creative technologist.`
+    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — experience design leader and technologist.` : `${p.title} — a project by Steve Mackey, experience design leader and technologist.`
   );
   if (!skipHistory) history.pushState({ slug: p.slug }, '', '#' + p.slug);
 }
@@ -945,7 +942,7 @@ let filterDateRange   = null;      // null | 'recent' | 'mid' | 'older' — sele
 const hasActiveFilters = () => filterCaseStudies || filterCategories.size > 0 || filterIndustries.size > 0 || filterDateRange !== null;
 
 function computeActiveProjects() {
-  let result = PROJECTS.slice(); // preserve page-load shuffle order
+  let result = PROJECTS.slice(); // preserve page-load shuffle order within same year
   if (filterCaseStudies) result = result.filter(p => p.casestudy);
   if (filterCategories.size) result = result.filter(p => p.category.some(c => filterCategories.has(c)));
   if (filterIndustries.size) result = result.filter(p => p.industry.some(i => filterIndustries.has(i)));
@@ -1186,7 +1183,6 @@ document.addEventListener('pointerdown', e => {
 /* ============================================================
    RENDER LOOP
 ============================================================ */
-const nowEl = document.getElementById('now');
 const nowTitle = document.getElementById('nowTitle');
 const nowMeta = document.getElementById('nowMeta');
 let lastCenterKey = null;
@@ -1278,7 +1274,6 @@ function animate() {
     m.scale.set(ITEM_W * s, ITEM_H * s, 1);
     if (cellX === ccx && cellY === ccy) { centrePxW = ITEM_W * s; centrePxH = ITEM_H * s; }
     m.material.uniforms.uRadius.value = RADIUS / S0;
-    m.material.uniforms.uHover.value = m.userData.hover;
     m.material.uniforms.uFade.value = 0.55 + 0.45 * fall;
     // Mobile/tablet: fade the intro card to transparent when centred, opaque when scrolled away
     if (innerWidth < 1280 && cellX === 0 && cellY === 0 && !hasActiveFilters() && activeN > 0) {

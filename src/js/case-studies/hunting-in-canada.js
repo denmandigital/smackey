@@ -16,7 +16,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'APTN / Mooswa Films' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Storytelling' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Story' },
       { type: 'text', span: 6, heading: 'Year',    body: '2018' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Technical direction</li></ul>' },
     ],
@@ -26,7 +26,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/huntingincanada/hic-responsive.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721572323' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721572323?autopause=0' },
   
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/huntingincanada/hic-guide-entry-1.png' },
   

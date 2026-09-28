@@ -16,7 +16,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'Volleyball Canada' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Mobile App' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'App' },
       { type: 'text', span: 6, heading: 'Year',    body: '2019' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],

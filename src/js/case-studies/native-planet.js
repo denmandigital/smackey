@@ -29,7 +29,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/nativeplanet/native-planet_wireframes.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.7', src: 'https://player.vimeo.com/video/705551452' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.7', src: 'https://player.vimeo.com/video/705551452?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/nativeplanet/nativeplanet-screens-perspective.jpg' },
   

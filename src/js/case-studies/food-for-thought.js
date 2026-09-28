@@ -16,7 +16,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'APTN / Mooswa Films' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Storytelling' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Story' },
       { type: 'text', span: 6, heading: 'Year',    body: '2018' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
     ],
@@ -28,7 +28,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/foodforthought/fft_wireframes.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/704697293' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/704697293?autopause=0' },
   
   
   { type: 'image', span: 12, src: 'assets/projects/foodforthought/screens-perspective_fft.jpg' },

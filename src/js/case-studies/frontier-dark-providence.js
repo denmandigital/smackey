@@ -16,7 +16,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'Discovery, Netflix' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital,<br>Switch United' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Storytelling' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Story' },
       { type: 'text', span: 6, heading: 'Year',    body: '2016' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Web development</li></ul>' },
     ],
@@ -26,7 +26,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/frontier/frontier-responsive.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721229239' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721229239?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/frontier/screens-perspective_frontier.jpg' },
 

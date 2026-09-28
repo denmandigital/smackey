@@ -26,7 +26,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/cbcvancouver/VancouverTalksAbout-Sunrise-Timelapse.gif' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/704361767' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/704361767?autopause=0' },
   { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/332490003' },
   
   

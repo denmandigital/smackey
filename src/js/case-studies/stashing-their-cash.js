@@ -17,7 +17,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'CBC News' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Interactive App' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'App' },
       { type: 'text', span: 6, heading: 'Year',    body: '2016' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
     ],

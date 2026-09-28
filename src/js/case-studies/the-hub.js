@@ -15,7 +15,7 @@ export const blocks = [
     spanMd: 5,
     spanSm: 12,
     children: [
-      { type: 'text', span: 6, heading: 'Client',  body: 'The Centre for Civic Engagement' },
+      { type: 'text', span: 6, heading: 'Client',  body: 'Centre for Civic Engagement' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website, Digital Publication' },
       { type: 'text', span: 6, heading: 'Year',    body: '2021' },
@@ -30,7 +30,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Create a brand that felt both modern <em>and</em> rooted in tradition, and a publishing platform to deliver their news, analysis, and debate to a news-savvy audience.',
+    body: 'Establish a brand that felt both modern <em>and</em> rooted in tradition, and a flexible publishing platform to deliver their news, analysis, and debate to a news-savvy audience.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -39,7 +39,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'As a charitable organization, The Hub had restrictions on how it could support itself',
+    body: 'As a charitable news organization, The Hub was limited in how it could raise money. We built a flexible platform that let it move between memberships, subscriptions, paid newsletters and donations as its needs changed.',
   },
 
   // Outcome callout — full width
@@ -48,7 +48,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Outcome',
-    body: 'The campaign reached over 500,000 students in its first year, with a 40% increase in educator sign-ups and a national media partnership with CBC.',
+    body: 'We built and ran The Hub’s platform through its early years. As its audience grew, it took digital in-house, and in 2024 it relaunched with its own team.',
   },
 
   { type: 'spacer', span: 12, height: 40 },
@@ -56,7 +56,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/thehub/thehub-responsive.png' },
 
   { type: 'spacer', span: 12, height: 20 },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/the_hub_visual_identity.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/the_hub_visual_identity.png', contain: true },
   {
     type: 'text',
     span: 6, spanSm: 12,
@@ -66,8 +66,15 @@ export const blocks = [
   },
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_side_brand_colours.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_typography.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_side_brand_colours.png', contain: true },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_typography.png', contain: true },
+  { type: 'spacer', span: 12, height: 40 },
+  {
+    type: 'text',
+    span: 12,
+    variant: 'callout',
+    body: '<p>A deep navy anchors the palette, supported by two gradients and a bright red reserved for calls-to-action. The typography is chosen for legibility and organized into systems that make information easy to scan.</p>',
+  },
   { type: 'spacer', span: 12, height: 40 },
 
 
@@ -75,7 +82,7 @@ export const blocks = [
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_newsdispatch.png' },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721609588' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/721609588' },
   
   { type: 'image', span: 12, src: 'assets/projects/thehub/thehub_email_campaigns.png' },
 

@@ -33,7 +33,7 @@ export const blocks = [
   },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721557130' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721557130?autopause=0' },
   
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-1.jpg' },
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-2.jpg' },
