@@ -54,6 +54,7 @@
 	line-height: 1.55;
 	margin: 0 0 10px;
 	font-weight: 500;
+	text-wrap: balance;
 	
 	@include mobile  { font-size: 17px; }
 	@include tablet  { font-size: 18px; }
