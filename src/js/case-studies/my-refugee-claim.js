@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'My Refugee Claim is a digital resource created to help refugee claimants get informed, connected, and prepared as they navigate Canada’s complex refugee protection process.',
+    body: '<p><em>My Refugee Claim</em> is a digital resource created to help refugee claimants get informed, connected, and prepared as they navigate Canada’s complex refugee protection process.</p>',
     url: 'https://myrefugeeclaim.ca'
   },
   {
@@ -28,7 +28,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Refugee claimants coming to Canada face a highly demanding legal process, usually with limited time, limited support, and very little familiarity with how things work here. Information exists, but it’s fragmented across government sites, legal documents, and nonprofit resources. Nothing speaks directly to claimants in plain language.',
+    body: '<p>Refugee claimants face a demanding legal process with little time, little support, and little familiarity with how things work in Canada. The information they need exists, but it’s scattered across government sites, legal documents, and nonprofit resources, and none of it is written for claimants in plain language. <em>My Refugee Claim</em> was built to change that.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -37,7 +37,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'We conducted multi-day discovery sessions with settlement workers, content creators from Kinbrace, and immigration lawyers who work directly with refugee claimants. Their input shaped the initial scope and ensured legal and procedural accuracy. With an MVP prototype, we ran usability testing with individuals who had recently gone through the refugee claim process. Their insights revealed friction points and blind spots that informed subsequent iterations.',
+    body: 'We ran multi-day discovery sessions with settlement workers, content creators from Kinbrace, and immigration lawyers who work directly with claimants. Their input set the scope and kept the content legally and procedurally accurate. We then tested an MVP prototype with people who had recently been through the claim process. Their feedback exposed friction points and blind spots that shaped later iterations.',
   },
 
   // Outcome callout
@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>A centralized, claimant-first digital guide used nationwide</li><li>Clearer understanding for claimants navigating a stressful process</li><li>Strong alignment between nonprofit, government, and legal stakeholders</li><li>A platform that can scale with new languages and policy changes</li><li>Improved workflow for agencies who refer claimants to the site</li></ul>',
+    body: '<ul><li>A plain-language guide for claimants in thirteen languages, used nationwide</li><li>A platform built to scale with new languages and policy changes</li><li>A simpler referral workflow for the agencies that send claimants to the site</li><li>Text to speech integration in 11 languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner</a></li></ul>',
   },
 
   // Takeaway callout
@@ -56,7 +56,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Takeaways',
-    body: 'This project reinforced the importance of designing with—not just for—vulnerable communities. It also sharpened my approach to multi-stakeholder collaboration in environments where accuracy and clarity are equally critical. And it reaffirmed the value of building systems that can evolve: content, technology, and governance all working together. In this case great work was rewarded with an <a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award</a>.',
+    body: 'Three lessons: design with vulnerable communities, not just for them; in high-stakes work, get accuracy and clarity right together, with every stakeholder in the room; and build systems that can evolve, with content, technology, and governance moving in step.',
   },
 
 
