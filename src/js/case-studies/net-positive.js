@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'Foran Mining is a copper-zinc-gold-silver exploration and development company, committed to supporting a greener future, empowering communities and creating circular economies, while also safeguarding the environment.',
+    body: 'Foran Mining is a copper-zinc-gold-silver exploration and development company focused on sustainable mining, community partnership and circular economies.',
     url: 'https://foranmining.com',
   },
   {
@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Foran had a desire to stand out from their competitors in a traditionally staid resource sector. The company wanted to better express their company values and share their unique vision for sustainable mining with investors, stakeholders, and indigenous partners.',
+    body: 'Foran wanted to stand out in a traditionally staid resource sector, and to share its values and vision for sustainable mining with investors, stakeholders and Indigenous partners.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -38,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'Their novel approach to mining based on sustainable value chains and circular economies called for a brand that reflected the boldness of their ambitions. Our strategy narrowed in on key concepts of strength, commitment, and the infinite finding its simplest form in a ring symbol used in their logotype and elsewhere.',
+    body: 'Foran’s approach to mining, built on sustainable value chains and circular economies, called for a brand as bold as its ambitions. Our strategy centred on strength, commitment and the infinite, and found its simplest expression in a ring symbol used in the logotype and across the brand.',
   },
 
   // Outcome callout
@@ -47,7 +47,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>To reach key audiences including investors and potential employees, a balance was struck between high impact visuals conveying emotion, to clarifying technical reports, metallurgical results and feasibility studies.</li><li>Foran’s McIllvenna Bay project was listed by the federal government as a project of national importance and referred to the Major Projects Office for streamlined regulatory and permitting support.</li><li>In 2026 Foran Mining was aquired by Elodrado Gold.</li></ul>',
+    body: '<ul><li>A brand that balances high-impact, emotional visuals with clear presentation of technical reports, metallurgical results and feasibility studies, built for audiences including investors and prospective employees</li><li>In September 2025, the federal government referred the McIlvenna Bay project to the Major Projects Office as a potential project of national interest</li><li>In April 2026, Eldorado Gold completed its acquisition of Foran in a C$3.8-billion deal</li></ul>',
   },
 
   { type: 'image', span: 12, src: 'assets/projects/foran/foran-responsive.png' },

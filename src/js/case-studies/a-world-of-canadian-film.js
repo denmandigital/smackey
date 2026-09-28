@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'Reel Canada promotes Canadian film through national education programs and workforce development initiatives, reaching tens of thousands of teachers and students and millions of Canadians each year.',
+    body: 'Reel Canada promotes Canadian film through national education programs and workforce development initiatives, reaching tens of thousands of teachers and students, and millions of Canadians, each year.',
     url: 'https://reelcanada.ca'
   },
   {
@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Reel Canada’s previous web platforms had grown unwieldy and disorganized over the years. Navigation was confusing, and key activities like finding films in their catalogue were drawn out and complicated. Data, including their comprehensive film library, lived multiple places with no single source of truth.',
+    body: 'Reel Canada’s web platforms had grown unwieldy and disorganized over the years. Navigation was confusing, finding films in the catalogue was slow and complicated, and data, including the film library, lived in several places with no single source of truth.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -38,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'We started with a comprehensive content and technology audit of Reel Canada’s previous web platforms. Working with their key stakeholders, we helped determine the most valued content by core audiences and analytics. These insights allowed us to remove out-dated and irrelevant content, reorganize their internal program structure, and shift topical content to their social channels.',
+    body: 'We started with a content and technology audit of the existing platforms. Working with key stakeholders, we used analytics and audience needs to identify the most valuable content. We then removed outdated and irrelevant material, reorganized the program structure, and moved topical content to social channels.',
   },
 
   // Outcome callout — full width
@@ -47,7 +47,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Outcome',
-    body: 'The campaign reached over 500,000 students in its first year, with a 40% increase in educator sign-ups and a national media partnership with CBC.',
+    body: '<ul><li>500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul>',
   },
 
   { type: 'spacer', span: 12, height: 40 },

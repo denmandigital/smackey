@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>The Centre for Civic Engagement is a charity that aims to generate dialogue and debate on Canada’s future. They organize the Munk Debates – a high profile public lecture and educational discussion series on major public policy issues facing Canada and the world.</p><p>In 2021 they brought together leading Canadian journalists, pundits, and editors to create <em>The Hub</em>, a digital first publication providing original news and analysis exploring economics, culture, technology, geopolitics, public policy, law and governance, and a platform for debate among competing visions of Canada’s future.</p>',
+    body: '<p>The Centre for Civic Engagement is a charity that aims to generate dialogue and debate on Canada’s future. It organizes the Munk Debates, a high-profile public debate series on major policy issues facing Canada and the world.</p><p>In 2021 it brought together leading Canadian journalists, pundits and editors to create <em>The Hub</em>, a digital-first publication covering economics, culture, technology, geopolitics, public policy, and law and governance, and a platform for debate among competing visions of Canada’s future.</p>',
   },
   {
     type: 'container',
@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Establish a brand that felt both modern <em>and</em> rooted in tradition, and a flexible publishing platform to deliver their news, analysis, and debate to a news-savvy audience.',
+    body: 'The Hub needed a brand that felt both modern and rooted in tradition, and a flexible publishing platform for news, analysis and debate aimed at a news-savvy audience. As a charitable news organization, it was also limited in how it could raise money.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -38,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'As a charitable news organization, The Hub was limited in how it could raise money. We built a flexible platform that let it move between memberships, subscriptions, paid newsletters and donations as its needs changed.',
+    body: 'We developed a brand that pairs a deep navy palette with a legible, hierarchical type system, then built a flexible platform that let The Hub move between memberships, subscriptions, paid newsletters and donations as its needs changed.',
   },
 
   // Outcome callout — full width
@@ -47,7 +47,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Outcome',
-    body: 'We built and ran The Hub’s platform through its early years. As its audience grew, it took digital in-house, and in 2024 it relaunched with its own team.',
+    body: 'We built and ran the platform through The Hub’s early years. As its audience grew, it took digital in-house, and in 2024 it relaunched with its own team.',
   },
 
   { type: 'spacer', span: 12, height: 40 },
@@ -61,7 +61,7 @@ export const blocks = [
     span: 6, spanSm: 12,
     variant: 'callout',
     center: true,
-    body: '<p>The logomark was designed to communicate depth, stability, perspective, and clarity. Its shape evokes the image of an open broadsheet newspaper. A custom drawn H, creates the depth perspective of the mark containing it, presenting a strong, clear, collegial representation of the brand name.</p>',
+    body: '<p>The logomark evokes an open broadsheet newspaper. A custom-drawn H sits within it, set in perspective to give the mark depth.</p>',
   },
 
   { type: 'spacer', span: 12, height: 40 },
