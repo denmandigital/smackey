@@ -87,7 +87,7 @@
 .filter-btn {
 	font: inherit;
 	font-size: 11px;
-	letter-spacing: 0.14em;
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	text-decoration: none;
 	color: var(--muted);
@@ -139,11 +139,6 @@
 	&:hover span { width: 22px; }
 }
 
-#nav.brand-hidden .brand {
-	opacity: 0;
-	pointer-events: none;
-}
-
 .brand {
 	transition: opacity 0.4s ease;
 	font-size: 13px;
@@ -165,7 +160,7 @@
 	}
 }
 
-@include tablet-up {
+@include extra-wide {
 	#navFilter {
 		position: static;
 		left: auto;
@@ -176,5 +171,10 @@
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
+	}
+
+	#nav.brand-hidden .brand {
+		opacity: 0;
+		pointer-events: none;
 	}
 }
