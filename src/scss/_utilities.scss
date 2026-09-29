@@ -1,0 +1,22 @@
+@use 'breakpoints' as *;
+
+.ta-left {
+    text-align: left;
+}
+.ta-center {
+    text-align: center;
+}
+.ta-right {
+    text-align: right;
+}
+.hide-sm {
+    @include mobile {
+        display: none;
+    }
+}
+
+.hide-md {
+    @include tablet-up {
+        display: none;
+    }
+}

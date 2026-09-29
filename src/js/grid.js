@@ -170,7 +170,7 @@ function makeIntroTexture(w = 1024) {
   c.width = w;
   c.height = Math.round(w * (ITEM_H / ITEM_W));
   const ctx = c.getContext('2d');
-  ctx.fillStyle = '#f5f3ef';
+  ctx.fillStyle = '#eae8e4';
   ctx.fillRect(0, 0, c.width, c.height);
   return c;
 }
@@ -178,7 +178,7 @@ function makeIntroTexture(w = 1024) {
 function drawIntroCanvas(wmOpacity) {
   const ctx = introBaseCanvas.getContext('2d');
   const cw = introBaseCanvas.width, ch = introBaseCanvas.height;
-  ctx.fillStyle = '#f5f3ef';
+  ctx.fillStyle = '#eae8e4';
   ctx.fillRect(0, 0, cw, ch);
   if (wmOpacity > 0.001 && wmStamp) {
     const sz = Math.min(cw, ch) * 0.38;
@@ -481,8 +481,7 @@ canvas.addEventListener('click', (e) => {
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
   if (c.x === ccx && c.y === ccy && centreProject) openZoom(centreProject);   // centre card → zoom
-  else if (c.x === ccx && c.y === ccy && ccx === 0 && ccy === 0 && !hasActiveFilters()) openMenu(); // intro card → about
-  else startTween(-c.x * PITCH_X, -c.y * PITCH_Y);           // otherwise snap to centre
+  else if (c.x !== ccx || c.y !== ccy) startTween(-c.x * PITCH_X, -c.y * PITCH_Y); // snap to centre
 });
 
 addEventListener('keydown', (e) => {
@@ -784,26 +783,27 @@ const navMenu = document.getElementById('navMenu');
 const navBurger = document.getElementById('navBurger');
 let menuOpen = false;
 
-function openMenu() {
+function openMenu(skipHistory = false) {
   menuOpen = true;
   closeFilterPanel();
   nav.classList.add('open');
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
   navMenu.scrollTop = 0;
+  if (!skipHistory) history.pushState({ menu: true }, '', '/about');
 }
 
-function closeMenu() {
+function closeMenu(skipHistory = false) {
   menuOpen = false;
   nav.classList.remove('open');
   navMenu.setAttribute('aria-hidden', 'true');
   navBurger.setAttribute('aria-label', 'Open menu');
   if (innerWidth > 640) navBurger.focus();
+  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive');
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
 document.getElementById('introAboutBtn').addEventListener('click', () => openMenu());
-introEl.addEventListener('click', () => openMenu());
 
 document.querySelectorAll('a.js-email').forEach(a => {
   a.href = `mailto:${a.dataset.u}@${a.dataset.d}`;
@@ -828,21 +828,6 @@ brandCube.rotation.y = -Math.PI / 4;  // S+M corner facing forward at rest
 brandScene.add(brandCube);
 brandRenderer.render(brandScene, brandCamera);  // draw static frame immediately
 
-// Intro monogram — larger SM cube, mouse-follow rendered inside animate()
-const introMonogramCanvas = document.getElementById('introMonogram');
-const introRenderer = new THREE.WebGLRenderer({ canvas: introMonogramCanvas, antialias: true, alpha: true });
-introRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-introRenderer.setSize(80, 80, false);
-const introScene = new THREE.Scene();
-const introCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-introCamera.position.set(0, 0, 2.2);
-introScene.add(new THREE.AmbientLight(0xffffff, 1.4));
-const introLight = new THREE.DirectionalLight(0xffffff, 1.2);
-introLight.position.set(2, 3, 3);
-introScene.add(introLight);
-const introCube = createSMBlock({ size: 1 });
-introCube.rotation.y = -Math.PI / 4;
-introScene.add(introCube);
 
 // Render the monogram once to an offscreen canvas for use as a texture watermark
 wmStamp = (() => {
@@ -868,31 +853,28 @@ wmStamp = (() => {
 let wmOpacity = 0;
 
 let brandRaf = null, brandReturnRaf = null, brandYRaf = null, brandTargetY = 0, brandTargetX = 0;
-let introTargetY = 0, introTargetX = 0;
 
 function brandDrift() {
   const dy = brandTargetY - brandCube.position.y;
   const dx = brandTargetX - brandCube.position.x;
-  brandCube.position.y += dy * 0.06;
-  brandCube.position.x += dx * 0.06;
+  brandCube.position.y += dy * 0.12;
+  brandCube.position.x += dx * 0.12;
   if (!brandRaf && !brandReturnRaf) brandRenderer.render(brandScene, brandCamera);
   brandYRaf = (Math.abs(dy) > 0.0002 || Math.abs(dx) > 0.0002) ? requestAnimationFrame(brandDrift) : null;
 }
 
 addEventListener('pointermove', e => {
   if (e.pointerType !== 'mouse') return;
-  brandTargetY = (0.5 - e.clientY / innerHeight) * 0.14;
-  brandTargetX = (e.clientX / innerWidth - 0.5) * 0.14;
+  brandTargetY = (0.5 - e.clientY / innerHeight) * 0.28;
+  brandTargetX = (e.clientX / innerWidth - 0.5) * 0.28;
   if (!brandRaf && !brandReturnRaf && !brandYRaf) brandDrift();
-  introTargetY = brandTargetY * 1.5;
-  introTargetX = brandTargetX * 1.5;
 });
 
 function brandSpin() {
   brandRaf = requestAnimationFrame(brandSpin);
   brandCube.rotation.y -= 0.015 * (1 + 0.70 * Math.cos(4 * brandCube.rotation.y));
-  brandCube.position.y += (brandTargetY - brandCube.position.y) * 0.06;
-  brandCube.position.x += (brandTargetX - brandCube.position.x) * 0.06;
+  brandCube.position.y += (brandTargetY - brandCube.position.y) * 0.12;
+  brandCube.position.x += (brandTargetX - brandCube.position.x) * 0.12;
   brandRenderer.render(brandScene, brandCamera);
 }
 
@@ -923,7 +905,7 @@ brandCanvas.addEventListener('mouseleave', () => {
 });
 brandCanvas.addEventListener('click', () => {
   if (zoomed) closeZoom();
-  if (menuOpen) closeMenu();
+  if (menuOpen) closeMenu(true);
   if (filterPanelOpen) closeFilterPanel();
   clearChipFilters();
   activateFilter('casestudies');
@@ -960,16 +942,18 @@ function computeActiveProjects() {
   return result;
 }
 
-function applyFilters() {
+function applyFilters(flashScene = false) {
   activeProjects = computeActiveProjects();
   activeN = activeProjects.length;
   pool.forEach(m => { m.userData.key = null; });
   lastCenterKey = null;
   snapNearest(false);
   updateFilterBadge();
-  const s = document.getElementById('scene');
-  s.classList.remove('ready');
-  requestAnimationFrame(() => s.classList.add('ready'));
+  if (flashScene) {
+    const s = document.getElementById('scene');
+    s.classList.remove('ready');
+    requestAnimationFrame(() => s.classList.add('ready'));
+  }
   const announcer = document.getElementById('filterAnnouncer');
   if (announcer) announcer.textContent = activeN === 0
     ? 'No projects match the selected filters'
@@ -980,9 +964,10 @@ function applyFilters() {
 const filterBtns = document.querySelectorAll('.filter-btn');
 function activateFilter(filter) {
   filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+  const modeChanged = filterCaseStudies !== (filter === 'casestudies');
   filterCaseStudies = (filter === 'casestudies');
   introEl.classList.toggle('mode-archive', !filterCaseStudies);
-  applyFilters();
+  applyFilters(modeChanged);
 }
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -991,7 +976,7 @@ filterBtns.forEach(btn => {
     activateFilter(btn.dataset.filter);
     const url = btn.dataset.filter === 'all' ? '/archive' : '/';
     history.pushState({ filter: btn.dataset.filter }, '', url);
-    if (menuOpen) closeMenu();
+    if (menuOpen) closeMenu(true);
   });
 });
 
@@ -1002,14 +987,23 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   activateFilter('casestudies');
   history.pushState({ filter: 'casestudies' }, '', '/');
-  if (menuOpen) closeMenu();
+  if (menuOpen) closeMenu(true);
 });
 
 // Back/forward navigation
 addEventListener('popstate', () => {
-  const path = location.pathname.slice(1); // e.g. '' | 'archive' | 'project-slug'
+  const path = location.pathname.slice(1); // e.g. '' | 'archive' | 'about' | 'project-slug'
   const isArchive = path === 'archive';
-  const slug = (!isArchive && path) ? path : '';
+  const isAbout = path === 'about';
+  const slug = (!isArchive && !isAbout && path) ? path : '';
+
+  if (isAbout) {
+    if (!menuOpen) openMenu(true);
+    return;
+  }
+
+  if (menuOpen) closeMenu(true);
+
   if (slug) {
     const p = PROJECTS.find(proj => proj.slug === slug);
     if (p && !zoomed) openZoom(p, true);
@@ -1050,7 +1044,7 @@ function filterNavHeight() {
 }
 
 function openFilterPanel() {
-  if (menuOpen) closeMenu();
+  if (menuOpen) closeMenu(true);
   filterPanelOpen = true;
   nav.classList.add('filter-open');
   filterMenuEl.setAttribute('aria-hidden', 'false');
@@ -1192,8 +1186,9 @@ let lastCenterKey = null;
 let lastT = performance.now();
 let prlxX = 0, prlxY = 0;   // smoothed mouse parallax (-1..1)
 
-// Sync filter from URL on load (must be after lastCenterKey is declared)
-if (location.pathname !== '/archive') activateFilter('casestudies');
+// Sync filter and menu state from URL on load (must be after lastCenterKey is declared)
+activateFilter(location.pathname === '/archive' ? 'all' : 'casestudies');
+if (location.pathname === '/about') openMenu(true);
 
 function animate() {
   requestAnimationFrame(animate);
@@ -1246,7 +1241,9 @@ function animate() {
   const hitObj = hit ? hit.object : null;
   if (hitObj !== hovered) {
     hovered = hitObj;
-    document.body.classList.toggle('hovering', !!hitObj);
+    const cell = hitObj?.userData.cell;
+    const isIntroCard = cell && cell.x === 0 && cell.y === 0 && !hasActiveFilters();
+    document.body.classList.toggle('hovering', !!hitObj && !isIntroCard);
   }
 
   // Position + warp every pooled item
@@ -1278,8 +1275,8 @@ function animate() {
     if (cellX === ccx && cellY === ccy) { centrePxW = ITEM_W * s; centrePxH = ITEM_H * s; }
     m.material.uniforms.uRadius.value = RADIUS / S0;
     m.material.uniforms.uFade.value = 0.55 + 0.45 * fall;
-    // Mobile/tablet: fade the intro card to transparent when centred, opaque when scrolled away
-    if (innerWidth < 1280 && cellX === 0 && cellY === 0 && !hasActiveFilters() && activeN > 0) {
+    // Fade intro card to transparent when centred, opaque when scrolled away
+    if (cellX === 0 && cellY === 0 && !hasActiveFilters() && activeN > 0) {
       const scrollDist = Math.hypot(scroll.x / PITCH_X, scroll.y / PITCH_Y);
       m.material.uniforms.uFade.value *= Math.min(scrollDist * 2.5, 1);
     }
@@ -1342,7 +1339,6 @@ function animate() {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
     introEl.classList.toggle('show', introSettled);
-    nav.classList.toggle('brand-hidden', introSettled);
   }
 
   // Watermark: fade in when intro card is off-centre, fade out when at centre
@@ -1364,9 +1360,6 @@ function animate() {
   contourGroup.position.x = scroll.x * 0.06 + prlxX * -28;
   contourGroup.position.y = scroll.y * 0.06 + prlxY * -28;
 
-  introCube.position.y += (introTargetY - introCube.position.y) * 0.035;
-  introCube.position.x += (introTargetX - introCube.position.x) * 0.035;
-  if (introShown) introRenderer.render(introScene, introCamera);
   renderer.render(scene, camera);
 }
 
