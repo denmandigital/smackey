@@ -81,7 +81,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/foran/foran-screens-perspective.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.5', src: 'https://player.vimeo.com/video/841292720' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.45', src: 'https://player.vimeo.com/video/841292720' },
   { type: 'image', span: 5, src: 'assets/projects/foran/foran-poster.png' },
   { type: 'image', span: 7, src: 'assets/projects/foran/foran-poster-details.png', contain: true },
   

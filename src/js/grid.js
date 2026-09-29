@@ -457,21 +457,24 @@ addEventListener('wheel', (e) => {
 
 /* ---------- raycast hover / click ---------- */
 const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2(-2, -2);
+const mouse = new THREE.Vector2(-2, -2); // hover detection only — stays off-screen on touch
+const prlxTarget = { x: 0, y: 0 };      // parallax target — centred by default, mouse-only
 let hovered = null;
-addEventListener('mousemove', (e) => {
+addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
   if (innerWidth <= 640) return;
-  const p = pt(e);
-  mouse.x = (p.x / innerWidth) * 2 - 1;
-  mouse.y = -(p.y / innerHeight) * 2 + 1;
+  mouse.x = (e.clientX / innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+  prlxTarget.x = mouse.x;
+  prlxTarget.y = mouse.y;
 });
 canvas.addEventListener('click', (e) => {
   if (zoomed || drag.moved > 6) return;
-  if (innerWidth <= 640) {
-    mouse.x = (e.clientX / innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / innerHeight) * 2 + 1;
-  }
-  raycaster.setFromCamera(mouse, camera);
+  const tapVec = new THREE.Vector2(
+    (e.clientX / innerWidth) * 2 - 1,
+    -(e.clientY / innerHeight) * 2 + 1
+  );
+  raycaster.setFromCamera(tapVec, camera);
   const hit = raycaster.intersectObjects(pool, false)[0];
   if (!hit) return;
   const c = hit.object.userData.cell;
@@ -658,7 +661,7 @@ zoomScroll.addEventListener('scroll', () => {
   zoomHeroBg.style.transform = `scale(${1 + progress * 0.12})`;
 }, { passive: true });
 
-const DEFAULT_TITLE = 'Steve Mackey — Experience Design Leader & Technologist';
+const DEFAULT_TITLE = 'Steve Mackey — Design & Technology Director';
 const DEFAULT_DESC  = document.getElementById('metaDesc').content;
 const metaDesc    = document.getElementById('metaDesc');
 const metaOgTitle = document.getElementById('metaOgTitle');
@@ -716,9 +719,9 @@ function openZoom(p, skipHistory = false) {
   zoomAnim.dir = 1; zoomAnim.active = true;
   setPageMeta(
     `${p.title} — ${p.client || 'Steve Mackey'}`,
-    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — experience design leader and technologist.` : `${p.title} — a project by Steve Mackey, experience design leader and technologist.`
+    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — Design & Technology Director.` : `${p.title} — a project by Steve Mackey, Design & Technology Director.`
   );
-  if (!skipHistory) history.pushState({ slug: p.slug }, '', '#' + p.slug);
+  if (!skipHistory) history.pushState({ slug: p.slug }, '', '/' + p.slug);
 }
 
 let csObserver = null;
@@ -742,7 +745,7 @@ function observeBlocks() {
 function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (csObserver) { csObserver.disconnect(); csObserver = null; }
-  if (!skipHistory) history.pushState(null, '', location.pathname + location.search);
+  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive');
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
   // Freeze parallax immediately so the card sits exactly where the panel will land
   prlxX = 0; prlxY = 0;
@@ -787,10 +790,7 @@ function openMenu() {
   nav.classList.add('open');
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
-  if (innerWidth > 640) {
-    const firstFocusable = navMenu.querySelector('a[href], button');
-    if (firstFocusable) firstFocusable.focus();
-  }
+  navMenu.scrollTop = 0;
 }
 
 function closeMenu() {
@@ -879,7 +879,8 @@ function brandDrift() {
   brandYRaf = (Math.abs(dy) > 0.0002 || Math.abs(dx) > 0.0002) ? requestAnimationFrame(brandDrift) : null;
 }
 
-addEventListener('mousemove', e => {
+addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
   brandTargetY = (0.5 - e.clientY / innerHeight) * 0.14;
   brandTargetX = (e.clientX / innerWidth - 0.5) * 0.14;
   if (!brandRaf && !brandReturnRaf && !brandYRaf) brandDrift();
@@ -925,9 +926,9 @@ brandCanvas.addEventListener('click', () => {
   if (menuOpen) closeMenu();
   if (filterPanelOpen) closeFilterPanel();
   clearChipFilters();
-  activateFilter('all');
+  activateFilter('casestudies');
   startTween(0, 0);
-  history.pushState(null, '', location.pathname);
+  history.pushState(null, '', '/');
 });
 
 // ── Filter system ──────────────────────────────────────────
@@ -939,7 +940,7 @@ let filterCategories  = new Set(); // multi-select within; cleared when date sel
 let filterIndustries  = new Set(); // multi-select within; cleared when date selected
 let filterDateRange   = null;      // null | 'recent' | 'mid' | 'older' — selecting clears categories + industry
 
-const hasActiveFilters = () => filterCaseStudies || filterCategories.size > 0 || filterIndustries.size > 0 || filterDateRange !== null;
+const hasActiveFilters = () => filterCategories.size > 0 || filterIndustries.size > 0 || filterDateRange !== null;
 
 function computeActiveProjects() {
   let result = PROJECTS.slice(); // preserve page-load shuffle order within same year
@@ -980,6 +981,7 @@ const filterBtns = document.querySelectorAll('.filter-btn');
 function activateFilter(filter) {
   filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
   filterCaseStudies = (filter === 'casestudies');
+  introEl.classList.toggle('mode-archive', !filterCaseStudies);
   applyFilters();
 }
 filterBtns.forEach(btn => {
@@ -987,7 +989,7 @@ filterBtns.forEach(btn => {
     e.preventDefault();
     clearChipFilters();
     activateFilter(btn.dataset.filter);
-    const url = btn.dataset.filter === 'casestudies' ? location.pathname + '?casestudies' : location.pathname;
+    const url = btn.dataset.filter === 'all' ? '/archive' : '/';
     history.pushState({ filter: btn.dataset.filter }, '', url);
     if (menuOpen) closeMenu();
   });
@@ -999,20 +1001,22 @@ document.addEventListener('click', (e) => {
   if (!a) return;
   e.preventDefault();
   activateFilter('casestudies');
-  history.pushState({ filter: 'casestudies' }, '', location.pathname + '?casestudies');
+  history.pushState({ filter: 'casestudies' }, '', '/');
   if (menuOpen) closeMenu();
 });
 
 // Back/forward navigation
 addEventListener('popstate', () => {
-  const slug = location.hash.slice(1);
+  const path = location.pathname.slice(1); // e.g. '' | 'archive' | 'project-slug'
+  const isArchive = path === 'archive';
+  const slug = (!isArchive && path) ? path : '';
   if (slug) {
     const p = PROJECTS.find(proj => proj.slug === slug);
     if (p && !zoomed) openZoom(p, true);
   } else {
     if (zoomed) closeZoom(true);
   }
-  activateFilter(location.search.includes('casestudies') ? 'casestudies' : 'all');
+  activateFilter(isArchive ? 'all' : 'casestudies');
 });
 
 // ── Filter panel ────────────────────────────────────────────
@@ -1027,11 +1031,9 @@ function updateFilterBadge() {
   filterBadgeEl.classList.toggle('visible', count > 0);
   // Keep clear button in sync
   const clearBtn = document.getElementById('filterClearBtn');
-  if (clearBtn) {
-    clearBtn.style.opacity = count > 0 ? '1' : '0';
-    clearBtn.style.visibility = count > 0 ? 'visible' : 'hidden';
-    clearBtn.style.pointerEvents = count > 0 ? 'auto' : 'none';
-  }
+  const filterTitle = document.getElementById('filterTitle');
+  if (clearBtn) clearBtn.style.display = count > 0 ? 'block' : 'none';
+  if (filterTitle) filterTitle.style.display = count > 0 ? 'none' : 'block';
 }
 
 function filterNavHeight() {
@@ -1100,7 +1102,8 @@ function buildFilterMenu() {
 </div>`;
 
   const header = `<div id="filterHeader">
-  <button id="filterClearBtn">Clear all</button>
+  <span id="filterTitle">Filters</span>
+  <button id="filterClearBtn">Clear All Filters</button>
 </div>`;
 
   filterMenuEl.innerHTML = header + dateSection + catSection + indSection;
@@ -1111,7 +1114,7 @@ function buildFilterMenu() {
       if (filterCaseStudies) {
         filterCaseStudies = false;
         filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
-        history.pushState({ filter: 'all' }, '', location.pathname);
+        history.pushState({ filter: 'all' }, '', '/archive');
       }
       if (chip.dataset.daterange) {
         // Date clears categories + industries, then toggles
@@ -1190,7 +1193,7 @@ let lastT = performance.now();
 let prlxX = 0, prlxY = 0;   // smoothed mouse parallax (-1..1)
 
 // Sync filter from URL on load (must be after lastCenterKey is declared)
-if (location.search.includes('casestudies')) activateFilter('casestudies');
+if (location.pathname !== '/archive') activateFilter('casestudies');
 
 function animate() {
   requestAnimationFrame(animate);
@@ -1333,7 +1336,8 @@ function animate() {
   const settled = !drag.active && !tween.active && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
   if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
 
-  const introSettled = !(drag.active && drag.moved > 3) && !tween.active && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
+  const tweeningAway = tween.active && (tween.x1 !== 0 || tween.y1 !== 0);
+  const introSettled = !(drag.active && drag.moved > 3) && !tweeningAway && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
@@ -1352,8 +1356,8 @@ function animate() {
 
   // Smooth mouse toward current position (~3% per frame); frozen at 0 while zoom panel is active or on mobile
   if (!zoomed && innerWidth > 640) {
-    prlxX += (mouse.x - prlxX) * 0.03;
-    prlxY += (mouse.y - prlxY) * 0.03;
+    prlxX += (prlxTarget.x - prlxX) * 0.03;
+    prlxY += (prlxTarget.y - prlxY) * 0.03;
   }
 
   // Cards shift gently with mouse; contour lines shift more (feel further away)
@@ -1422,8 +1426,8 @@ setTimeout(() => {
   });
 })();
 
-// Deep-link: snap the grid and open the zoom for a project referenced in the URL hash
-const initSlug = location.hash.slice(1);
+// Deep-link: snap the grid and open the zoom for a project referenced in the URL path
+const initSlug = (location.pathname !== '/archive') ? location.pathname.slice(1) : '';
 if (initSlug) {
   const initProject = PROJECTS.find(p => p.slug === initSlug);
   if (initProject) {

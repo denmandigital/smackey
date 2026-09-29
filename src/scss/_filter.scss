@@ -81,11 +81,21 @@
 }
 
 #filterHeader {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding-bottom: 4px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#filterTitle {
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: rgba(0, 0, 0, 0.4);
+	padding: 4px 0;
 }
 
 #filterClearBtn {
@@ -99,10 +109,8 @@
 	border: none;
 	cursor: pointer;
 	padding: 4px 0;
-	opacity: 0;
-	visibility: hidden;
-	pointer-events: none;
-	transition: color 0.15s ease, opacity 0.15s ease;
+	display: none;
+	transition: color 0.15s ease;
 
 	&:hover {
 		color: var(--ink);

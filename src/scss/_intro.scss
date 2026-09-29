@@ -5,7 +5,8 @@
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	width: var(--card-w);
+	width: calc(var(--card-w) + 40px);
+	// width: var(--card-w);
 	height: calc(var(--card-w) * 225 / 320);
 	display: flex;
 	flex-direction: column;
@@ -17,6 +18,18 @@
 	z-index: 6;
 	text-align: center;
 
+	.dark {
+		color: var(--grey-dark);
+	}
+
+	@include mobile {
+		max-width: 400px;
+	}
+
+	@include tablet-up {
+		// max-width: 90%;
+	}
+
 	&.show {
 		opacity: 1;
 		pointer-events: auto;
@@ -27,68 +40,98 @@
 #introMonogram {
 	width: 40px;
 	height: 40px;
-	margin-bottom: 10px;
+	// width: clamp(40px, calc(2.181rem + 1.307vw), 50px);
+	// height: clamp(40px, calc(2.181rem + 1.307vw), 50px);
+	margin: 0 auto 1.5vw;
 	display: block;
 	
 	@include mobile {
-		margin-bottom: 10px;
+		// margin-bottom: 10px;
+		width: 30px;
+		height: 30px;
 	}
-	@include tablet {
+	@include tablet-down {
+		// margin-bottom: 3vw;
+		// width: 50px;
+		// height: 50px;
+	}
+	@include desktop {
+		// margin-bottom: 2rem;
+		width: 45px;
+		height: 45px;
+	}
+	@include extra-wide {
 		width: 50px;
 		height: 50px;
 	}
-	@include desktop {
-		margin-bottom: 20px;
-		width: 60px;
-		height: 60px;
-	}
-	@include extra-wide {
-		width: 90px;
-		height: 90px;
-	}
 }
 
-.intro-tag {
-	font-size: 21px;
-	color: rgba(0, 0, 0, 0.65);
-	line-height: 1.55;
-	margin: 0 0 10px;
-	font-weight: 500;
-	text-wrap: balance;
+.intro-divider {
+	display: block;
+	width: 45%;
+	height: 0.5px;
+	margin: 1vw auto;
+	background: var(--grey-light);
+	-webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+	mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+	border-radius: 3px;
+	opacity: 0.25;
 	
-	@include mobile  { font-size: 17px; }
-	@include tablet  { font-size: 18px; }
+}
+
+.intro-title {
+	//font-size: clamp(2.00rem, calc(1.539rem + 1.842vw), 4.25rem);
+	font-size: clamp(1.75rem, calc(1.092rem + 2.632vw), 4.25rem); //28-68
+	// font-size: clamp(1.75rem, calc(1.158rem + 2.368vw), 4.00rem); //28-64
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.08; //1.55;
+	// margin: 0 0 0.35em;
+	font-weight: 400;
+	text-wrap: balance;
+	font-family: var(--serif-font);
+	letter-spacing: 0.01rem;
+	color: var(--grey-light);
+	//line-height: n;
+	
+	// @include mobile  { font-size: 17px; }
+	// @include tablet  { font-size: 18px; }
 	
 	@include desktop { 
-		max-width: 90%;
+		// max-width: 90%;
 	}
 	@include wide    { 
-		max-width: 70%;
-		font-size: 22px; 
+		//font-size: clamp(2.75rem, calc(0.250rem + 3.125vw), 4.00rem); //44 to 64
+		// max-width: 70%;
+		// font-size: 22px; 
 	}
 	@include extra-wide { 
-		font-size: 24px; 
+		// max-width: 90%;
+		// font-size: 64px; 
 	}
 }
 
-.intro-name {
-	font-size: 15px;
+.intro-desc {
+	//font-size: 15px;
 	color: rgba(0, 0, 0, 0.5);
-	letter-spacing: 0.02em;
-	margin: 0 0 20px;
+	letter-spacing: -0.015em;
+	// margin: 0 0 20px;
+	font-weight: 500;
+	margin-bottom: 1.2vw;
+	font-size: clamp(0.81rem, calc(0.664rem + 0.592vw), 1.38rem);
 
-	@include mobile  { font-size: 13px; margin-bottom: 16px; }
-	@include tablet  { font-size: 14px; }
-	@include wide    { font-size: 16px; }
-	@include extra-wide { font-size: 17px; }
+	// @include mobile  { font-size: 13px; }
+	// @include tablet  { font-size: 14px; }
+	@include tablet-down  { margin-bottom: 2vw; }
+	// @include wide    { font-size: 16px; }
+	// @include extra-wide { font-size: 20px; }
 }
 
 #introAboutBtn {
 	font: inherit;
 	cursor: pointer;
 	border: none;
-	background: rgba(255, 255, 255, 0.94);
-	color: #15161a;
+	color: rgba(255, 255, 255, 0.94);
+	background: #15161a;
 	border-radius: 100px;
 	padding: 14px 24px;
 	font-size: 12px;
@@ -97,27 +140,46 @@
 	text-transform: uppercase;
 	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.32);
 	transition: background 0.2s, transform 0.2s;
-	margin-bottom: 20px;
-	margin-top: 10px;
+	// margin-bottom: 20px;
+	// margin-top: 10px;
+	margin-top: 2vw;
 
 	&:hover {
-		background: #fff;
+		// background: #fff;
 		transform: scale(1.04);
 	}
 
 	@include mobile {
 		padding: 12px 20px;
-		margin-bottom: 14px;
+		// margin-bottom: 14px;
+	}
+	@include tablet-down {
+		// margin-top: 2vw;
 	}
 	@include desktop {
-		margin-top: 20px;
+		// margin-top: 20px;
 	}
 	@include wide {
-		margin-top: 30px;
+		// margin-top: 30px;
 	}
 	@include extra-wide {
-		margin-top: 40px;
+		// margin-top: 2.5rem;
 	}
+}
+
+// Mode-specific content blocks — default shows casestudies, archive class switches it
+.intro-content--archive { 
+	display: none; 
+	max-width: 80%;
+	.intro-title {
+		margin-bottom: 1.25vw;
+	}
+
+}
+
+#intro.mode-archive {
+	.intro-content--casestudies { display: none; }
+	.intro-content--archive { display: block; }
 }
 
 .intro-scroll {

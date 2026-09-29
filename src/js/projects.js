@@ -194,7 +194,7 @@ export const PROJECTS = [
     year:      2024,
     casestudy: false,
     category:  ['Website'],
-    industry:  ['Charitable Foundations'],
+    industry:  ['Foundations & Charitable Organizations'],
     accentColourPrimary:   '#003879',
     textColour: 'light',
   },

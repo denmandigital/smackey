@@ -4,7 +4,7 @@
 	display: flex;
 	flex-direction: column-reverse;
 	width: 70%;
-	margin: 5rem auto;
+	margin: 10rem auto 5rem auto;
 	
 	@include desktop {
 		display: grid;
@@ -31,11 +31,13 @@
 }
 
 .about-name {
-	font-size: clamp(28px, 3.5vw, 48px);
-	font-weight: 800;
-	letter-spacing: -0.02em;
-	color: var(--ink);
-	margin-bottom: 0.25rem;
+	//font-size: clamp(28px, 3.5vw,64px);
+	font-size: clamp(1.75rem, calc(1.092rem + 2.632vw), 4.25rem);
+	font-weight: 400;
+	letter-spacing: 0.01em;
+	color: var(--grey-med);
+	//margin-bottom: 0.25rem;
+	font-family: var(--serif-font);
 }
 .about-role {
 	font-weight: 500;
@@ -46,7 +48,7 @@
 	font-size: 1.1rem;
 	line-height: 1.5;
 	color: var(--muted);
-	max-width: 440px;
+	max-width: 90%;
 	margin-bottom: 32px;
 	a {
 		color: var(--ink);
@@ -55,6 +57,93 @@
 
 		&:hover { color: var(--accent); }
 	}
+}
+
+.about-experience, .about-contact {
+	width: 70%;
+	margin: 0 auto 6rem;
+
+	@include tablet-down {
+		width: 100%;
+		margin: 2rem auto 4rem;
+	}
+}
+
+.about-heading {
+	//font-size: 1.75rem;
+	// text-transform: uppercase;
+	//color: var(--ink);
+	padding-bottom: 0.75rem;
+	margin-bottom: 3rem;
+	font-weight: 600;
+	border-bottom: 1px solid var(--grey-lighter);
+	-webkit-mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%);
+	mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%);
+
+	//font-family: var(--serif-font);
+}
+
+.about-experience-grid {
+	display: grid;
+	grid-template-columns: 50% 1fr;
+	gap: 3rem;
+
+	@include mobile {
+		grid-template-columns: 1fr;
+	}
+}
+
+.exp-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 1.25rem;
+}
+
+.exp-logo {
+	flex-shrink: 0;
+	width: 120px;
+	height: 90px;
+	background: var(--grey-dark);
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 20px;
+
+	img {
+		width: auto;
+		height: 100%;
+		object-fit: contain;
+		// filter: brightness(0) invert(1);
+	}
+}
+
+.exp-detail {
+	padding-top: 2px;
+}
+
+.exp-dates {
+	display: block;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	color: var(--muted);
+	// margin-bottom: 0.25rem;
+}
+
+.exp-title {
+	font-size: 2rem;
+	font-weight: 400;
+	font-family: var(--serif-font);
+	color: var(--dark-grey);
+	margin: 0 0 2px;
+	line-height: 1.3;
+}
+
+.exp-company {
+	font-size: 1rem;
+	color: var(--grey-dark);
+	margin: 0;
 }
 
 .about-contact {

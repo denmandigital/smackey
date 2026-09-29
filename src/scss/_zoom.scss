@@ -1,10 +1,10 @@
 @use 'breakpoints' as *;
 
 #zoom {
-	--border-radius-cs-block: 1.75rem;
+	--border-radius-cs-block: 1rem;
 
 	@include mobile {
-		--border-radius-cs-block: 0.875rem;
+		--border-radius-cs-block: 0.75rem;
 	}
 
 	position: fixed;
