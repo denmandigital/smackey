@@ -37,7 +37,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'We ran multi-day discovery sessions with settlement workers, content creators from Kinbrace, and immigration lawyers who work directly with claimants. Their input set the scope and kept the content legally and procedurally accurate. We then tested an MVP prototype with people who had recently been through the claim process. Their feedback exposed friction points and blind spots that shaped later iterations.',
+    body: 'Multi-day discovery sessions were held with settlement workers, content creators, and immigration lawyers who work directly with claimants. Their input set the scope and kept the content legally and procedurally accurate. An MVP prototype was then tested with people who had recently been through the claim process. Their feedback exposed friction points and blind spots that shaped later iterations.',
   },
 
   // Outcome callout
@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>A plain-language guide for claimants in thirteen languages, used nationwide</li><li>A platform built to scale with new languages and policy changes</li><li>A simpler referral workflow for the agencies that send claimants to the site</li><li>Text to speech integration in 11 languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner</a></li></ul>',
+    body: '<ul><li>A plain-language guide for claimants in thirteen languages, used nationwide</li><li>A platform built to scale with new languages and policy changes</li><li>Integrated Ready Tour registrations with HubSpot to automate follow-up communications</li><li>Text to speech integration in 11 languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner</a></li></ul>',
   },
 
   // Takeaway callout
@@ -56,16 +56,22 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Takeaways',
-    body: 'Three lessons: design with vulnerable communities, not just for them; in high-stakes work, get accuracy and clarity right together, with every stakeholder in the room; and build systems that can evolve, with content, technology, and governance moving in step.',
+    body: '<ul><li>Design with vulnerable communities, not just for them</li><li>In high-stakes work, get accuracy and clarity right together, with every stakeholder in the room</li><li>Build systems that can evolve with content, technology, and governance moving in step</li></ul>',
   },
 
 
   { type: 'spacer', span: 12, height: 40 },
   { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-responsive.png' },
 
-  
   { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-illustrations-2.png' },
-  
+
+  {
+    type: 'text',
+    span: 12,
+    variant: 'callout',
+    body: 'Hand-sketched illustrations give the guide a welcoming, approachable feel, paired with a consistent colour palette that codes related content for easy navigation.',
+  },
+
   { type: 'vimeo', span: 12, aspect: '16/11.15', autoplay: true, src: 'https://player.vimeo.com/video/812203483' },
   
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-readytours-01.png' },

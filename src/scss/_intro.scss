@@ -139,6 +139,46 @@
 	}
 }
 
+// Intro reveal sequence — first show only
+@keyframes introWordFade {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+@keyframes introDividerFade {
+	from { opacity: 0; }
+	to   { opacity: 0.25; }
+}
+
+// All animated elements start hidden
+#intro.intro-animating .intro-title .dark,
+#intro.intro-animating .intro-title .light,
+#intro.intro-animating .intro-divider,
+#intro.intro-animating .intro-desc,
+#intro.intro-animating #introAboutBtn {
+	opacity: 0;
+}
+
+// Dark words — fade in together, quickly
+#intro.intro-animating.show .intro-title .dark {
+	animation: introWordFade 0.55s ease 0.3s both;
+}
+
+// Light text — starts at the same time as dark, fades in slowly
+#intro.intro-animating.show .intro-title .light {
+	animation: introWordFade 6s ease 0.3s both;
+}
+
+// Divider, desc, CTA — after the title text
+#intro.intro-animating.show .intro-desc,
+#intro.intro-animating.show #introAboutBtn {
+	animation: introWordFade 2s ease 1.1s both;
+}
+
+#intro.intro-animating.show .intro-divider {
+	animation: introDividerFade 2s ease 1.1s both;
+}
+
 // Mode-specific content blocks — default shows casestudies, archive class switches it
 .intro-content--archive { 
 	display: none; 

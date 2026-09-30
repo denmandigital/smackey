@@ -619,6 +619,8 @@ let zoomed = false;          // true while open OR animating (blocks grid intera
 let ctaShown = false;
 ctaBtn.setAttribute('tabindex', '-1');
 let introShown = false;
+let introPageLoadAnimDone = false;
+let introAnimTimeout = null;
 const introAboutBtn = document.getElementById('introAboutBtn');
 introAboutBtn.setAttribute('tabindex', '-1');
 let zoomSlug = null;         // slug of currently open project (guards async content loads)
@@ -986,18 +988,28 @@ function applyFilters(flashScene = false) {
 
 // Archive / ★ Case Studies nav buttons
 const filterBtns = document.querySelectorAll('.filter-btn');
+function triggerIntroAnimation() {
+  introEl.classList.remove('intro-animating');
+  void introEl.offsetWidth; // force reflow so removing/re-adding restarts the animation
+  introEl.classList.add('intro-animating');
+  clearTimeout(introAnimTimeout);
+  introAnimTimeout = setTimeout(() => introEl.classList.remove('intro-animating'), 6500);
+}
+
 function activateFilter(filter) {
   filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
   const modeChanged = filterCaseStudies !== (filter === 'casestudies');
   filterCaseStudies = (filter === 'casestudies');
   introEl.classList.toggle('mode-archive', !filterCaseStudies);
   applyFilters(modeChanged);
+  if (modeChanged && introShown) triggerIntroAnimation();
 }
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
     clearChipFilters();
     activateFilter(btn.dataset.filter);
+    startTween(0, 0);
     const url = btn.dataset.filter === 'all' ? '/archive' : '/';
     history.pushState({ filter: btn.dataset.filter }, '', url);
     if (menuOpen) closeMenu(true);
@@ -1372,6 +1384,7 @@ function animate() {
     introEl.setAttribute('aria-hidden', String(!introSettled));
     introEl.classList.toggle('show', introSettled);
     introAboutBtn.setAttribute('tabindex', introSettled ? '0' : '-1');
+    if (introSettled && !introPageLoadAnimDone) { introPageLoadAnimDone = true; triggerIntroAnimation(); }
   }
 
   // Watermark: fade in when intro card is off-centre, fade out when at centre
@@ -1412,7 +1425,10 @@ addEventListener('resize', () => {
 animate();
 setTimeout(() => {
   document.getElementById('loader').classList.add('hidden');
-  requestAnimationFrame(() => canvas.classList.add('ready'));
+  const _startSlug = location.pathname.slice(1);
+  const _isProjectLoad = !!_startSlug && _startSlug !== 'archive' && _startSlug !== 'about';
+  const gridDelay = _isProjectLoad ? 0 : 3100;
+  setTimeout(() => requestAnimationFrame(() => canvas.classList.add('ready')), gridDelay);
 }, 300);
 
 // HTML project grid — SEO / progressive enhancement

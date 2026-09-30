@@ -151,7 +151,7 @@ export const PROJECTS = [
     casestudy: true,
     category:  ['Website'],
     industry:  ['Foundations & Charitable Organizations'],
-    accentColourPrimary:   '#678588',
+    accentColourPrimary:   '#5B777A',
     textColour: 'light',
   },
   {
