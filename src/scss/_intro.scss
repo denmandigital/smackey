@@ -49,6 +49,9 @@
 	mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 	border-radius: 3px;
 	opacity: 0.25;
+	@include mobile {
+		margin: 3vw auto;
+	}
 	
 }
 
@@ -94,7 +97,12 @@
 	margin-bottom: 1.2vw;
 	font-size: clamp(0.81rem, calc(0.664rem + 0.592vw), 1.38rem);
 
-	@include tablet-down  { margin-bottom: 3vw; }
+	@include mobile { font-size: 0.95rem; }
+	@media (orientation: portrait) {
+		@include tablet-down {
+			margin-bottom: 3vw;
+		}
+	}
 	
 }
 
@@ -125,8 +133,11 @@
 		padding: 12px 20px;
 		// margin-bottom: 14px;
 	}
-	@include tablet-down {
-		margin-top: 5vw;
+	
+	@media (orientation: portrait) {
+		@include tablet-down {
+			margin-top: 5vw;
+		}
 	}
 	@include desktop {
 		// margin-top: 20px;
