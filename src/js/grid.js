@@ -378,6 +378,19 @@ buildPool();
 const pmod = (a, n) => ((a % n) + n) % n;
 const projIndex = (cx, cy) => {
   if (activeN === 0) return 0;
+  // In case studies mode, pin the 8 cells surrounding the intro to unique indices per group
+  if (filterCaseStudies && activeN >= 4) {
+    if (cx ===  1 && cy ===  0) return 0;
+    if (cx === -1 && cy ===  0) return 1;
+    if (cx ===  0 && cy ===  1) return 2;
+    if (cx ===  0 && cy === -1) return 3;
+  }
+  if (filterCaseStudies && activeN >= 6) {
+    if (cx ===  1 && cy ===  1) return 4;
+    if (cx === -1 && cy ===  1) return 5;
+    if (cx ===  1 && cy === -1) return 2;
+    if (cx === -1 && cy === -1) return 3;
+  }
   return pmod(cx * 31 + cy * 131, activeN);
 };
 
@@ -447,7 +460,7 @@ addEventListener('wheel', (e) => {
   e.preventDefault();
   tween.active = false;
   wheeling = true;
-  cta.classList.remove('show'); ctaShown = false;
+  cta.classList.remove('show'); ctaShown = false; ctaBtn.setAttribute('tabindex', '-1');
   scroll.x -= e.deltaX;
   scroll.y += e.deltaY;    // wheel-down pans content up
   vel.x = vel.y = 0;
@@ -485,7 +498,7 @@ canvas.addEventListener('click', (e) => {
 });
 
 addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { if (zoomed) zoomClose.click(); else closeMenu(); return; }
+  if (e.key === 'Escape') { if (zoomed) closeZoom(); else closeMenu(); return; }
   if (zoomed) {
     if (e.key === 'Tab') {
       const focusable = [...zoom.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])')];
@@ -499,7 +512,9 @@ addEventListener('keydown', (e) => {
     }
     return;
   }
-  if (e.key === 'Enter' && centreProject) { openZoom(centreProject); return; }
+  const active = document.activeElement;
+  const interactiveHasFocus = active && active !== document.body && active !== document.documentElement && active !== canvas;
+  if (e.key === 'Enter' && centreProject && !interactiveHasFocus) { openZoom(centreProject); return; }
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
   let nx = ccx, ny = ccy;
@@ -521,6 +536,8 @@ const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
 const introEl = document.getElementById('intro');
 const zoom = document.getElementById('zoom');
+zoom.setAttribute('inert', '');
+document.getElementById('project-grid-html').setAttribute('inert', '');
 const zoomMeta = document.getElementById('zoomMeta');
 const zoomCat = document.getElementById('zoomCat');
 const zoomTitle = document.getElementById('zoomTitle');
@@ -600,7 +617,10 @@ let centrePxW = CENTRE_FRAC * innerWidth;   // actual screen px width of centre 
 let centrePxH = centrePxW * (ITEM_H / ITEM_W);
 let zoomed = false;          // true while open OR animating (blocks grid interaction)
 let ctaShown = false;
+ctaBtn.setAttribute('tabindex', '-1');
 let introShown = false;
+const introAboutBtn = document.getElementById('introAboutBtn');
+introAboutBtn.setAttribute('tabindex', '-1');
 let zoomSlug = null;         // slug of currently open project (guards async content loads)
 let zoomTriggerEl = null;    // element focused before zoom opened; restored on close
 
@@ -681,6 +701,7 @@ function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   zoomed = true;
   zoomTriggerEl = document.activeElement;
+  zoom.removeAttribute('inert');
   zoom.setAttribute('aria-hidden', 'false');
   document.body.classList.remove('hovering');
   // backgroundImage, backgroundColor already pre-painted in the render loop while hidden;
@@ -782,11 +803,13 @@ const nav = document.getElementById('nav');
 const navMenu = document.getElementById('navMenu');
 const navBurger = document.getElementById('navBurger');
 let menuOpen = false;
+navMenu.setAttribute('inert', '');
 
 function openMenu(skipHistory = false) {
   menuOpen = true;
   closeFilterPanel();
   nav.classList.add('open');
+  navMenu.removeAttribute('inert');
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
   navMenu.scrollTop = 0;
@@ -796,6 +819,7 @@ function openMenu(skipHistory = false) {
 function closeMenu(skipHistory = false) {
   menuOpen = false;
   nav.classList.remove('open');
+  navMenu.setAttribute('inert', '');
   navMenu.setAttribute('aria-hidden', 'true');
   navBurger.setAttribute('aria-label', 'Open menu');
   if (innerWidth > 640) navBurger.focus();
@@ -803,7 +827,7 @@ function closeMenu(skipHistory = false) {
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
-document.getElementById('introAboutBtn').addEventListener('click', () => openMenu());
+introAboutBtn.addEventListener('click', () => openMenu());
 
 document.querySelectorAll('a.js-email').forEach(a => {
   a.href = `mailto:${a.dataset.u}@${a.dataset.d}`;
@@ -1018,6 +1042,7 @@ const navFilterBtn  = document.getElementById('navFilterBtn');
 const filterMenuEl  = document.getElementById('filterMenu');
 const filterBadgeEl = document.getElementById('filterBadge');
 let filterPanelOpen = false;
+filterMenuEl.setAttribute('inert', '');
 
 function updateFilterBadge() {
   const count = filterCategories.size + filterIndustries.size + (filterDateRange ? 1 : 0);
@@ -1047,6 +1072,7 @@ function openFilterPanel() {
   if (menuOpen) closeMenu(true);
   filterPanelOpen = true;
   nav.classList.add('filter-open');
+  filterMenuEl.removeAttribute('inert');
   filterMenuEl.setAttribute('aria-hidden', 'false');
   // Interrupt any ongoing height transition and measure at unconstrained height
   // so flex children aren't squeezed mid-animation (e.g. switching from about menu).
@@ -1063,6 +1089,7 @@ function openFilterPanel() {
 function closeFilterPanel() {
   filterPanelOpen = false;
   nav.classList.remove('filter-open');
+  filterMenuEl.setAttribute('inert', '');
   filterMenuEl.setAttribute('aria-hidden', 'true');
   filterMenuEl.style.maxHeight = '';
   nav.style.height = '';
@@ -1216,6 +1243,7 @@ function animate() {
       zoomAnim.active = false;
       zoom.classList.remove('open');
       zoom.style.opacity = '';
+      zoom.setAttribute('inert', '');
       zoom.setAttribute('aria-hidden', 'true');
       zoomed = false;
       if (zoomTriggerEl) { zoomTriggerEl.focus(); zoomTriggerEl = null; }
@@ -1329,16 +1357,21 @@ function animate() {
     }
   }
 
-  // Show the CTA button only when settled on a non-intro centre card
-  const settled = !drag.active && !tween.active && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
-  if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); }
-
+  const tweenTargetCcx = Math.round(-tween.x1 / PITCH_X);
+  const tweenTargetCcy = Math.round(-tween.y1 / PITCH_Y);
+  const tweenChangesCell = tween.active && (tweenTargetCcx !== ccx || tweenTargetCcy !== ccy);
   const tweeningAway = tween.active && (tween.x1 !== 0 || tween.y1 !== 0);
+
+  // Show the CTA button only when settled on a non-intro centre card
+  const settled = !(drag.active && drag.moved > 6) && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
+  if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); ctaBtn.setAttribute('tabindex', settled ? '0' : '-1'); }
+
   const introSettled = !(drag.active && drag.moved > 3) && !tweeningAway && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
     introEl.classList.toggle('show', introSettled);
+    introAboutBtn.setAttribute('tabindex', introSettled ? '0' : '-1');
   }
 
   // Watermark: fade in when intro card is off-centre, fade out when at centre
