@@ -81,7 +81,7 @@ export const blocks = [
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_newsdispatch.png' },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/721609588' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/721609588?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/thehub/thehub_email_campaigns.png' },
 

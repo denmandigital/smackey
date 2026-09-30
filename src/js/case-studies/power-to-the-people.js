@@ -33,5 +33,5 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-quiz.jpg' },
   { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-poll.jpg' },
 
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/724653523' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/724653523?autopause=0' },
 ];

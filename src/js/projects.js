@@ -149,9 +149,9 @@ export const PROJECTS = [
     title:     'My Refugee Claim',
     year:      2023,
     casestudy: true,
-    category:  ['Website'],
+    category:  ['Website', 'Digital Publication'],
     industry:  ['Foundations & Charitable Organizations'],
-    accentColourPrimary:   '#5B777A',
+    accentColourPrimary: '#5B777A',
     textColour: 'light',
   },
   {
@@ -327,7 +327,7 @@ export const PROJECTS = [
     casestudy: true,
     category:  ['Website', 'Interactive Story'],
     industry:  ['Arts & Culture'],
-    accentColourPrimary:   '#0b202e',
+    accentColourPrimary:   '#0c133b',
     textColour: 'light',
   },
 ].map(p => ({ ...p, src: 'assets/' + p.file, slug: toSlug(p.title) }));

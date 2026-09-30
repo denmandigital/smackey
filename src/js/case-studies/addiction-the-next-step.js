@@ -27,7 +27,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/addiction/addiction-responsive.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9.1', src: 'https://player.vimeo.com/video/225482597' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9.1', src: 'https://player.vimeo.com/video/225482597?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/addiction/screens-perspective_addiction.jpg' },
   

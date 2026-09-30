@@ -27,7 +27,7 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/backstory/backstory-responsive.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/206498889' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/206498889?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/backstory/screens-perspective_backstory.jpg' },
   

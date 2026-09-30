@@ -28,9 +28,9 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/historyrevealed/bc-hydro_single-img.jpg' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8', src: 'https://player.vimeo.com/video/721578563' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8', src: 'https://player.vimeo.com/video/721578563?autopause=0' },
 
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721577871' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721577871?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/historyrevealed/screens-perspective_BCHydro.jpg' },
   

@@ -26,9 +26,9 @@ export const blocks = [
   { type: 'image', span: 12, src: 'assets/projects/theconversation/theconversation-responsive.png' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1087171201' },
-  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1087172109' },
-  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1087173472' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1087171201?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1087172109?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1087173472?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/theconversation/the-conversation-screens.jpg' },
   

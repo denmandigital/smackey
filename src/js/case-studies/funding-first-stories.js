@@ -6,8 +6,8 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'Intro text goes here.',
-    url: '',
+    body: 'The Indigenous Screen Office (ISO) is an independent national advocacy and funding organization serving First Nations, Inuit and Métis creators of screen content in Canada. Their mandate is to foster narrative sovereignty and cultural revitalization by increasing the share of Indigenous screen-based productions, while promoting Indigenous values and participation across the media landscape.',
+    url: 'https://iso-bea.ca',
   },
   {
     type: 'container',
@@ -15,19 +15,55 @@ export const blocks = [
     spanMd: 5,
     spanSm: 12,
     children: [
-      { type: 'text', span: 6, heading: 'Client',  body: 'Client Name' },
-      { type: 'text', span: 6, heading: 'Agency',  body: 'Agency Name' },
+      { type: 'text', span: 6, heading: 'Client',  body: 'Indigenous Screen Office' },
+      { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website' },
-      { type: 'text', span: 6, heading: 'Year',    body: 'yyyy' },
-      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
+      { type: 'text', span: 6, heading: 'Year',    body: '2024' },
+      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],
   },
+  
+  {
+    type: 'text',
+    span: 12,
+    spanSm: 12,
+    variant: 'callout',
+    heading: 'Challenge',
+    body: '<p>ISO’s previous funding application system was overly complicated, confusing to applicants, and difficult to maintain. Their resources were buried and overall web presence was uninspiring.</p>',
+  },
+  // Approach text + UI screenshot — 4 + 8
+  {
+    type: 'text',
+    span: 6,
+    spanSm: 12,
+    variant: 'callout',
+    heading: 'Approach',
+    body: '<p>We worked with ISO to understand their funding process, internal nominclature, and unique pain points. This included an audit of existing content, 3rd party integrations and functional requirements. User journey mapping, prototying and user feedback reviews were imlemented.</p>',
+  },
 
-  { type: 'image', span: 12, src: 'assets/projects/xxx/xxx-responsive.png' },
+  // Outcome callout
+  {
+    type: 'text',
+    span:6,
+    spanSm: 12,
+    variant: 'callout',
+    heading: 'Outcomes',
+    body: '<ul><li>Custom built funding calendar admin system that automatically organizes funds based on fund type and opening and closing dates</li><li>Stepped applicaton qualification system checklist reducing unqualified or incomplete submissions</li><li>Flexible, block based admin system for easy site administration in English and French</li></ul>',
+  },
+  { type: 'spacer', span: 12, height: 40 },
+
+  { type: 'image', span: 12, src: 'assets/projects/iso/iso-responsive.png' },
+  
+  { type: 'image', span: 12, src: 'assets/projects/iso/iso-ux.png' },
+  
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-home.jpg' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-funding-opportunities.jpg' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-get-inspired.jpg' },
+  
+  { type: 'image', span: 12, src: 'assets/projects/iso/iso-screens-perspective.jpg' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1008938152' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/907945251' },
   
-  { type: 'image', span: 12, src: 'assets/projects/xxx/screens-perspective_xxx.jpg' },
   
 ];

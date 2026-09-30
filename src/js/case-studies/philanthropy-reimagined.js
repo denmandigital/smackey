@@ -37,7 +37,7 @@ export const blocks = [
 
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1008938152' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1008938152?autopause=0' },
   
   { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_screens.jpg' },
   

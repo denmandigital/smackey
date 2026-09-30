@@ -1315,11 +1315,6 @@ function animate() {
     if (cellX === ccx && cellY === ccy) { centrePxW = ITEM_W * s; centrePxH = ITEM_H * s; }
     m.material.uniforms.uRadius.value = RADIUS / S0;
     m.material.uniforms.uFade.value = 0.55 + 0.45 * fall;
-    // Fade intro card to transparent when centred, opaque when scrolled away
-    if (cellX === 0 && cellY === 0 && !hasActiveFilters() && activeN > 0) {
-      const scrollDist = Math.hypot(scroll.x / PITCH_X, scroll.y / PITCH_Y);
-      m.material.uniforms.uFade.value *= Math.min(scrollDist * 2.5, 1);
-    }
 
     // Assign the right project only when this slot's cell changes
     const key = cellX + ',' + cellY;

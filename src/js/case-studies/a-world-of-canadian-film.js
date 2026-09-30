@@ -75,5 +75,5 @@ export const blocks = [
   // { type: 'image', span: 4, src: 'assets/projects/reelcanada/cs-reelcanada-09.jpg' },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/10.66', src: 'https://player.vimeo.com/video/810732633' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/10.66', src: 'https://player.vimeo.com/video/810732633?autopause=0' },
 ];
