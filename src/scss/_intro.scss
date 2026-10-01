@@ -196,19 +196,36 @@
 	animation: introDividerFade 2s ease 1.1s both;
 }
 
+
 // Mode-specific content blocks — default shows casestudies, archive class switches it
-.intro-content--archive { 
+.intro-content--archive {
 	display: none; 
-	max-width: 80%;
+	// max-width: 80%;
+	max-width: 600px;
+	.archive-chip {
+		display: inline-block;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--grey-light);
+		// border: 1px solid currentColor;
+		border-radius: 100px;
+		padding: 5px 13px;
+		margin-bottom: 1rem;
+		// opacity: 0.5;
+		background: rgba(0, 0, 0, 0.07);
+		@include mobile {
+			margin-bottom: 0.75rem;
+		}
+	}
 	.intro-title {
 		margin-bottom: 1.25vw;
 	}
 	.intro-desc {
 		text-wrap: pretty;
-		
-		@include wide {
-			padding: 0 4%;
-		}
+		text-align: center;
+		padding: 0 4%;
 	}
 }
 

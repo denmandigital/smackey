@@ -537,6 +537,15 @@ addEventListener('keydown', (e) => {
 const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
 const introEl = document.getElementById('intro');
+
+(function () {
+  const years = PROJECTS.map(p => p.year).filter(Boolean);
+  const minYear = Math.min(...years);
+  const maxYear = Math.max(...years);
+  const chip = document.getElementById('archiveChip');
+  if (chip) chip.textContent = PROJECTS.length + ' projects | ' + minYear + '–' + maxYear;
+})();
+
 const zoom = document.getElementById('zoom');
 zoom.setAttribute('inert', '');
 document.getElementById('project-grid-html').setAttribute('inert', '');
