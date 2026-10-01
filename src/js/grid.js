@@ -1431,7 +1431,7 @@ function animate() {
   const tweeningAway = tween.active && (tween.x1 !== 0 || tween.y1 !== 0);
 
   // Show the CTA button only when settled on a non-intro centre card
-  const settled = !(drag.active && drag.moved > 6) && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
+  const settled = !(drag.active && drag.moved > 6) && !coasting && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
   if (settled !== ctaShown) {
     ctaShown = settled;
     clearTimeout(ctaTimer);
@@ -1442,7 +1442,7 @@ function animate() {
     }
   }
 
-  const introSettled = !(drag.active && drag.moved > 3) && !tweeningAway && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
+  const introSettled = !(drag.active && drag.moved > 3) && !coasting && !tweeningAway && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
