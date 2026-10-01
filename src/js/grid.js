@@ -15,6 +15,17 @@ for (let i = PROJECTS.length - 1; i > 0; i--) {
 // Tag each project with its texture-array index (stable after shuffle)
 PROJECTS.forEach((p, i) => { p._idx = i; });
 
+// Fixed cell positions for case studies — radiate around intro at (0,0)
+const CS_POSITIONS = [
+  { cx:  1, cy:  0 },
+  { cx: -1, cy:  0 },
+  { cx:  0, cy:  1 },
+  { cx:  0, cy: -1 },
+  { cx:  1, cy: -1 },
+  { cx: -1, cy: -1 },
+];
+
+
 /* ============================================================
    TUNABLES
 ============================================================ */
@@ -32,8 +43,7 @@ const SIZE_MIN = 0.12;       // smallest item scale, relative to the centre item
 const SIZE_POW = 1.4;        // how fast items shrink toward the edge
 
 const FLING = 11;         // momentum carried from a flick into the snap target
-const SNAP_MIN = 0.34;       // s — shortest snap tween
-const SNAP_MAX = 0.85;       // s — longest snap tween
+const SNAP_MIN = 0.34;       // s — rubber-band snap-back duration
 
 // derived per-viewport layout (recomputed on resize)
 const NMAX = 30;                // rings tabulated per axis
@@ -169,17 +179,13 @@ function makeIntroTexture(w = 1024) {
   const c = document.createElement('canvas');
   c.width = w;
   c.height = Math.round(w * (ITEM_H / ITEM_W));
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#eae8e4';
-  ctx.fillRect(0, 0, c.width, c.height);
   return c;
 }
 
 function drawIntroCanvas(wmOpacity) {
   const ctx = introBaseCanvas.getContext('2d');
   const cw = introBaseCanvas.width, ch = introBaseCanvas.height;
-  ctx.fillStyle = '#eae8e4';
-  ctx.fillRect(0, 0, cw, ch);
+  ctx.clearRect(0, 0, cw, ch);
   if (wmOpacity > 0.001 && wmStamp) {
     const sz = Math.min(cw, ch) * 0.38;
     ctx.globalAlpha = wmOpacity * 0.13;
@@ -205,84 +211,39 @@ function camDistance() { return (innerHeight / 2) / Math.tan(THREE.MathUtils.deg
 camera.position.set(0, 0, camDistance());
 camera.lookAt(0, 0, 0);
 
-/* ---------- contour / topographic line background ---------- */
-function makeContourLines() {
-  const mat = new THREE.LineBasicMaterial({
-    color: 0x1b1c20,
-    transparent: true,
-    opacity: 0.09,
-    depthWrite: false,
-    depthTest: false,
-  });
+/* ---------- background image plane ---------- */
+let bgMesh = null;
+let bgTexture = null;
 
-  const grp = new THREE.Group();
-
-  const EXTENT  = 4000; // half-width in world units
-  const SPACING = 440;  // world units between lines
-  const N_PTS   = 400;  // vertices per line — enough to follow dish curvature smoothly
-
-  const hH = [
-    { amp: 70, freq: 1, phase: 0.00 },
-    { amp: 35, freq: 2, phase: 1.30 },
-    { amp: 17, freq: 3, phase: 2.60 },
-    { amp:  9, freq: 5, phase: 0.85 },
-    { amp:  5, freq: 7, phase: 1.75 },
-  ];
-  const vH = [
-    { amp: 70, freq: 1, phase: 0.60 },
-    { amp: 35, freq: 2, phase: 1.90 },
-    { amp: 17, freq: 3, phase: 3.20 },
-    { amp:  9, freq: 5, phase: 1.45 },
-    { amp:  5, freq: 7, phase: 2.35 },
-  ];
-
-  const n = Math.ceil(EXTENT / SPACING) * 2 + 1;
-
-  function addLine(verts) {
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
-    const ln = new THREE.Line(geo, mat);
-    ln.renderOrder = -1;
-    grp.add(ln);
+function updateBgCover() {
+  if (!bgMesh || !bgTexture) return;
+  const PAD = 160;
+  const w = innerWidth  + PAD * 2;
+  const h = innerHeight + PAD * 2;
+  bgMesh.scale.set(w, h, 1);
+  const imgAspect = bgTexture.image.width / bgTexture.image.height;
+  const scrAspect = w / h;
+  if (imgAspect > scrAspect) {
+    const s = scrAspect / imgAspect;
+    bgTexture.repeat.set(s, 1);
+    bgTexture.offset.set((1 - s) / 2, 0);
+  } else {
+    const s = imgAspect / scrAspect;
+    bgTexture.repeat.set(1, s);
+    bgTexture.offset.set(0, (1 - s) / 2);
   }
-
-  // Horizontal contours
-  for (let i = 0; i < n; i++) {
-    const y0 = (i - Math.floor(n / 2)) * SPACING;
-    const scale = 0.72 + 0.28 * Math.sin(i * 2.399);
-    const verts = [];
-    for (let j = 0; j <= N_PTS; j++) {
-      const x = -EXTENT + (j / N_PTS) * EXTENT * 2;
-      const t = (j / N_PTS) * Math.PI * 2;
-      const dy = hH.reduce((s, h) => s + h.amp * scale * Math.sin(h.freq * t + h.phase), 0);
-      const y = y0 + dy;
-      const z = CONVEX * (x * x + y * y) - 1;
-      verts.push(x, y, z);
-    }
-    addLine(verts);
-  }
-
-  // Vertical contours
-  for (let i = 0; i < n; i++) {
-    const x0 = (i - Math.floor(n / 2)) * SPACING;
-    const scale = 0.72 + 0.28 * Math.sin(i * 2.399 + 1.1);
-    const verts = [];
-    for (let j = 0; j <= N_PTS; j++) {
-      const y = -EXTENT + (j / N_PTS) * EXTENT * 2;
-      const t = (j / N_PTS) * Math.PI * 2;
-      const dx = vH.reduce((s, h) => s + h.amp * scale * Math.sin(h.freq * t + h.phase), 0);
-      const x = x0 + dx;
-      const z = CONVEX * (x * x + y * y) - 1;
-      verts.push(x, y, z);
-    }
-    addLine(verts);
-  }
-
-  return grp;
 }
 
-const contourGroup = makeContourLines();
-scene.add(contourGroup);
+new THREE.TextureLoader().load('/assets/grid-bg.jpg', (tex) => {
+  bgTexture = tex;
+  const geo = new THREE.PlaneGeometry(1, 1);
+  const mat = new THREE.MeshBasicMaterial({ map: tex, depthWrite: false, depthTest: false });
+  bgMesh = new THREE.Mesh(geo, mat);
+  bgMesh.position.z = -2;
+  bgMesh.renderOrder = -2;
+  scene.add(bgMesh);
+  updateBgCover();
+});
 
 /* ---------- textures (start as generated art, photos swap in on load) ---------- */
 const textures = PROJECTS.map((p, i) => {
@@ -333,8 +294,8 @@ void main(){
   float aa = fwidth(d) + 0.0001;
   float alpha = 1.0 - smoothstep(-aa, aa, d);
   if (alpha <= 0.001) discard;
-  vec3 col = texture2D(map, vUv).rgb;
-  gl_FragColor = vec4(col, alpha * uFade);
+  vec4 texel = texture2D(map, vUv);
+  gl_FragColor = vec4(texel.rgb, texel.a * alpha * uFade);
 }`;
 
 function makeMaterial() {
@@ -378,14 +339,24 @@ buildPool();
 const pmod = (a, n) => ((a % n) + n) % n;
 const projIndex = (cx, cy) => {
   if (activeN === 0) return 0;
+  if (filterCaseStudies) {
+    const i = CS_POSITIONS.findIndex(p => p.cx === cx && p.cy === cy);
+    return (i >= 0 && i < activeN) ? i : -1;
+  }
   return pmod(cx * 31 + cy * 131, activeN);
 };
+// Returns true if this cell should display a card (always true in archive; bounded in CS mode)
+const isValidCSCell = (cx, cy) =>
+  !filterCaseStudies ||
+  (cx === 0 && cy === 0) ||
+  CS_POSITIONS.some((p, i) => p.cx === cx && p.cy === cy && i < activeN);
 
 /* ============================================================
    INTERACTION — drag / wheel / arrow keys, inertia, snap
 ============================================================ */
 // scroll = grid translation in px (screen space, +x right, +y up)
 const scroll = { x: 0, y: 0 };
+const rawScroll = { x: 0, y: 0 }; // unresisted position; scroll is the rubber-banded display value
 const vel = { x: 0, y: 0 };
 const drag = { active: false, lastX: 0, lastY: 0, moved: 0 };
 
@@ -393,17 +364,38 @@ const nearestMultiple = (v, pitch) => Math.round(v / pitch) * pitch;
 
 // Single ease-in-out tween for every settle (snap / arrows / click).
 // Smootherstep: gentle in and out with no overshoot.
-const tween = { active: false, x0: 0, y0: 0, x1: 0, y1: 0, t: 0, dur: 0.5 };
-function startTween(tx, ty) {
+const tween = { active: false, x0: 0, y0: 0, x1: 0, y1: 0, t: 0, dur: 0.5, easeOut: false };
+function startTween(tx, ty, easeOut = false) {
   tween.x0 = scroll.x; tween.y0 = scroll.y;
   tween.x1 = tx; tween.y1 = ty;
   const dist = Math.hypot(tx - scroll.x, ty - scroll.y);
-  tween.dur = THREE.MathUtils.clamp(SNAP_MIN + dist / 3500, SNAP_MIN, SNAP_MAX);
+  tween.dur = easeOut ? SNAP_MIN : THREE.MathUtils.clamp(0.42 + dist / 1200, 0.42, 0.85);
+  tween.easeOut = easeOut;
   tween.t = 0; tween.active = true;
 }
+function rubberBand(natural, max) {
+  if (Math.abs(natural) <= max) return natural;
+  const sign = Math.sign(natural);
+  const over = Math.abs(natural) - max;
+  // Asymptotic: resistance increases continuously; approaches max*0.38 ceiling
+  return sign * (max + over / (1 + over / (max * 0.38)));
+}
+
 function snapNearest(useVel) {
   const px = scroll.x + (useVel ? vel.x * FLING : 0);
   const py = scroll.y + (useVel ? vel.y * FLING : 0);
+  if (filterCaseStudies) {
+    const cells = [{ cx: 0, cy: 0 }, ...CS_POSITIONS.slice(0, activeN)];
+    let bestD = Infinity, bestTx = 0, bestTy = 0;
+    for (const { cx, cy } of cells) {
+      const tx = -cx * PITCH_X, ty = -cy * PITCH_Y;
+      const d = (px - tx) ** 2 + (py - ty) ** 2;
+      if (d < bestD) { bestD = d; bestTx = tx; bestTy = ty; }
+    }
+    const overBounds = Math.abs(scroll.x) > PITCH_X || Math.abs(scroll.y) > PITCH_Y;
+    startTween(bestTx, bestTy, overBounds);
+    return;
+  }
   startTween(nearestMultiple(px, PITCH_X), nearestMultiple(py, PITCH_Y));
 }
 
@@ -413,6 +405,7 @@ function onDown(e) {
   if (zoomed) return;
   drag.active = true; drag.moved = 0; tween.active = false;
   vel.x = vel.y = 0;
+  rawScroll.x = scroll.x; rawScroll.y = scroll.y;
   const p = pt(e); drag.lastX = p.x; drag.lastY = p.y;
   document.body.classList.add('dragging');
 }
@@ -422,9 +415,19 @@ function onMove(e) {
   const dx = p.x - drag.lastX, dy = p.y - drag.lastY;
   drag.lastX = p.x; drag.lastY = p.y;
   drag.moved += Math.abs(dx) + Math.abs(dy);
-  scroll.x += dx;
-  scroll.y -= dy;          // screen-down → grid-down (world -y)
-  vel.x = dx; vel.y = -dy;
+  rawScroll.x += dx;
+  rawScroll.y -= dy;       // screen-down → grid-down (world -y)
+  if (filterCaseStudies) {
+    scroll.x = rubberBand(rawScroll.x, PITCH_X);
+    scroll.y = rubberBand(rawScroll.y, PITCH_Y);
+    // Zero out velocity when past boundary so fling doesn't add energy against the snap-back
+    vel.x = Math.abs(rawScroll.x) > PITCH_X ? 0 : dx;
+    vel.y = Math.abs(rawScroll.y) > PITCH_Y ? 0 : -dy;
+  } else {
+    scroll.x = rawScroll.x;
+    scroll.y = rawScroll.y;
+    vel.x = dx; vel.y = -dy;
+  }
 }
 function onUp() {
   if (!drag.active) return;
@@ -448,11 +451,21 @@ addEventListener('wheel', (e) => {
   tween.active = false;
   wheeling = true;
   cta.classList.remove('show'); ctaShown = false; ctaBtn.setAttribute('tabindex', '-1');
-  scroll.x -= e.deltaX;
-  scroll.y += e.deltaY;    // wheel-down pans content up
+  rawScroll.x -= e.deltaX;
+  rawScroll.y += e.deltaY; // wheel-down pans content up
   vel.x = vel.y = 0;
+  if (filterCaseStudies) {
+    scroll.x = rubberBand(rawScroll.x, PITCH_X);
+    scroll.y = rubberBand(rawScroll.y, PITCH_Y);
+  } else {
+    scroll.x = rawScroll.x;
+    scroll.y = rawScroll.y;
+  }
   clearTimeout(wheelTimer);
-  wheelTimer = setTimeout(() => { wheeling = false; snapNearest(false); }, 90);
+  wheelTimer = setTimeout(() => {
+    rawScroll.x = scroll.x; rawScroll.y = scroll.y;
+    wheeling = false; snapNearest(false);
+  }, 90);
 }, { passive: false });
 
 /* ---------- raycast hover / click ---------- */
@@ -481,7 +494,7 @@ canvas.addEventListener('click', (e) => {
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
   if (c.x === ccx && c.y === ccy && centreProject) openZoom(centreProject);   // centre card → zoom
-  else if (c.x !== ccx || c.y !== ccy) startTween(-c.x * PITCH_X, -c.y * PITCH_Y); // snap to centre
+  else if ((c.x !== ccx || c.y !== ccy) && isValidCSCell(c.x, c.y)) startTween(-c.x * PITCH_X, -c.y * PITCH_Y); // snap to centre
 });
 
 addEventListener('keydown', (e) => {
@@ -511,6 +524,7 @@ addEventListener('keydown', (e) => {
   else if (e.key === 'ArrowDown') ny = ccy - 1;
   else return;
   e.preventDefault();
+  if (!isValidCSCell(nx, ny)) return;
   startTween(-nx * PITCH_X, -ny * PITCH_Y);
 });
 
@@ -604,6 +618,7 @@ let centrePxW = CENTRE_FRAC * innerWidth;   // actual screen px width of centre 
 let centrePxH = centrePxW * (ITEM_H / ITEM_W);
 let zoomed = false;          // true while open OR animating (blocks grid interaction)
 let ctaShown = false;
+let ctaTimer = null;
 ctaBtn.setAttribute('tabindex', '-1');
 let introShown = false;
 let introPageLoadAnimDone = false;
@@ -1249,14 +1264,16 @@ function animate() {
     }
   }
 
-  // Advance the ease-in-out snap tween
+  // Advance the snap tween — smootherstep normally, ease-out cubic for rubber-band snap-back
   if (!drag.active && tween.active) {
     tween.t += dt / tween.dur;
     const p = Math.min(tween.t, 1);
-    const e = p * p * p * (p * (p * 6 - 15) + 10);   // smootherstep
+    const e = tween.easeOut
+      ? 1 - (1 - p) * (1 - p) * (1 - p)        // ease-out cubic: rubber-band snap-back
+      : (1 - Math.cos(Math.PI * p)) / 2;        // sine ease-in-out: gentle ramp, moderate peak, smooth settle
     scroll.x = tween.x0 + (tween.x1 - tween.x0) * e;
     scroll.y = tween.y0 + (tween.y1 - tween.y0) * e;
-    if (p >= 1) { scroll.x = tween.x1; scroll.y = tween.y1; tween.active = false; }
+    if (p >= 1) { scroll.x = tween.x1; scroll.y = tween.y1; rawScroll.x = tween.x1; rawScroll.y = tween.y1; tween.active = false; }
   }
 
   // Which cell currently sits at screen centre
@@ -1301,21 +1318,27 @@ function animate() {
     m.scale.set(ITEM_W * s, ITEM_H * s, 1);
     if (cellX === ccx && cellY === ccy) { centrePxW = ITEM_W * s; centrePxH = ITEM_H * s; }
     m.material.uniforms.uRadius.value = RADIUS / S0;
-    m.material.uniforms.uFade.value = 0.55 + 0.45 * fall;
+    const isEmpty = !isValidCSCell(cellX, cellY);
+    m.material.uniforms.uFade.value = isEmpty ? 0 : 0.55 + 0.45 * fall;
 
     // Assign the right project only when this slot's cell changes
     const key = cellX + ',' + cellY;
     if (m.userData.key !== key) {
       m.userData.key = key;
       m.userData.cell = { x: cellX, y: cellY };
-      if (activeN === 0) {
+      if (isEmpty) {
+        m.userData.projIdx = -1;
+      } else if (activeN === 0) {
         m.material.uniforms.map.value = introTexture;
+        m.userData.projIdx = -1;
       } else {
-        m.material.uniforms.map.value = (cellX === 0 && cellY === 0 && !hasActiveFilters())
-          ? introTexture
-          : textures[activeProjects[projIndex(cellX, cellY)]._idx];
+        const isIntro = cellX === 0 && cellY === 0 && !hasActiveFilters();
+        const pi = isIntro ? -1 : projIndex(cellX, cellY);
+        m.material.uniforms.map.value = (isIntro || pi < 0) ? introTexture : textures[activeProjects[pi]._idx];
+        m.userData.projIdx = pi;
       }
     }
+
   }
 
   // Bottom HUD reflects the centred project
@@ -1331,23 +1354,30 @@ function animate() {
       nowTitle.textContent = '';
       nowMeta.textContent = 'Scroll in any direction to explore';
     } else {
-      centreProject = activeProjects[projIndex(ccx, ccy)];
-      nowTitle.textContent = centreProject.title;
-      nowMeta.textContent = centreProject.category.join(', ');
-      ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
-      // Pre-paint the zoom hero while the panel is hidden so the image is already
-      // rendered when openZoom makes it visible — skip when zoomed so a resize
-      // can't overwrite the open project's colours with a different project's.
-      if (!zoomed) {
-        zoomHeroBg.style.backgroundImage = `url("${centreProject.src}")`;
-        zoom.style.backgroundColor = centreProject.accentColourPrimary;
-        zoomContent.style.backgroundColor = centreProject.accentColourPrimary;
+      const _pi = projIndex(ccx, ccy);
+      centreProject = _pi >= 0 ? activeProjects[_pi] : null;
+      if (!centreProject) {
+        nowTitle.textContent = '';
+        nowMeta.textContent = '';
+      } else {
+        nowTitle.textContent = centreProject.title;
+        nowMeta.textContent = centreProject.category.join(', ');
+        ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
+        // Pre-paint the zoom hero while the panel is hidden so the image is already
+        // rendered when openZoom makes it visible — skip when zoomed so a resize
+        // can't overwrite the open project's colours with a different project's.
+        if (!zoomed) {
+          zoomHeroBg.style.backgroundImage = `url("${centreProject.src}")`;
+          zoom.style.backgroundColor = centreProject.accentColourPrimary;
+          zoomContent.style.backgroundColor = centreProject.accentColourPrimary;
+        }
+        // Decode this and adjacent images so they're always ready
+        [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx, dy]) => {
+          const pi2 = projIndex(ccx + dx, ccy + dy);
+          const np = pi2 >= 0 ? activeProjects[pi2] : null;
+          _bgPreloads.get(np?.src)?.decode?.().catch(() => {});
+        });
       }
-      // Decode this and adjacent images so they're always ready
-      [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx, dy]) => {
-        const np = activeProjects[projIndex(ccx + dx, ccy + dy)];
-        _bgPreloads.get(np?.src)?.decode?.().catch(() => {});
-      });
     }
   }
 
@@ -1358,7 +1388,15 @@ function animate() {
 
   // Show the CTA button only when settled on a non-intro centre card
   const settled = !(drag.active && drag.moved > 6) && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
-  if (settled !== ctaShown) { ctaShown = settled; cta.classList.toggle('show', settled); ctaBtn.setAttribute('tabindex', settled ? '0' : '-1'); }
+  if (settled !== ctaShown) {
+    ctaShown = settled;
+    clearTimeout(ctaTimer);
+    if (settled) {
+      ctaTimer = setTimeout(() => { cta.classList.add('show'); ctaBtn.setAttribute('tabindex', '0'); }, 250);
+    } else {
+      cta.classList.remove('show'); ctaBtn.setAttribute('tabindex', '-1');
+    }
+  }
 
   const introSettled = !(drag.active && drag.moved > 3) && !tweeningAway && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
   if (introSettled !== introShown) {
@@ -1384,9 +1422,11 @@ function animate() {
     prlxY += (prlxTarget.y - prlxY) * 0.03;
   }
 
-  // Cards shift gently with mouse; contour lines shift more (feel further away)
-  contourGroup.position.x = scroll.x * 0.06 + prlxX * -28;
-  contourGroup.position.y = scroll.y * 0.06 + prlxY * -28;
+  // Background image parallaxes gently behind the cards
+  if (bgMesh) {
+    bgMesh.position.x = scroll.x * 0.03 + prlxX * -14;
+    bgMesh.position.y = scroll.y * 0.03 + prlxY * -14;
+  }
 
   renderer.render(scene, camera);
 }
@@ -1396,6 +1436,7 @@ addEventListener('resize', () => {
   camera.position.z = camDistance();
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
+  updateBgCover();
   computeLayout();
   buildPool();
   positionCTA();
