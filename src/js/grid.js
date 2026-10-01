@@ -30,7 +30,6 @@ const CS_POSITIONS = [
    TUNABLES
 ============================================================ */
 
-const BG_COLOR = 0xeae8e4;   // scene background, and fallback for card covers
 const ITEM_W = 320;   // px — geometry/texture aspect only (16:10)
 const ITEM_H = 225;
 const RADIUS = 30;    // px — corner radius in screen pixels (constant across all sizes)
@@ -203,7 +202,7 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(BG_COLOR);
+scene.background = new THREE.Color(0xeae8e4);
 
 const camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, 1, 6000);
 // Distance chosen so at z=0 the visible height == innerHeight px  →  1 world unit ≈ 1px.
@@ -235,6 +234,8 @@ function updateBgCover() {
 }
 
 new THREE.TextureLoader().load('/assets/grid-bg.jpg', (tex) => {
+  console.log(tex);
+  tex.colorSpace = THREE.NoColorSpace;
   bgTexture = tex;
   const geo = new THREE.PlaneGeometry(1, 1);
   const mat = new THREE.MeshBasicMaterial({ map: tex, depthWrite: false, depthTest: false });
@@ -1449,8 +1450,7 @@ animate();
 setTimeout(() => {
   document.getElementById('loader').classList.add('hidden');
   const _startSlug = location.pathname.slice(1);
-  const _isProjectLoad = !!_startSlug && _startSlug !== 'archive' && _startSlug !== 'about';
-  const gridDelay = _isProjectLoad ? 0 : 3100;
+  const gridDelay = !_startSlug ? 3100 : 0; // home page only: wait for intro word animation
   setTimeout(() => requestAnimationFrame(() => canvas.classList.add('ready')), gridDelay);
 }, 300);
 
