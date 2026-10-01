@@ -66,7 +66,7 @@ export const blocks = [
     body: '<h2>Dressed for History</h2><p><em>Women’s fashion 1750–2000</em></p><p>Just as fashion constantly evolves, it is continuously informed and held together by a common thread: the past. This exhibit highlights the importance of collecting and preserving the clothing of the past in order to inform the future.</p>',
   },
 
-  { type: 'video', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'assets/projects/adornment/dressed-for-history-compressed.mp4' },
+  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231911203?autopause=0' },
   { type: 'spacer', span: 12, height: 40 },
   { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231801301?autopause=0' },
   {
