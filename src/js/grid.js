@@ -378,19 +378,6 @@ buildPool();
 const pmod = (a, n) => ((a % n) + n) % n;
 const projIndex = (cx, cy) => {
   if (activeN === 0) return 0;
-  // In case studies mode, pin the 8 cells surrounding the intro to unique indices per group
-  if (filterCaseStudies && activeN >= 4) {
-    if (cx ===  1 && cy ===  0) return 0;
-    if (cx === -1 && cy ===  0) return 1;
-    if (cx ===  0 && cy ===  1) return 2;
-    if (cx ===  0 && cy === -1) return 3;
-  }
-  if (filterCaseStudies && activeN >= 6) {
-    if (cx ===  1 && cy ===  1) return 4;
-    if (cx === -1 && cy ===  1) return 5;
-    if (cx ===  1 && cy === -1) return 2;
-    if (cx === -1 && cy === -1) return 3;
-  }
   return pmod(cx * 31 + cy * 131, activeN);
 };
 

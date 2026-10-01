@@ -316,7 +316,7 @@ export const PROJECTS = [
     casestudy: true,
     category:  ['Website', 'Interactive Story'],
     industry:  ['Arts & Culture'],
-    accentColourPrimary:   '#0b202e',
+    accentColourPrimary:   '#323C36',
     textColour: 'light',
   },
   {

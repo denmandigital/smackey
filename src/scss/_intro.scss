@@ -170,9 +170,15 @@
 	opacity: 0;
 }
 
-// Dark words — fade in together, quickly
-#intro.intro-animating.show .intro-title .dark {
-	animation: introWordFade 0.55s ease 0.3s both;
+// Dark words — stagger immediately one after the other
+#intro.intro-animating.show .intro-title .dark:nth-child(2) {
+	animation: introWordFade 0.3s ease 0.3s both;
+}
+#intro.intro-animating.show .intro-title .dark:nth-child(4) {
+	animation: introWordFade 0.3s ease 0.6s both;
+}
+#intro.intro-animating.show .intro-title .dark:nth-child(6) {
+	animation: introWordFade 0.3s ease 0.9s both;
 }
 
 // Light text — starts at the same time as dark, fades in slowly
