@@ -41,8 +41,9 @@ const GAP_C = 36;         // gap (px) held between adjacent items — shrinks ou
 const SIZE_MIN = 0.12;       // smallest item scale, relative to the centre item
 const SIZE_POW = 1.4;        // how fast items shrink toward the edge
 
-const FLING = 11;         // momentum carried from a flick into the snap target
 const SNAP_MIN = 0.34;       // s — rubber-band snap-back duration
+const COAST_FRICTION = 0.95; // velocity multiplier per frame at 60fps (~5% remains after 1s)
+const COAST_STOP = 0.8;      // px/frame — coast ends and snap begins below this speed
 
 // derived per-viewport layout (recomputed on resize)
 const NMAX = 30;                // rings tabulated per axis
@@ -359,6 +360,8 @@ const isValidCSCell = (cx, cy) =>
 const scroll = { x: 0, y: 0 };
 const rawScroll = { x: 0, y: 0 }; // unresisted position; scroll is the rubber-banded display value
 const vel = { x: 0, y: 0 };
+const velSmooth = { x: 0, y: 0 }; // EMA of drag velocity — used to seed coasting
+let coasting = false;
 const drag = { active: false, lastX: 0, lastY: 0, moved: 0 };
 
 const nearestMultiple = (v, pitch) => Math.round(v / pitch) * pitch;
@@ -382,9 +385,9 @@ function rubberBand(natural, max) {
   return sign * (max + over / (1 + over / (max * 0.38)));
 }
 
-function snapNearest(useVel) {
-  const px = scroll.x + (useVel ? vel.x * FLING : 0);
-  const py = scroll.y + (useVel ? vel.y * FLING : 0);
+function snapNearest() {
+  const px = scroll.x;
+  const py = scroll.y;
   if (filterCaseStudies) {
     const cells = [{ cx: 0, cy: 0 }, ...CS_POSITIONS.slice(0, activeN)];
     let bestD = Infinity, bestTx = 0, bestTy = 0;
@@ -405,7 +408,9 @@ function pt(e) { const t = e.touches ? e.touches[0] : e; return { x: t.clientX, 
 function onDown(e) {
   if (zoomed) return;
   drag.active = true; drag.moved = 0; tween.active = false;
+  coasting = false;
   vel.x = vel.y = 0;
+  velSmooth.x = velSmooth.y = 0;
   rawScroll.x = scroll.x; rawScroll.y = scroll.y;
   const p = pt(e); drag.lastX = p.x; drag.lastY = p.y;
   document.body.classList.add('dragging');
@@ -418,6 +423,8 @@ function onMove(e) {
   drag.moved += Math.abs(dx) + Math.abs(dy);
   rawScroll.x += dx;
   rawScroll.y -= dy;       // screen-down → grid-down (world -y)
+  velSmooth.x = velSmooth.x * 0.7 + dx * 0.3;
+  velSmooth.y = velSmooth.y * 0.7 + (-dy) * 0.3;
   if (filterCaseStudies) {
     scroll.x = rubberBand(rawScroll.x, PITCH_X);
     scroll.y = rubberBand(rawScroll.y, PITCH_Y);
@@ -434,7 +441,13 @@ function onUp() {
   if (!drag.active) return;
   drag.active = false;
   document.body.classList.remove('dragging');
-  snapNearest(true);       // carry flick momentum into the snap target
+  if (Math.hypot(velSmooth.x, velSmooth.y) > COAST_STOP) {
+    vel.x = velSmooth.x;
+    vel.y = velSmooth.y;
+    coasting = true;
+  } else {
+    snapNearest();
+  }
 }
 
 canvas.addEventListener('mousedown', onDown);
@@ -450,6 +463,7 @@ addEventListener('wheel', (e) => {
   if (zoomed || menuOpen) return;
   e.preventDefault();
   tween.active = false;
+  coasting = false;
   wheeling = true;
   cta.classList.remove('show'); ctaShown = false; ctaBtn.setAttribute('tabindex', '-1');
   rawScroll.x -= e.deltaX;
@@ -465,7 +479,7 @@ addEventListener('wheel', (e) => {
   clearTimeout(wheelTimer);
   wheelTimer = setTimeout(() => {
     rawScroll.x = scroll.x; rawScroll.y = scroll.y;
-    wheeling = false; snapNearest(false);
+    wheeling = false; snapNearest();
   }, 90);
 }, { passive: false });
 
@@ -985,7 +999,7 @@ function applyFilters(flashScene = false) {
   activeN = activeProjects.length;
   pool.forEach(m => { m.userData.key = null; });
   lastCenterKey = null;
-  snapNearest(false);
+  snapNearest();
   updateFilterBadge();
   if (flashScene) {
     const s = document.getElementById('scene');
@@ -1274,8 +1288,28 @@ function animate() {
     }
   }
 
+  // Coast: free-scroll with friction after drag release, then snap once slow enough
+  if (coasting) {
+    const friction = Math.pow(COAST_FRICTION, dt * 60);
+    vel.x *= friction;
+    vel.y *= friction;
+    rawScroll.x += vel.x;
+    rawScroll.y += vel.y;
+    if (filterCaseStudies) {
+      scroll.x = rubberBand(rawScroll.x, PITCH_X);
+      scroll.y = rubberBand(rawScroll.y, PITCH_Y);
+    } else {
+      scroll.x = rawScroll.x;
+      scroll.y = rawScroll.y;
+    }
+    if (Math.hypot(vel.x, vel.y) < COAST_STOP) {
+      coasting = false;
+      snapNearest();
+    }
+  }
+
   // Advance the snap tween — smootherstep normally, ease-out cubic for rubber-band snap-back
-  if (!drag.active && tween.active) {
+  if (!drag.active && !coasting && tween.active) {
     tween.t += dt / tween.dur;
     const p = Math.min(tween.t, 1);
     const e = tween.easeOut
@@ -1450,7 +1484,7 @@ addEventListener('resize', () => {
   computeLayout();
   buildPool();
   positionCTA();
-  snapNearest(false);
+  snapNearest();
   lastCenterKey = null;
   if (zoomed) { applyZoomGeometry(); setZoomTransform(zoomAnim.p); }  // refit to new viewport
 });
