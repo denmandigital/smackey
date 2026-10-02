@@ -31,7 +31,7 @@
 	}
 	#navTop {
 		height: 54px;
-		padding: 0 12px;
+		padding: 0 1.1rem 0 0.9rem;
 	}
 	.nav-actions {
 		gap: 14px;
@@ -78,8 +78,5 @@
 		letter-spacing: 0.03em;
 		padding: 5px 8px;
 
-		.filter-btn-star {
-			display: none;
-		}
 	}
 }

@@ -49,7 +49,12 @@ body {
 }
 
 :focus-visible {
-  outline: 1px solid var(--muted);
+  outline: 1px solid var(--bg);
   outline-offset: 3px;
   border-radius: 10px;
 }	
+
+#nav *:focus-visible, 
+#introAboutBtn:focus-visible {
+	outline: 1px solid var(--muted);
+}

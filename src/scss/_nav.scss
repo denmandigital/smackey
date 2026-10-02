@@ -22,11 +22,14 @@
 		box-shadow 0.55s ease,
 		background 0.4s ease;
 	box-shadow: 0 10px 10px rgba(0, 0, 0, 0.12);
+	background-image: url(/assets/grid-bg.jpg);
+	background-size: 100vmax 150vmax;
+	background-position: top center;
 
 	&.open {
 		width: calc(100vw - 72px);
 		box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
-		background: rgb(234, 232, 228);
+		// background: rgb(234, 232, 228);
 		backdrop-filter: none;
 		-webkit-backdrop-filter: none;
 		height: calc(100vh - 72px);
@@ -56,7 +59,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0 25px;
+	padding: 0 25px 0 22px;
 	height: 62px;
 	flex-shrink: 0;
 }
@@ -71,6 +74,7 @@
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
+	
 }
 
 #navFilter {
@@ -110,7 +114,7 @@
 
 #navBurger {
 	width: 22px;
-	height: 44px;
+	height: 22px;
 	border: none;
 	background: none;
 	cursor: pointer;

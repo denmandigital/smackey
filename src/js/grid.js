@@ -108,6 +108,11 @@ let activeProjects = PROJECTS;
 let activeN = N;
 
 /* ============================================================
+   VIEWED TRACKING — persisted in localStorage
+============================================================ */
+const viewedSlugs = new Set();
+
+/* ============================================================
    COVER TEXTURE
    Photo (if loaded) or generated colour art, with card text overlaid.
 ============================================================ */
@@ -157,19 +162,20 @@ function makeCover(p, idx, w = 1024, img = null) {
     x.letterSpacing = '0px';
   }
 
-  if (p.casestudy) {
+  if (viewedSlugs.has(p.slug)) {
     const r = w * (innerWidth <= 640 ? 0.026 : 0.018);
     const pad = innerWidth <= 640 ? 3.4 : 2.4;
-    const sx = cw - r * pad, sy = r * pad;
+    const bx = cw - r * pad;
+    const by = r * pad;
     x.beginPath();
-    for (let i = 0; i < 10; i++) {
-      const a = (i * Math.PI) / 5 - Math.PI / 2;
-      const radius = i % 2 === 0 ? r : r * 0.42;
-      x[i === 0 ? 'moveTo' : 'lineTo'](sx + Math.cos(a) * radius, sy + Math.sin(a) * radius);
-    }
-    x.closePath();
-    x.fillStyle = 'rgba(255,255,255,.95)';
+    x.arc(bx, by, r * 1.15, 0, Math.PI * 2);
+    x.fillStyle = 'rgba(241, 239, 232, 0.5)';
     x.fill();
+    x.font = `600 ${r * 1.5}px "Open Sans", Arial`;
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    x.fillStyle = 'rgba(25, 26, 29, 1)';
+    x.fillText('✓', bx - r * 0.08, by + r * 0.1);
   }
 
   return c;
@@ -265,6 +271,15 @@ PROJECTS.forEach((p, i) => {
   img.onerror = () => console.warn('Card image not found, using generated art:', p.src);
   img.src = p.src;
 });
+
+function markViewed(p) {
+  if (viewedSlugs.has(p.slug)) return;
+  viewedSlugs.add(p.slug);
+  const img = _bgPreloads.get(p.src);
+  const loaded = img && img.complete && img.naturalWidth > 0 ? img : null;
+  textures[p._idx].image = makeCover(p, p._idx, 1024, loaded);
+  textures[p._idx].needsUpdate = true;
+}
 
 let wmStamp = null;  // set after intro monogram scene is ready (below)
 let introBaseCanvas = makeIntroTexture();
@@ -727,6 +742,7 @@ function setPageMeta(title, desc) {
 
 function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
+  markViewed(p);
   zoomed = true;
   zoomTriggerEl = document.activeElement;
   zoom.removeAttribute('inert');
@@ -761,7 +777,9 @@ function openZoom(p, skipHistory = false) {
   zoomMeta.style.transform = 'translateY(0)';
   applyZoomGeometry();
   zoomAnim.p = 0; setZoomTransform(0);
+  zoomClose.style.transition = 'none';
   zoomClose.style.opacity = '0';
+  requestAnimationFrame(() => { zoomClose.style.transition = ''; });
   zoom.style.opacity = '1';
   zoom.classList.add('open');
   zoomAnim.dir = 1; zoomAnim.active = true;
@@ -1238,6 +1256,10 @@ buildFilterMenu();
 navFilterBtn.addEventListener('click', () => filterPanelOpen ? closeFilterPanel() : openFilterPanel());
 
 // Close filter panel on outside click
+let usingKeyboard = false;
+document.addEventListener('pointerdown', () => { usingKeyboard = false; });
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Tab' || ev.key === 'Enter' || ev.key === ' ') usingKeyboard = true; });
+
 document.addEventListener('pointerdown', e => {
   if (filterPanelOpen && !nav.contains(e.target)) closeFilterPanel();
 });
@@ -1274,7 +1296,7 @@ function animate() {
       zoomMeta.style.opacity = '1';
       zoomMeta.style.transform = 'translateY(-30px)';
       zoomClose.style.opacity = '1';
-      zoomClose.focus();
+      if (usingKeyboard) zoomClose.focus();
       if (innerWidth > 640) setTimeout(() => smoothScrollTo(zoomScroll, zoomScroll.clientHeight / 2, 2000), 1000);
     }
     if (zoomAnim.dir < 0 && zoomAnim.p <= 0) {
