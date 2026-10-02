@@ -64,6 +64,10 @@
 	&:hover {
 		transform: translateZ(0) scale(1.2);
 	}
+	@include mobile  { 
+		top:12px;
+		right:12px;
+	}
 }
 
 /* Scrollable inner layer */
@@ -349,7 +353,7 @@
 		padding: 48px 56px;
 
 		@include mobile {
-			padding: 48px 36px;
+			padding: 38px 24px;
 		}
 
 		h3 {

@@ -7,7 +7,6 @@ export const blocks = [
     spanSm: 12,
     variant: 'intro',
     body: 'Foran Mining is a copper-zinc-gold-silver exploration and development company focused on sustainable mining, community partnership and circular economies.',
-    url: 'https://foranmining.com',
   },
   {
     type: 'container',

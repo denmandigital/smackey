@@ -163,13 +163,15 @@ function makeCover(p, idx, w = 1024, img = null) {
   }
 
   if (viewedSlugs.has(p.slug)) {
-    const r = w * (innerWidth <= 640 ? 0.026 : 0.018);
-    const pad = innerWidth <= 640 ? 3.4 : 2.4;
+    // Normalize r so the circle is ~11 screen px radius regardless of card scale
+    const cardW = Math.max(320, CENTRE_FRAC * innerWidth);
+    const r = w * 11 / cardW;
+    const pad = 2.4;
     const bx = cw - r * pad;
     const by = r * pad;
     x.beginPath();
     x.arc(bx, by, r * 1.15, 0, Math.PI * 2);
-    x.fillStyle = 'rgba(241, 239, 232, 0.5)';
+    x.fillStyle = 'rgba(241, 239, 232, 0.75)';
     x.fill();
     x.font = `600 ${r * 1.5}px "Open Sans", Arial`;
     x.textAlign = 'center';
@@ -683,7 +685,7 @@ function positionCTA() {
 function applyZoomGeometry() {
   const cW = centrePxW, cH = centrePxH;
   const mobile = innerWidth <= 640;
-  const zm = mobile ? 16 : GAP_C;
+  const zm = mobile ? 12 : GAP_C;
   zoomCard = {
     l0: (innerWidth  - cW) / 2,  t0: (innerHeight - cH) / 2,  w0: cW,  h0: cH,
     l1: zm,                      t1: zm,
@@ -1274,7 +1276,14 @@ let lastT = performance.now();
 let prlxX = 0, prlxY = 0;   // smoothed mouse parallax (-1..1)
 
 // Sync filter and menu state from URL on load (must be after lastCenterKey is declared)
-activateFilter(location.pathname === '/archive' ? 'all' : 'casestudies');
+// Deep-linked non-case-study projects must open in archive mode so the project
+// remains visible after the zoom closes and the scroll position is computed correctly.
+const _dlPath = location.pathname.slice(1);
+const _dlProject = _dlPath && _dlPath !== 'archive' && _dlPath !== 'about'
+  ? PROJECTS.find(p => p.slug === _dlPath) : null;
+activateFilter(
+  location.pathname === '/archive' || (_dlProject && !_dlProject.casestudy) ? 'all' : 'casestudies'
+);
 if (location.pathname === '/about') openMenu(true);
 
 function animate() {
@@ -1577,8 +1586,8 @@ if (initSlug) {
     // Cancel any tween started by activateFilter (e.g. ?casestudies on load) so it can't
     // override the scroll position we're about to set.
     tween.active = false;
-    scroll.x = -bestCell.cx * PITCH_X;
-    scroll.y = -bestCell.cy * PITCH_Y;
+    scroll.x = rawScroll.x = -bestCell.cx * PITCH_X;
+    scroll.y = rawScroll.y = -bestCell.cy * PITCH_Y;
     // Wait two frames so the render loop sets centrePxW/centrePxH before openZoom reads them
     requestAnimationFrame(() => requestAnimationFrame(() => openZoom(initProject, true)));
   }
