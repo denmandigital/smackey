@@ -23,9 +23,9 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/truthandlies/responsive-desktop-tablet_truth.png' },
+  { type: 'image', span: 12, src: 'assets/projects/truthandlies/responsive-desktop-tablet-truth.png' },
   
-  { type: 'image', span: 12, src: 'assets/projects/truthandlies/screens-perspective_truth.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/truthandlies/screens-perspective-truth.jpg' },
   
   // Video
   { type: 'vimeo', span: 12, autoplay: false, aspect: '16/10.2', src: 'https://player.vimeo.com/video/339435879' },

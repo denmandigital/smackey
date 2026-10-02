@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Foran wanted to stand out in a traditionally staid resource sector, and to share its values and vision for sustainable mining with investors, stakeholders and Indigenous partners.',
+    body: 'Foran wanted to stand out in a traditionally staid resource sector, and to share its values and vision for sustainable mining with investors, stakeholders, prospective employees and Indigenous partners.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -38,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'Foran’s approach to mining, built on sustainable value chains and circular economies, called for a brand as bold as its ambitions. Our strategy centred on strength, commitment and the infinite, and found its simplest expression in a ring symbol used in the logotype and across the brand.',
+    body: 'Foran’s approach to mining, built on sustainable value chains and circular economies, called for a brand as bold as its ambitions. Our strategy centred on strength, commitment, and the infinite, and found its simplest expression in a ring symbol used in the logotype and across the brand.',
   },
 
   // Outcome callout
@@ -47,7 +47,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>A brand and website that balances high-impact, emotional visuals with clear presentation of technical reports, metallurgical results and feasibility studies, built for audiences including investors and prospective employees</li><li>In September 2025, the federal government referred the McIlvenna Bay project to the Major Projects Office as a potential project of national interest</li><li>In April 2026, Eldorado Gold acquired Foran in a C$3.8-billion deal</li></ul>',
+    body: '<ul><li>A brand and website that conveyed Foran’s ambitions by balancing high-impact, emotional visuals with technical reports, metallurgical results and feasibility studies</li><li>In September 2025, the federal government referred Foran’s McIlvenna Bay project to the Major Projects Office as one of five potential projects of national interest</li><li>In April 2026, Eldorado Gold acquired Foran in a C$3.8-billion deal</li></ul>',
   },
 
   { type: 'image', span: 12, src: 'assets/projects/foran/foran-responsive.png' },
