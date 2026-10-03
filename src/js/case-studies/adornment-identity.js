@@ -6,8 +6,8 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>Text goes here</p>',
-    url: ''
+    body: '<p>The BC Society for the Museum of Costume (SMOC) maintains a large collection of historic fashion, traditional costume and textiles from the 18th century to the present. With funding from Digital Museums Canada, SMOC brought this collection online, giving students, academics and the public outside Vancouver access to its historical holdings.</p><p><em>Adornment & Identity: An Interactive Exploration of Women’s Fashion, 1750–2000</em> explores clothing as a historical artifact.</p>',
+    url: 'https://fashionhistory.ca',
   },
   {
     type: 'container',
@@ -27,8 +27,8 @@ export const blocks = [
     type: 'text',
     span: 12,
     variant: 'callout',
-    heading: 'Challenge',
-    body: '<p>Challenge text...</p>',
+    heading: 'Objectives',
+    body: '<ul><li>Engage and inform visitors with an interactive experience exploring the stories behind the garments, the cultural and historical context that shaped their design, and the people who wore them.</li><li>Employ a variety of media and digital storytelling techniques, including 3D modelling, video and scrolly-telling.</li><li>Provide curated learning activities for students.</li><li>Ground all content in primary research and expert review from fashion historians.</li></ul>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -37,7 +37,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: '<p>Approach text...</p>',
+    body: '<p>Working closely with SMOC, we developed a user-centred approach to digital storytelling, balancing engagement with historical accuracy. We ran two rounds of user testing with fashion students to validate concepts, built technical prototypes to test feasibility, and developed content with input from fashion historians and educators. I designed the virtual space floorplan and interaction UX, which a modeler and 3D programmer brought to life.</p>',
   },
 
   // Outcome callout
@@ -47,15 +47,17 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>List item 1</li><li>List item 2</li><li>List item 3</li></ul>',
+    body: '<ul><li>An immersive virtual museum with four interactive exhibits</li><li>A fully accessible version of the experience, meeting the WCAG 2.2 AA standards</li><li>An interactive 3D model of an 1900 House of Worth evening gown</li><li>Three short films exploring the personal histories behind selected garments</li></ul>',
   },
 
+
+  { type: 'spacer', span: 12, height: 40 },
 
   { type: 'image', span: 12, src: 'assets/projects/adornment/adornment-responsive.png' },
   
   { type: 'vimeo', span: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231806231?autopause=0' },
   
-  { type: 'spacer', span: 12, height: 40 },
+  { type: 'image', span: 12, src: 'assets/projects/adornment/floorplan-model.png' },
 
   {
     type: 'text',
@@ -105,6 +107,7 @@ export const blocks = [
 
   
   { type: 'image', span: 12, src: 'assets/projects/adornment/ai-screens-perspective.jpg' },
+  
 
   
 ];

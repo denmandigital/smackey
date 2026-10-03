@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: '<p>ISO’s previous funding application system was overly complicated, confusing to applicants, and difficult to maintain. Their resources were buried and overall web presence was uninspiring.</p>',
+    body: '<p>ISO’s previous funding application system was complicated, confusing for applicants, and hard for administrators to maintain. Resources were buried, and the organization’s web presence didn’t reflect its work.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -61,7 +61,7 @@ export const blocks = [
   { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-get-inspired.jpg' },
   
   { type: 'image', span: 12, src: 'assets/projects/iso/iso-screens-perspective.jpg' },
-  
+
   // Video
   { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/907945251' },
   
