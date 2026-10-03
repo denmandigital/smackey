@@ -37,8 +37,8 @@ export const blocks = [
     span: 6,
     spanSm: 12,
     variant: 'callout',
-    heading: 'Approach',
-    body: 'We developed a brand that pairs a deep navy palette with a legible, hierarchical type system, then built a flexible platform that let The Hub move between memberships, subscriptions, paid newsletters and donations as its needs changed.',
+    heading: 'Solution',
+    body: 'We developed a brand that pairs a deep navy palette with a legible, hierarchical type system, then built a flexible platform that let The Hub move between memberships, subscriptions, paid newsletters and donations as its needs changed. I led the research behind that model and designed the platform’s information architecture and user experience.',
   },
 
   // Outcome callout — full width
@@ -47,7 +47,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Outcome',
-    body: 'We built and ran the platform through The Hub’s early years. As its audience grew, it took digital in-house, and in 2024 it relaunched with its own team.',
+    body: 'We built and ran the platform through The Hub’s early years. It grew its audience over this period, and in 2024 moved digital in-house and relaunched.',
   },
 
   { type: 'spacer', span: 12, height: 40 },

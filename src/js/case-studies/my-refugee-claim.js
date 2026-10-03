@@ -37,7 +37,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'Multi-day discovery sessions were held with settlement workers, content creators, and immigration lawyers who work directly with claimants. Their input set the scope and kept the content legally and procedurally accurate. An MVP prototype was then tested with people who had recently been through the claim process. Their feedback exposed friction points and blind spots that shaped later iterations.',
+    body: 'We ran multi-day discovery sessions with settlement workers, content creators and immigration lawyers who work directly with claimants. Their input set the scope and kept the content legally and procedurally accurate. We then tested an MVP prototype with people who had recently been through the claim process, surfacing friction points and blind spots that shaped later iterations. I designed the information architecture and user experience, and directed the development of a flexible, block-based content management system that could scale with new languages and changes to government policies.',
   },
 
   // Outcome callout
@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>A plain-language guide for claimants in thirteen languages, used nationwide</li><li>A platform built to scale with new languages and policy changes</li><li>Integrated Ready Tour registrations with HubSpot to automate follow-up communications</li><li>Text to speech integration in 11 languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner</a></li></ul>',
+    body: '<ul><li>A plain-language guide for claimants in thirteen languages, used nationwide</li><li>Integrated registrations for Ready Tour, a virtual workshop helping claimants prepare for their hearings, with HubSpot to automate follow-up communications</li><li>AI text to speech integration, available in eleven languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner</a></li></ul>',
   },
 
   // Takeaway callout

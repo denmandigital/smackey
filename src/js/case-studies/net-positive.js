@@ -37,7 +37,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'Foran’s approach to mining, built on sustainable value chains and circular economies, called for a brand as bold as its ambitions. Our strategy centred on strength, commitment, and the infinite, and found its simplest expression in a ring symbol used in the logotype and across the brand.',
+    body: 'Foran’s approach to mining, built on sustainable value chains and circular economies, called for a brand as bold as its ambitions. Our strategy centred on strength, commitment, and the infinite, and found its simplest expression in a ring symbol used in the logotype and across the brand. I directed the design of the identity system, built an interactive scrolly-telling experience for its Ethos section, and an illustrated, interactive map explaining its mining infrastructure.',
   },
 
   // Outcome callout

@@ -38,16 +38,26 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'We started with a content and technology audit of the existing platforms. Working with key stakeholders, we used analytics and audience needs to identify the most valuable content. We then removed outdated and irrelevant material, reorganized the program structure, and moved topical content to social channels.',
+    body: 'We started with a content and technology audit of the existing platforms. Working with key stakeholders, we used analytics and audience needs to identify the most valuable content, challenging some long-held internal assumptions. We then removed outdated and irrelevant material, reorganized the program structure, and moved topical content to social channels.',
+  },
+
+  {
+    type: 'text',
+    span: 6,
+    spanSm: 12,
+    variant: 'callout',
+    heading: 'Solutions',
+    body: '<ul><li>Designed the information architecture and mega menu navigation system</li><li>Directed the development of a custom-built Canadian film catalogue with advanced search and filtering</li><li>Integrated film data from Salesforce with a custom-built plugin</li><li>Directed the development of a flexible, block-based content management system</li></ul>',
   },
 
   // Outcome callout — full width
   {
     type: 'text',
-    span: 12,
+    span: 6,
+    spanSm: 12,
     variant: 'callout',
-    heading: 'Outcome',
-    body: '<ul><li>500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul>',
+    heading: 'Outcomes',
+    body: '<ul><li>500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul><p>The following year, we developed <em>Reel Opportunities</em>, a digital workforce initiative aimed at attracting young adults to careers in Canada’s film industry, including an interactive career-pathway tool, a career-planning quiz, and a searchable, filterable directory of film-related job profiles.</p>',
   },
 
   { type: 'spacer', span: 12, height: 40 },

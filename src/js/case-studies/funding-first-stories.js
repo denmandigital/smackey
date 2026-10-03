@@ -38,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: '<p>We worked with ISO to understand their funding process, internal nominclature, and unique pain points. This included an audit of existing content, 3rd party integrations and functional requirements. User journey mapping, prototying and user feedback reviews were imlemented.</p>',
+    body: '<p>We worked with ISO to understand its funding process, internal nomenclature and unique pain points, including an audit of existing content, third-party integrations and functional requirements. I developed user journey maps and prototypes, incorporating user feedback throughout, informing a redesigned platform built around how ISO’s funding process actually works.</p>',
   },
 
   // Outcome callout
@@ -48,7 +48,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>Custom built funding calendar admin system that automatically organizes funds based on fund type and opening and closing dates</li><li>Stepped applicaton qualification system checklist reducing unqualified or incomplete submissions</li><li>Flexible, block based admin system for easy site administration in English and French</li></ul>',
+    body: '<ul><li>Custom-built funding calendar admin system that automatically organizes funds based on fund type and opening and closing dates</li><li>Stepped application qualification checklist, reducing unqualified or incomplete submissions</li><li>Flexible, block-based admin system for easy site administration in English and French</li></ul>',
   },
   { type: 'spacer', span: 12, height: 40 },
 
