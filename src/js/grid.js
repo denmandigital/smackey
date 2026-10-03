@@ -1158,8 +1158,8 @@ function buildFilterMenu() {
   const dateSection = `<div class="filter-section">
   <span class="filter-section-label" id="filter-label-date">Date</span>
   <div class="filter-chips" role="group" aria-labelledby="filter-label-date">
-    <button class="filter-chip" data-daterange="recent" aria-pressed="false">${now - 4}–${now}</button>
-    <button class="filter-chip" data-daterange="mid" aria-pressed="false">${now - 10}–${now - 5}</button>
+    <button class="filter-chip" data-daterange="recent" aria-pressed="false">${now}–${now - 4}</button>
+    <button class="filter-chip" data-daterange="mid" aria-pressed="false">${now - 5}–${now - 10}</button>
     <button class="filter-chip" data-daterange="older" aria-pressed="false">${now - 11} &amp; earlier</button>
   </div>
 </div>`;
