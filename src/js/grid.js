@@ -25,6 +25,16 @@ const CS_POSITIONS = [
   { cx: -1, cy: -1 },
 ];
 
+// Finite positions for filtered archive — spiral outward from (0,0), sorted by distance
+const GRID_POSITIONS = (() => {
+  const pos = [];
+  for (let cy = -8; cy <= 8; cy++)
+    for (let cx = -8; cx <= 8; cx++)
+      if (cx !== 0 || cy !== 0) pos.push({ cx, cy });
+  pos.sort((a, b) => (Math.hypot(a.cx, a.cy) - Math.hypot(b.cx, b.cy)) || (Math.abs(a.cx) - Math.abs(b.cx)) || (Math.abs(a.cy) - Math.abs(b.cy)));
+  return pos;
+})();
+
 
 /* ============================================================
    TUNABLES
@@ -106,6 +116,8 @@ const PALETTE = [
 const N = PROJECTS.length;
 let activeProjects = PROJECTS;
 let activeN = N;
+let gridFade = 1.0; // 0→1 fade-in when filters change
+const GRID_FADE_DUR = 0.35; // seconds
 
 /* ============================================================
    VIEWED TRACKING — persisted in localStorage
@@ -356,19 +368,29 @@ function buildPool() {
 buildPool();
 
 const pmod = (a, n) => ((a % n) + n) % n;
+const isFiniteGrid = () => filterCaseStudies || hasActiveFilters();
 const projIndex = (cx, cy) => {
   if (activeN === 0) return 0;
   if (filterCaseStudies) {
     const i = CS_POSITIONS.findIndex(p => p.cx === cx && p.cy === cy);
     return (i >= 0 && i < activeN) ? i : -1;
   }
+  if (hasActiveFilters()) {
+    // (0,0) holds the first filtered project; GRID_POSITIONS[i] holds project i+1
+    if (cx === 0 && cy === 0) return 0;
+    const i = GRID_POSITIONS.findIndex(p => p.cx === cx && p.cy === cy);
+    return (i >= 0 && i + 1 < activeN) ? i + 1 : -1;
+  }
   return pmod(cx * 31 + cy * 131, activeN);
 };
-// Returns true if this cell should display a card (always true in archive; bounded in CS mode)
-const isValidCSCell = (cx, cy) =>
-  !filterCaseStudies ||
-  (cx === 0 && cy === 0) ||
-  CS_POSITIONS.some((p, i) => p.cx === cx && p.cy === cy && i < activeN);
+// Returns true if this cell should display a card (always true in infinite archive; bounded in finite modes)
+const isValidCSCell = (cx, cy) => {
+  if (!isFiniteGrid()) return true;
+  if (cx === 0 && cy === 0) return true;
+  const positions = filterCaseStudies ? CS_POSITIONS : GRID_POSITIONS;
+  const limit = hasActiveFilters() && !filterCaseStudies ? activeN - 1 : activeN;
+  return positions.some((p, i) => p.cx === cx && p.cy === cy && i < limit);
+};
 
 /* ============================================================
    INTERACTION — drag / wheel / arrow keys, inertia, snap
@@ -401,19 +423,51 @@ function rubberBand(natural, max) {
   // Asymptotic: resistance increases continuously; approaches max*0.38 ceiling
   return sign * (max + over / (1 + over / (max * 0.38)));
 }
+function rubberBandRange(val, min, max) {
+  if (val >= min && val <= max) return val;
+  const span = Math.max(max - min, PITCH_X * 0.5);
+  if (val < min) { const over = min - val; return min - over / (1 + over / (span * 0.38)); }
+  const over = val - max;
+  return max + over / (1 + over / (span * 0.38));
+}
+function getFiniteBounds() {
+  if (!isFiniteGrid()) return null;
+  const positions = filterCaseStudies ? CS_POSITIONS : GRID_POSITIONS;
+  const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
+  const cells = [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
+  let minX = 0, maxX = 0, minY = 0, maxY = 0;
+  for (const { cx, cy } of cells) {
+    const tx = -cx * PITCH_X, ty = -cy * PITCH_Y;
+    if (tx < minX) minX = tx; if (tx > maxX) maxX = tx;
+    if (ty < minY) minY = ty; if (ty > maxY) maxY = ty;
+  }
+  return { minX, maxX, minY, maxY };
+}
 
-function snapNearest() {
+function snapNearest(allowEaseOut = true) {
   const px = scroll.x;
   const py = scroll.y;
-  if (filterCaseStudies) {
-    const cells = [{ cx: 0, cy: 0 }, ...CS_POSITIONS.slice(0, activeN)];
+  if (isFiniteGrid()) {
+    const positions = filterCaseStudies ? CS_POSITIONS : GRID_POSITIONS;
+    // CS: intro at (0,0) + N project cells; filtered archive: project[0] at (0,0) + N-1 project cells
+    const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
+    const cells = [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
     let bestD = Infinity, bestTx = 0, bestTy = 0;
     for (const { cx, cy } of cells) {
       const tx = -cx * PITCH_X, ty = -cy * PITCH_Y;
       const d = (px - tx) ** 2 + (py - ty) ** 2;
       if (d < bestD) { bestD = d; bestTx = tx; bestTy = ty; }
     }
-    const overBounds = Math.abs(scroll.x) > PITCH_X || Math.abs(scroll.y) > PITCH_Y;
+    // Ease-out snap-back when dragged past the grid boundary (not for wheel — uses distance-scaled duration)
+    let overBounds = false;
+    if (allowEaseOut) {
+      if (filterCaseStudies) {
+        overBounds = Math.abs(scroll.x) > PITCH_X || Math.abs(scroll.y) > PITCH_Y;
+      } else if (hasActiveFilters()) {
+        const b = getFiniteBounds();
+        overBounds = scroll.x < b.minX || scroll.x > b.maxX || scroll.y < b.minY || scroll.y > b.maxY;
+      }
+    }
     startTween(bestTx, bestTy, overBounds);
     return;
   }
@@ -448,6 +502,12 @@ function onMove(e) {
     // Zero out velocity when past boundary so fling doesn't add energy against the snap-back
     vel.x = Math.abs(rawScroll.x) > PITCH_X ? 0 : dx;
     vel.y = Math.abs(rawScroll.y) > PITCH_Y ? 0 : -dy;
+  } else if (hasActiveFilters()) {
+    const b = getFiniteBounds();
+    scroll.x = rubberBandRange(rawScroll.x, b.minX, b.maxX);
+    scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
+    vel.x = (rawScroll.x < b.minX || rawScroll.x > b.maxX) ? 0 : dx;
+    vel.y = (rawScroll.y < b.minY || rawScroll.y > b.maxY) ? 0 : -dy;
   } else {
     scroll.x = rawScroll.x;
     scroll.y = rawScroll.y;
@@ -479,6 +539,7 @@ let wheeling = false;
 addEventListener('wheel', (e) => {
   if (zoomed || menuOpen) return;
   e.preventDefault();
+  if (tween.active) { rawScroll.x = scroll.x; rawScroll.y = scroll.y; }
   tween.active = false;
   coasting = false;
   wheeling = true;
@@ -489,6 +550,10 @@ addEventListener('wheel', (e) => {
   if (filterCaseStudies) {
     scroll.x = rubberBand(rawScroll.x, PITCH_X);
     scroll.y = rubberBand(rawScroll.y, PITCH_Y);
+  } else if (hasActiveFilters()) {
+    const b = getFiniteBounds();
+    scroll.x = rubberBandRange(rawScroll.x, b.minX, b.maxX);
+    scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
   } else {
     scroll.x = rawScroll.x;
     scroll.y = rawScroll.y;
@@ -496,7 +561,7 @@ addEventListener('wheel', (e) => {
   clearTimeout(wheelTimer);
   wheelTimer = setTimeout(() => {
     rawScroll.x = scroll.x; rawScroll.y = scroll.y;
-    wheeling = false; snapNearest();
+    wheeling = false; snapNearest(false);
   }, 90);
 }, { passive: false });
 
@@ -986,8 +1051,13 @@ brandCanvas.addEventListener('click', () => {
 });
 
 // ── Filter system ──────────────────────────────────────────
-const ALL_CATEGORIES = [...new Set(_PROJECTS.flatMap(p => p.category))].filter(Boolean).sort();
-const ALL_INDUSTRIES  = [...new Set(_PROJECTS.flatMap(p => p.industry))].filter(Boolean).sort();
+const _byCount = (items, key) => {
+  const counts = {};
+  _PROJECTS.forEach(p => (p[key] || []).forEach(v => { counts[v] = (counts[v] || 0) + 1; }));
+  return [...new Set(items)].filter(Boolean).sort((a, b) => (counts[b] || 0) - (counts[a] || 0));
+};
+const ALL_CATEGORIES = _byCount(_PROJECTS.flatMap(p => p.category), 'category');
+const ALL_INDUSTRIES  = _byCount(_PROJECTS.flatMap(p => p.industry),  'industry');
 
 let filterCaseStudies = false;
 let filterCategories  = new Set(); // multi-select within; cleared when date selected
@@ -1019,7 +1089,13 @@ function applyFilters(flashScene = false) {
   activeN = activeProjects.length;
   pool.forEach(m => { m.userData.key = null; });
   lastCenterKey = null;
-  snapNearest();
+  if (!flashScene) gridFade = 0;
+  if (!hasActiveFilters() && !filterCaseStudies) {
+    rawScroll.x = 0; rawScroll.y = 0;
+    startTween(0, 0);
+  } else {
+    snapNearest();
+  }
   updateFilterBadge();
   if (flashScene) {
     const s = document.getElementById('scene');
@@ -1042,12 +1118,24 @@ function triggerIntroAnimation() {
   introAnimTimeout = setTimeout(() => introEl.classList.remove('intro-animating'), 6500);
 }
 
+const navFilterEl = document.getElementById('navFilter');
+
+function positionFilterIndicator(instant = false) {
+  const active = navFilterEl.querySelector('.filter-btn.active');
+  if (!active) return;
+  if (instant) navFilterEl.classList.add('ind-instant');
+  navFilterEl.style.setProperty('--ind-x', `${active.offsetLeft}px`);
+  navFilterEl.style.setProperty('--ind-w', `${active.offsetWidth}px`);
+  if (instant) requestAnimationFrame(() => navFilterEl.classList.remove('ind-instant'));
+}
+
 function activateFilter(filter) {
   filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
   const modeChanged = filterCaseStudies !== (filter === 'casestudies');
   filterCaseStudies = (filter === 'casestudies');
   introEl.classList.toggle('mode-archive', !filterCaseStudies);
   applyFilters(modeChanged);
+  positionFilterIndicator();
   if (modeChanged && introShown) triggerIntroAnimation();
 }
 filterBtns.forEach(btn => {
@@ -1099,8 +1187,53 @@ addEventListener('popstate', () => {
 const navFilterBtn  = document.getElementById('navFilterBtn');
 const filterMenuEl  = document.getElementById('filterMenu');
 const filterBadgeEl = document.getElementById('filterBadge');
+const activeFiltersEl = document.getElementById('activeFilters');
 let filterPanelOpen = false;
 filterMenuEl.setAttribute('inert', '');
+
+function dateRangeLabel(range) {
+  const now = new Date().getFullYear();
+  if (range === 'recent') return `${now}–${now - 4}`;
+  if (range === 'mid')    return `${now - 5}–${now - 10}`;
+  if (range === 'older')  return `${now - 11} & earlier`;
+  return range;
+}
+
+function updateActiveFilterChips() {
+  if (!activeFiltersEl) return;
+  const chips = [];
+  filterCategories.forEach(c => chips.push({ label: c, type: 'category', value: c }));
+  filterIndustries.forEach(i => chips.push({ label: i, type: 'industry', value: i }));
+  if (filterDateRange) chips.push({ label: dateRangeLabel(filterDateRange), type: 'date', value: filterDateRange });
+  activeFiltersEl.innerHTML = chips.map(ch =>
+    `<button class="active-filter-chip" data-type="${ch.type}" data-value="${ch.value}">${ch.label}<span class="chip-x" aria-hidden="true">&#x2715;</span></button>`
+  ).join('');
+  activeFiltersEl.classList.toggle('visible', chips.length > 0);
+}
+
+activeFiltersEl.addEventListener('click', e => {
+  const chip = e.target.closest('.active-filter-chip');
+  if (!chip) return;
+  const { type, value } = chip.dataset;
+  if (type === 'category') {
+    filterCategories.delete(value);
+    filterMenuEl.querySelectorAll(`[data-category="${value}"]`).forEach(c => {
+      c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
+    });
+  } else if (type === 'industry') {
+    filterIndustries.delete(value);
+    filterMenuEl.querySelectorAll(`[data-industry="${value}"]`).forEach(c => {
+      c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
+    });
+  } else if (type === 'date') {
+    filterDateRange = null;
+    filterMenuEl.querySelectorAll('[data-daterange]').forEach(c => {
+      c.classList.remove('active'); c.setAttribute('aria-pressed', 'false');
+    });
+  }
+  applyFilters();
+  updateFilterBadge();
+});
 
 function updateFilterBadge() {
   const count = filterCategories.size + filterIndustries.size + (filterDateRange ? 1 : 0);
@@ -1111,6 +1244,7 @@ function updateFilterBadge() {
   const filterTitle = document.getElementById('filterTitle');
   if (clearBtn) clearBtn.style.display = count > 0 ? 'block' : 'none';
   if (filterTitle) filterTitle.style.display = count > 0 ? 'none' : 'block';
+  updateActiveFilterChips();
 }
 
 function filterNavHeight() {
@@ -1130,6 +1264,7 @@ function openFilterPanel() {
   if (menuOpen) closeMenu(true);
   filterPanelOpen = true;
   nav.classList.add('filter-open');
+  activeFiltersEl.classList.add('panel-open');
   filterMenuEl.removeAttribute('inert');
   filterMenuEl.setAttribute('aria-hidden', 'false');
   // Interrupt any ongoing height transition and measure at unconstrained height
@@ -1147,6 +1282,7 @@ function openFilterPanel() {
 function closeFilterPanel() {
   filterPanelOpen = false;
   nav.classList.remove('filter-open');
+  activeFiltersEl.classList.remove('panel-open');
   filterMenuEl.setAttribute('inert', '');
   filterMenuEl.setAttribute('aria-hidden', 'true');
   filterMenuEl.style.maxHeight = '';
@@ -1183,6 +1319,7 @@ function buildFilterMenu() {
   const header = `<div id="filterHeader">
   <span id="filterTitle">Filters</span>
   <button id="filterClearBtn">Clear All Filters</button>
+  <button id="filterCloseBtn" aria-label="Close filters">&#x2715;</button>
 </div>`;
 
   filterMenuEl.innerHTML = header + dateSection + catSection + indSection;
@@ -1232,14 +1369,14 @@ function buildFilterMenu() {
         chip.classList.toggle('active', indOn); chip.setAttribute('aria-pressed', String(indOn));
       }
       applyFilters();
-      const { targetH } = filterNavHeight();
-      nav.style.height = targetH + 'px';
-      setTimeout(closeFilterPanel, 900);
       return;
     }
     if (e.target.id === 'filterClearBtn') {
       clearChipFilters();
       applyFilters();
+    }
+    if (e.target.id === 'filterCloseBtn') {
+      closeFilterPanel();
     }
   });
 }
@@ -1284,6 +1421,7 @@ const _dlProject = _dlPath && _dlPath !== 'archive' && _dlPath !== 'about'
 activateFilter(
   location.pathname === '/archive' || (_dlProject && !_dlProject.casestudy) ? 'all' : 'casestudies'
 );
+positionFilterIndicator(true);
 if (location.pathname === '/about') openMenu(true);
 
 function animate() {
@@ -1292,6 +1430,7 @@ function animate() {
   const nowT = performance.now();
   let dt = (nowT - lastT) / 1000; lastT = nowT;
   dt = Math.min(dt, 0.05);
+  if (gridFade < 1) gridFade = Math.min(1, gridFade + dt / GRID_FADE_DUR);
 
   // Advance the zoom open/close animation
   if (zoomAnim.active) {
@@ -1329,6 +1468,10 @@ function animate() {
     if (filterCaseStudies) {
       scroll.x = rubberBand(rawScroll.x, PITCH_X);
       scroll.y = rubberBand(rawScroll.y, PITCH_Y);
+    } else if (hasActiveFilters()) {
+      const b = getFiniteBounds();
+      scroll.x = rubberBandRange(rawScroll.x, b.minX, b.maxX);
+      scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
     } else {
       scroll.x = rawScroll.x;
       scroll.y = rawScroll.y;
@@ -1394,7 +1537,7 @@ function animate() {
     if (cellX === ccx && cellY === ccy) { centrePxW = ITEM_W * s; centrePxH = ITEM_H * s; }
     m.material.uniforms.uRadius.value = RADIUS / S0;
     const isEmpty = !isValidCSCell(cellX, cellY);
-    m.material.uniforms.uFade.value = isEmpty ? 0 : 0.55 + 0.45 * fall;
+    m.material.uniforms.uFade.value = isEmpty ? 0 : (0.55 + 0.45 * fall) * gridFade;
 
     // Assign the right project only when this slot's cell changes
     const key = cellX + ',' + cellY;
@@ -1461,8 +1604,8 @@ function animate() {
   const tweenChangesCell = tween.active && (tweenTargetCcx !== ccx || tweenTargetCcy !== ccy);
   const tweeningAway = tween.active && (tween.x1 !== 0 || tween.y1 !== 0);
 
-  // Show the CTA button only when settled on a non-intro centre card
-  const settled = !(drag.active && drag.moved > 6) && !coasting && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && (ccx !== 0 || ccy !== 0);
+  // Show CTA when settled on any project card — (0,0) counts as a project when filters are active
+  const settled = !(drag.active && drag.moved > 6) && !coasting && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && ((ccx !== 0 || ccy !== 0) || hasActiveFilters());
   if (settled !== ctaShown) {
     ctaShown = settled;
     clearTimeout(ctaTimer);
@@ -1515,6 +1658,7 @@ addEventListener('resize', () => {
   computeLayout();
   buildPool();
   positionCTA();
+  positionFilterIndicator(true);
   snapNearest();
   lastCenterKey = null;
   if (zoomed) { applyZoomGeometry(); setZoomTransform(zoomAnim.p); }  // refit to new viewport

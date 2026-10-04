@@ -48,6 +48,10 @@
 			background: url(/assets/arrow.svg) no-repeat center center;
 			background-size: 14px 22px;
 
+			@include desktop {
+				display: none;
+			}
+
 			&.top-left {
 				top: -3rem;
 				left: 0.5rem;

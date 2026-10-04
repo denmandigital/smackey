@@ -79,6 +79,7 @@
         <canvas id="brandCanvas" aria-hidden="true"></canvas>
       </div>
       <div id="navFilter">
+        <span id="navFilterIndicator" aria-hidden="true"></span>
         <a class="filter-btn active" href="/" data-filter="casestudies">Case Studies</a>
         <a class="filter-btn" href="/archive" data-filter="all">Archive</a>
       </div>
@@ -110,18 +111,15 @@
           <h2 class="about-name">Steve Mackey</h2>
           <h3 class="about-role">Design leader & technologist</h3>
 
-          <p class="about-text">I work at the intersection of communications, user experience design, and
-            technical delivery for growing companies and organizations navigating complex change. I have 25 years of experience in
-            digital product development and interactive storytelling. I set product vision, align stakeholders, and lead
-            cross-functional teams to deliver purposeful, high-impact digital experiences.</p>
+          <p class="about-text">For 25 years I've worked at the intersection of communications, user experience design and interactive storytelling, building digital products for growing companies and organizations navigating complex change. I shape product direction, align stakeholders, and lead cross-functional teams to deliver purposeful, high-impact work.</p>
 
           <p class="about-text">For 10 years, as managing partner at <a href="https://www.denmandigital.com/" target="_blank" rel="noopener">Denman Digital</a>, I built and led a team working primarily with
             nonprofit, media, cultural, and public-sector organizations. Denman was
-            acquired in early 2026. With the transition complete I’m now looking for what’s next.</p>
+            acquired in early 2026 and I’m now looking for what’s next.</p>
 
           <p class="about-text">My work has been awarded internationally by the Webby Awards, FWA, Communication Arts, Applied Arts, Canadian Screen Awards, Summit Awards, Digi Awards, Digital Marketing Magazine, and One Show Interactive.</p>
 
-          <p class="about-text">Check out my <a href="/archive">archive</a> of two decades of work history.</p>
+          <p class="about-text">Check out an <a href="/archive">archive</a> of my work history.</p>
         </div>
         <div class="about-connect">
           <div class="about-photo">
@@ -258,6 +256,8 @@
 
     </div>
   </nav>
+  <div id="activeFilters" aria-label="Active filters" aria-live="polite"></div>
+
   <!-- <div id="navEdge" aria-hidden="true"></div> -->
   <div class="hud hud-bottom">
     <div class="now" id="now"><b id="nowTitle">—</b><span id="nowMeta"></span></div>
@@ -283,7 +283,7 @@
       <span class="arrow top-left"></span>
       <span class="arrow top-right"></span>
       <div id="archiveChip" class="archive-chip"></div>
-      <p class="intro-title"><span class="light">Two</span> <span class="dark">decades</span> <span class="light">of building</span> <span class="dark">digital</span>
+      <p class="intro-title"><span class="light">Explore two</span> <span class="dark">decades</span> <span class="light">of </span> <span class="dark">digital</span>
         <span class="light">experiences.</span></p>
       <span class="intro-divider"></span>
       <p class="intro-desc ta-left pl-10">Digital work is ephemeral. Technology changes, platforms disappear, campaigns

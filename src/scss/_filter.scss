@@ -98,6 +98,33 @@
 	padding: 4px 0;
 }
 
+#filterCloseBtn {
+	position: absolute;
+	right: 0;
+	top: auto;
+	bottom: 0;
+	transform: translateY(50%);
+	z-index: 1;
+	width: 24px;
+	height: 24px;
+	border-radius: 100px;
+	border: none;
+	background: var(--ink);
+	color: var(--bg-darker);
+	font-size: 11px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: opacity 0.15s ease;
+	opacity: 0.8;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
 #filterClearBtn {
 	font: inherit;
 	font-size: 10px;
@@ -167,6 +194,76 @@
 
 	&.visible {
 		display: flex;
+	}
+}
+
+/* Active filter chips bar — shown below nav when filters are active */
+#activeFilters {
+	position: fixed;
+	top: calc(36px + 62px + 10px);
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	align-items: center;
+	justify-content: center;
+	z-index: 9;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.25s ease;
+	max-width: calc(100vw - 48px);
+
+	&.visible {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	&.panel-open {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	@include mobile {
+		top: calc(12px + 54px + 10px);
+	}
+}
+
+.active-filter-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font: inherit;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--bg);
+	background: var(--ink);
+	border: none;
+	border-radius: 100px;
+	padding: 5px 8px 5px 12px;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background 0.15s ease;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+	.chip-x {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 14px;
+		height: 14px;
+		border-radius: 100px;
+		background: rgba(255, 255, 255, 0.15);
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 1;
+		transition: background 0.15s ease;
+	}
+
+	&:hover .chip-x {
+		background: rgba(255, 255, 255, 0.3);
 	}
 }
 
