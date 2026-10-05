@@ -676,9 +676,12 @@ function renderBlock(b) {
     return `<figure class="cs-block cs-block--image${contain}"${span}><img src="${b.src}" alt="${b.alt || ''}" loading="lazy"></figure>`;
   }
   if (b.type === 'video') {
-    const attrs = b.autoplay ? 'autoplay muted loop playsinline' : 'controls playsinline';
+    const once = b.autoplay && b.loop === false;
+    const loop = b.autoplay && !once ? ' loop' : '';
+    const attrs = b.autoplay ? `autoplay muted${loop} playsinline` : 'controls playsinline';
     const mod = b.autoplay ? ' cs-block--video-autoplay' : '';
-    return `<figure class="cs-block cs-block--video${mod}"${span}><video src="${b.src}" ${attrs}></video></figure>`;
+    const onceAttr = once ? ' data-autoplay-once' : '';
+    return `<figure class="cs-block cs-block--video${mod}"${span}><video src="${b.src}"${onceAttr} ${attrs}></video></figure>`;
   }
   if (b.type === 'vimeo') {
     let vimeoSrc = b.src;
@@ -898,6 +901,23 @@ function observeBlocks() {
   }, { root: zoomScroll, threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
   els.forEach(el => csObserver.observe(el));
   initVimeoPlayers();
+
+  // One-shot autoplay videos: reset and replay each time they enter the viewport
+  const onceVideos = zoomContent.querySelectorAll('video[data-autoplay-once]');
+  if (onceVideos.length) {
+    const onceObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const v = entry.target;
+          v.currentTime = 0;
+          v.play().catch(() => {});
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { root: zoomScroll, threshold: 0.3 });
+    onceVideos.forEach(v => onceObserver.observe(v));
+  }
 }
 
 function closeZoom(skipHistory = false) {
