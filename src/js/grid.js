@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { PROJECTS as _PROJECTS } from './projects.js';
 import { createSMBlock } from './SMBlock.js';
+import Player from '@vimeo/player';
 
 document.body.classList.add('js');
 
@@ -15,17 +16,7 @@ for (let i = PROJECTS.length - 1; i > 0; i--) {
 // Tag each project with its texture-array index (stable after shuffle)
 PROJECTS.forEach((p, i) => { p._idx = i; });
 
-// Fixed cell positions for case studies — radiate around intro at (0,0)
-const CS_POSITIONS = [
-  { cx:  1, cy:  0 },
-  { cx: -1, cy:  0 },
-  { cx:  0, cy:  1 },
-  { cx:  0, cy: -1 },
-  { cx:  1, cy: -1 },
-  { cx: -1, cy: -1 },
-];
-
-// Finite positions for filtered archive — spiral outward from (0,0), sorted by distance
+// Finite positions for both CS mode and filtered archive — spiral outward from (0,0), sorted by distance
 const GRID_POSITIONS = (() => {
   const pos = [];
   for (let cy = -8; cy <= 8; cy++)
@@ -372,7 +363,7 @@ const isFiniteGrid = () => filterCaseStudies || hasActiveFilters();
 const projIndex = (cx, cy) => {
   if (activeN === 0) return 0;
   if (filterCaseStudies) {
-    const i = CS_POSITIONS.findIndex(p => p.cx === cx && p.cy === cy);
+    const i = GRID_POSITIONS.findIndex(p => p.cx === cx && p.cy === cy);
     return (i >= 0 && i < activeN) ? i : -1;
   }
   if (hasActiveFilters()) {
@@ -387,7 +378,7 @@ const projIndex = (cx, cy) => {
 const isValidCSCell = (cx, cy) => {
   if (!isFiniteGrid()) return true;
   if (cx === 0 && cy === 0) return true;
-  const positions = filterCaseStudies ? CS_POSITIONS : GRID_POSITIONS;
+  const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
   const limit = hasActiveFilters() && !filterCaseStudies ? activeN - 1 : activeN;
   return positions.some((p, i) => p.cx === cx && p.cy === cy && i < limit);
 };
@@ -432,7 +423,7 @@ function rubberBandRange(val, min, max) {
 }
 function getFiniteBounds() {
   if (!isFiniteGrid()) return null;
-  const positions = filterCaseStudies ? CS_POSITIONS : GRID_POSITIONS;
+  const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
   const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
   const cells = [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
   let minX = 0, maxX = 0, minY = 0, maxY = 0;
@@ -448,7 +439,7 @@ function snapNearest(allowEaseOut = true) {
   const px = scroll.x;
   const py = scroll.y;
   if (isFiniteGrid()) {
-    const positions = filterCaseStudies ? CS_POSITIONS : GRID_POSITIONS;
+    const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
     // CS: intro at (0,0) + N project cells; filtered archive: project[0] at (0,0) + N-1 project cells
     const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
     const cells = [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
@@ -693,11 +684,12 @@ function renderBlock(b) {
     let vimeoSrc = b.src;
     const sep = vimeoSrc.includes('?') ? '&' : '?';
     if (b.autoplay) {
-      vimeoSrc += `${sep}autoplay=1&loop=1&muted=1&background=1`;
+      vimeoSrc += `${sep}loop=1&muted=1&background=1`;
     } else {
       vimeoSrc += `${sep}title=0&byline=0&portrait=0&play_button_position=center`;
     }
-    return `<figure class="cs-block cs-block--vimeo"${span}><iframe src="${vimeoSrc}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></figure>`;
+    const autoAttr = b.autoplay ? ' data-vimeo-autoplay' : '';
+    return `<figure class="cs-block cs-block--vimeo"${span}><iframe src="${vimeoSrc}"${autoAttr} frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></figure>`;
   }
   if (b.type === 'spacer') {
     const h = typeof b.height === 'number' ? `${b.height}px` : (b.height || '40px');
@@ -858,6 +850,38 @@ function openZoom(p, skipHistory = false) {
 }
 
 let csObserver = null;
+let vimeoPlayers = [];
+let vimeoObserver = null;
+
+function initVimeoPlayers() {
+  if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
+  vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
+  vimeoPlayers = [];
+
+  const iframes = zoomContent.querySelectorAll('iframe[data-vimeo-autoplay]');
+  if (!iframes.length) return;
+
+  iframes.forEach(iframe => {
+    const player = new Player(iframe);
+    player.ready().then(() => player.pause()).catch(() => {});
+    vimeoPlayers.push({ player, iframe });
+  });
+
+  vimeoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const match = vimeoPlayers.find(v => v.iframe === entry.target);
+      if (!match) return;
+      if (entry.isIntersecting) {
+        match.player.play().catch(() => {});
+      } else {
+        match.player.pause().catch(() => {});
+      }
+    });
+  }, { root: zoomScroll, threshold: 0.3 });
+
+  vimeoPlayers.forEach(({ iframe }) => vimeoObserver.observe(iframe));
+}
+
 function observeBlocks() {
   if (csObserver) csObserver.disconnect();
   const els = zoomContent.querySelectorAll('.cs-block, .cs-container');
@@ -873,11 +897,15 @@ function observeBlocks() {
       });
   }, { root: zoomScroll, threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
   els.forEach(el => csObserver.observe(el));
+  initVimeoPlayers();
 }
 
 function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (csObserver) { csObserver.disconnect(); csObserver = null; }
+  if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
+  vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
+  vimeoPlayers = [];
   if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive');
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
   // Freeze parallax immediately so the card sits exactly where the panel will land
@@ -1330,7 +1358,9 @@ function buildFilterMenu() {
       if (filterCaseStudies) {
         filterCaseStudies = false;
         filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+        introEl.classList.add('mode-archive');
         history.pushState({ filter: 'all' }, '', '/archive');
+        positionFilterIndicator();
       }
       if (chip.dataset.daterange) {
         // Date clears categories + industries, then toggles

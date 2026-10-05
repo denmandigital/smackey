@@ -11,6 +11,7 @@
     "lint": "npm run lint:js && npm run lint:css"
   },
   "dependencies": {
+    "@vimeo/player": "^2.30.4",
     "three": "^0.160.0"
   },
   "devDependencies": {

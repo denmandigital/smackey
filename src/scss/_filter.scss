@@ -212,7 +212,7 @@
 	pointer-events: none;
 	opacity: 0;
 	transition: opacity 0.25s ease;
-	max-width: calc(100vw - 48px);
+	width: calc(100vw - 48px);
 
 	&.visible {
 		opacity: 1;
@@ -224,7 +224,7 @@
 		pointer-events: none;
 	}
 
-	@include mobile {
+	@include tablet-down {
 		top: calc(12px + 54px + 10px);
 	}
 }
