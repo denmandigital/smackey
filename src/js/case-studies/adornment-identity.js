@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>The BC Society for the Museum of Costume (SMOC) maintains a large collection of historic fashion, traditional costume and textiles from the 18th century to the present. With funding from Digital Museums Canada, SMOC brought this collection online, giving students, fashion enthusiasts  and the public outside Vancouver access to its historical holdings.</p><p><em>Adornment & Identity: An Interactive Exploration of Women’s Fashion, 1750–2000</em> explores clothing as a historical artifact.</p>',
+    body: '<p>The BC Society for the Museum of Costume (SMOC) maintains a large collection of historic fashion, traditional costume and textiles from the 18th century to the present. With support from Digital Museums Canada, SMOC was able to bring this collection online, giving students, fashion enthusiasts and the public outside Vancouver access to its historical holdings.</p><p><em>Adornment & Identity: An Interactive Exploration of Women’s Fashion, 1750–2000</em> explores clothing as a historical artifact.</p>',
     url: 'https://fashionhistory.ca',
   },
   {
@@ -27,8 +27,8 @@ export const blocks = [
     type: 'text',
     span: 12,
     variant: 'callout',
-    heading: 'Objectives',
-    body: '<p>The goal was to engage and inform visitors through an immersive experience that explores the cultural and historical context behind each garment and the people who wore them. Employing a range of media and digital storytelling techniques including 3D modelling, video, and scroll-based narratives, all content was grounded in primary research and expert review from fashion historians. The experience also included curated learning activities designed for student audiences.</p>',
+    heading: 'Challenge',
+    body: '<p>Bringing SMOC’s collection online meant more than digitizing garments. Exhibits were carefully curated, each built around garments chosen for their cultural significance and the personal stories they could tell. The challenge was conveying the historical weight and human context behind each piece to audiences who would never see them in a gallery, across a range of visitors from fashion students to the general public, while meeting a high bar for historical accuracy.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -37,7 +37,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: '<p>Working closely with SMOC, we developed a user-centred approach to digital storytelling, balancing engagement with historical accuracy. We ran two rounds of user testing with fashion students to validate concepts, built technical prototypes to test feasibility, and developed content with input from fashion historians and educators. I designed the virtual space floorplan and interaction UX, which a modeler and 3D programmer brought to life.</p>',
+    body: '<p>Working closely with SMOC, we developed a user-centred approach to digital storytelling that balanced engagement with historical accuracy. A range of media and storytelling techniques, including 3D models, video, and scroll-based narratives, were employed to bring each garment and its story to life. We ran two rounds of user testing with fashion students to validate concepts, built technical prototypes to test feasibility, and developed content with input from fashion historians and educators. I designed the virtual space floorplan and interaction UX, which a modeller and 3D programmer brought to life.</p>',
   },
 
   // Outcome callout
@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>An immersive virtual museum with four interactive exhibits</li><li>A fully accessible version of the experience, meeting the WCAG 2.2 AA standards</li><li>An interactive 3D model of a House of Worth evening gown from 1900</li><li>Three short films exploring the personal histories behind selected garments</li></ul>',
+    body: '<ul><li>An immersive virtual museum with four interactive exhibits</li><li>An interactive 3D model of a House of Worth evening gown from 1900</li><li>Three short films exploring the personal histories behind selected garments</li><li>Educational resources written for fashion students</li><li>An accessible version of the experience, built to WCAG 2.2 AA standards</li></ul>',
   },
 
 
