@@ -407,5 +407,16 @@ export const PROJECTS = [
     accentColourPrimary:   '#29270F',
     textColour: 'light',
   },
+  {
+    file:      'index-northernlink.jpg',
+    client:    'Northern Link',
+    title:     'Engineered to Endure',
+    year:      2014,
+    casestudy: false,
+    category:  ['Website'],
+    industry:  ['Industrial & Construction'],
+    accentColourPrimary:   '#2B1950',
+    textColour: 'light',
+  },
   
 ].map(p => ({ ...p, src: 'assets/' + p.file, slug: toSlug(p.title) }));
