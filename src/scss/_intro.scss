@@ -48,7 +48,7 @@
 			background: url(/assets/arrow.svg) no-repeat center center;
 			background-size: 14px 22px;
 
-			@include desktop {
+			@include tablet-up {
 				display: none;
 			}
 
@@ -111,12 +111,12 @@
 	
 	@include mobile  { 
 		line-height: 1.2; //1.55;
-		font-size: 32px;
+		font-size: 42px;
 	}
 	@media (orientation: landscape) {
 		@include tablet-down {
 			line-height: 1.2; //1.55;
-			font-size: 24px;
+			font-size: 34px;
 		}
 		
 	}
@@ -257,7 +257,7 @@
 .intro-content--archive {
 	display: none; 
 	// max-width: 80%;
-	max-width: 600px;
+	max-width: 640px;
 	.archive-chip {
 		display: inline-block;
 		font-size: 11px;
