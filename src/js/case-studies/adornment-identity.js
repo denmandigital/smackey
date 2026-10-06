@@ -28,7 +28,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Objectives',
-    body: '<ul><li>Engage and inform visitors with an interactive experience exploring the stories behind the garments, the cultural and historical context that shaped their design, and the people who wore them.</li><li>Employ a variety of media and digital storytelling techniques, including 3D modelling, video and scrolly-telling.</li><li>Provide curated learning activities for students.</li><li>Ground all content in primary research and expert review from fashion historians.</li></ul>',
+    body: '<p>The goal was to engage and inform visitors through an immersive experience that explores the cultural and historical context behind each garment and the people who wore them. Employing a range of media and digital storytelling techniques including 3D modelling, video, and scroll-based narratives, all content was grounded in primary research and expert review from fashion historians. The experience also included curated learning activities designed for student audiences.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>An immersive virtual museum with four interactive exhibits</li><li>A fully accessible version of the experience, meeting the WCAG 2.2 AA standards</li><li>An interactive 3D model of an 1900 House of Worth evening gown</li><li>Three short films exploring the personal histories behind selected garments</li></ul>',
+    body: '<ul><li>An immersive virtual museum with four interactive exhibits</li><li>A fully accessible version of the experience, meeting the WCAG 2.2 AA standards</li><li>An interactive 3D model of a House of Worth evening gown from 1900</li><li>Three short films exploring the personal histories behind selected garments</li></ul>',
   },
 
 
