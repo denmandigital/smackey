@@ -344,7 +344,7 @@ export const PROJECTS = [
   {
     file:      'index-knowledge.jpg',
     client:    'Knowledge Network',
-    title:     'Beyond the Stream',
+    title:     'Your Public Broadcaster',
     year:      2025,
     casestudy: true,
     category:  ['Website'],
