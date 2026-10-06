@@ -86,12 +86,12 @@
 	margin-bottom: 1rem;
 }
 
-.about-text {
+.about-bio p {
 	font-size: 1.1rem;
 	line-height: 1.5;
 	color: var(--grey-light);
 	// max-width: 90%;
-	margin-bottom: 32px;
+	margin-bottom: 1.5rem;
 	a {
 		color: var(--ink);
 		text-decoration: none;
@@ -112,7 +112,9 @@
 			color: var(--accent);
 		}
 	}
+	
 }
+
 
 .about-experience {
 	width: 100%;
@@ -256,7 +258,7 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	margin: 0 auto 15vh auto;
+	margin: 0 auto 8vh auto;
 
 	@include wide {
 		width: 80%;
@@ -269,27 +271,37 @@
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		column-gap: 12%;
-		row-gap: 4%;
+		// row-gap: 4%;
 	
 		img {
 			width: 100%;
 			object-fit: contain;
 			display: block;
 			mix-blend-mode: luminosity;
-			// filter: grayscale(100%);
+			filter: grayscale(100%);
 			opacity: 0.75;
-			transition: opacity 0.2s ease, transform 0.2s ease;
-	
-	
-			&:hover {
-				opacity: 0.9;
-				transform: scale(1.05);
+			margin-bottom: 2rem;
+
+			@media (hover: hover) {
+				transition: opacity 0.2s ease, transform 0.2s ease;
+
+				&:hover {
+					opacity: 0.9;
+					transform: scale(1.05);
+				}
 			}
 		}
 	
 		@include mobile {
-			grid-template-columns: repeat(4, 1fr);
+			grid-template-columns: repeat(2, 1fr);
+			margin-bottom: 0.5rem;
 		}
+		
+		@include tablet {
+			grid-template-columns: repeat(4, 1fr);
+			margin-bottom: 0.75rem;
+		}
+
 	}
 }
 
