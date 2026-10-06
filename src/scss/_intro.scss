@@ -218,15 +218,23 @@
 	opacity: 0;
 }
 
-// Dark words — stagger immediately one after the other
-#intro.intro-animating.show .intro-title .dark:nth-child(2) {
+// Dark words — stagger immediately one after the other (case studies)
+#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(2) {
 	animation: introWordFade 0.3s ease 0.3s both;
 }
-#intro.intro-animating.show .intro-title .dark:nth-child(4) {
+#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(4) {
 	animation: introWordFade 0.3s ease 0.6s both;
 }
-#intro.intro-animating.show .intro-title .dark:nth-child(6) {
+#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(6) {
 	animation: introWordFade 0.3s ease 0.9s both;
+}
+
+// Dark words — stagger immediately one after the other (archive)
+#intro.intro-animating.show .intro-content--archive .intro-title .dark:nth-child(1) {
+	animation: introWordFade 0.3s ease 0.3s both;
+}
+#intro.intro-animating.show .intro-content--archive .intro-title .dark:nth-child(3) {
+	animation: introWordFade 0.3s ease 0.6s both;
 }
 
 // Light text — starts at the same time as dark, fades in slowly

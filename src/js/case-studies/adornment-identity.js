@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>The BC Society for the Museum of Costume (SMOC) maintains a large collection of historic fashion, traditional costume and textiles from the 18th century to the present. With funding from Digital Museums Canada, SMOC brought this collection online, giving students, academics and the public outside Vancouver access to its historical holdings.</p><p><em>Adornment & Identity: An Interactive Exploration of Women’s Fashion, 1750–2000</em> explores clothing as a historical artifact.</p>',
+    body: '<p>The BC Society for the Museum of Costume (SMOC) maintains a large collection of historic fashion, traditional costume and textiles from the 18th century to the present. With funding from Digital Museums Canada, SMOC brought this collection online, giving students, fashion enthusiasts  and the public outside Vancouver access to its historical holdings.</p><p><em>Adornment & Identity: An Interactive Exploration of Women’s Fashion, 1750–2000</em> explores clothing as a historical artifact.</p>',
     url: 'https://fashionhistory.ca',
   },
   {
