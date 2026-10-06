@@ -246,7 +246,7 @@ function updateBgCover() {
 }
 
 new THREE.TextureLoader().load('/assets/grid-bg.jpg', (tex) => {
-  console.log(tex);
+  //console.log(tex);
   tex.colorSpace = THREE.NoColorSpace;
   bgTexture = tex;
   const geo = new THREE.PlaneGeometry(1, 1);
