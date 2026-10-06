@@ -630,7 +630,7 @@ const introEl = document.getElementById('intro');
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
   const chip = document.getElementById('archiveChip');
-  if (chip) chip.textContent = PROJECTS.length + ' projects | ' + minYear + '–' + maxYear;
+  if (chip) chip.textContent = PROJECTS.length + ' projects | ' + maxYear + '–' + minYear;
 })();
 
 const zoom = document.getElementById('zoom');
