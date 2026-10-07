@@ -38,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Solution',
-    body: 'We developed a brand that pairs a deep navy palette with a legible, hierarchical type system, then built a flexible platform that let The Hub move between memberships, subscriptions, paid newsletters and donations as its needs changed. I led the research behind that model and designed the platform’s information architecture and user experience.',
+    body: 'We developed the brand and design system, then built a flexible publishing platform capable of handling subscriptions, memberships, tiered newsletter sign-ups, and donations. I led the research behind the commerce model and designed the platform’s information architecture and user experience.',
   },
 
   // Outcome callout — full width
