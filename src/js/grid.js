@@ -178,11 +178,16 @@ function makeCover(p, idx, w = 1024, img = null) {
     x.arc(bx, by, r * 1.15, 0, Math.PI * 2);
     x.fillStyle = 'rgba(241, 239, 232, 0.75)';
     x.fill();
-    x.font = `600 ${r * 1.5}px "Open Sans", Arial`;
-    x.textAlign = 'center';
-    x.textBaseline = 'middle';
-    x.fillStyle = 'rgba(25, 26, 29, 1)';
-    x.fillText('✓', bx - r * 0.08, by + r * 0.1);
+    const s = (r * 1.2) / 15;  // scale check.svg viewBox (0 0 15 14) to fit badge
+    x.save();
+    x.translate(bx - 7.5 * s, by - 7 * s);
+    x.scale(s, s);
+    x.strokeStyle = 'rgba(25, 26, 29, 1)';
+    x.lineWidth = 1;
+    x.lineCap = 'round';
+    x.lineJoin = 'round';
+    x.stroke(new Path2D('M0.5 7.88462L5.85294 12.5L14.5 0.5'));
+    x.restore();
   }
 
   return c;
