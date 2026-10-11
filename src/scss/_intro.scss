@@ -11,7 +11,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-end;
 	pointer-events: none;
 	opacity: 0;
 	transition: opacity 0.3s ease;  // hide: immediate, no delay
@@ -36,45 +36,6 @@
 
 		#introAboutBtn { pointer-events: auto; }
 	}
-	.intro-content {
-		.arrow {
-			position: absolute;
-			width: 14px;
-			height: 22px;
-			opacity: 1;
-			transition: opacity 0.2s ease;
-			box-sizing: border-box;
-			display: block;
-			background: url(/assets/arrow.svg) no-repeat center center;
-			background-size: 14px 22px;
-
-			@include tablet-up {
-				display: none;
-			}
-
-			&.top-left {
-				top: -3rem;
-				left: 0.5rem;
-				transform: rotate(-45deg);
-			}
-			&.top-right {
-				top: -3rem;
-				right: 0.5rem;
-				transform: rotate(45deg);
-			}
-			&.bottom-left {
-				bottom: -3rem;
-				left: 0.5rem;
-				transform: rotate(-135deg);
-			}
-			&.bottom-right {
-				bottom: -3rem;
-				right: 0.5rem;
-				transform: rotate(135deg);
-
-			}
-		}
-	}
 }
 
 
@@ -89,9 +50,8 @@
 	border-radius: 3px;
 	opacity: 0.25;
 	@include mobile {
-		margin: 3vw auto;
+		margin: 2vw auto;
 	}
-	
 }
 
 .intro-title {
@@ -111,14 +71,13 @@
 	
 	@include mobile  { 
 		line-height: 1.2; //1.55;
-		font-size: 42px;
+		font-size: 40px;
 	}
 	@media (orientation: landscape) {
 		@include tablet-down {
 			line-height: 1.2; //1.55;
-			font-size: 34px;
+			font-size: 28px;
 		}
-		
 	}
 	// @include tablet  { font-size: 18px; }
 	
@@ -145,10 +104,12 @@
 	margin-bottom: 1.2vw;
 	font-size: clamp(0.81rem, calc(0.664rem + 0.592vw), 1.38rem);
 
-	@include mobile { font-size: 0.95rem; }
+	@include mobile { 
+		font-size: 0.95rem;
+	}
 	@media (orientation: portrait) {
 		@include tablet-down {
-			margin-bottom: 3vw;
+			margin-bottom: 0.25rem;
 		}
 	}
 	

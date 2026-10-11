@@ -80,7 +80,9 @@ function computeLayout() {
   PITCH_X = cW + GAP_C;                           // flat pitch (snapping granularity)
   PITCH_Y = cH + GAP_C;
   S0 = cW / ITEM_W;                          // mesh scale that yields the centre width
-  HALF_DIAG = 0.5 * Math.hypot(innerWidth, innerHeight);
+  HALF_DIAG = (innerWidth <= 640 && innerHeight > innerWidth)
+    ? Math.hypot(innerWidth, innerHeight)       // slower falloff on portrait — single column
+    : 0.5 * Math.hypot(innerWidth, innerHeight);
   Xtab = buildTable(cW);
   Ytab = buildTable(cH);
 }
@@ -158,7 +160,7 @@ function makeCover(p, idx, w = 1024, img = null) {
   x.fillText(p.title, cw / 2, ty);
   ty += titleSize + titleClientGap;
   if (p.client) {
-    x.fillStyle = 'rgba(255,255,255,.6)';
+    x.fillStyle = 'rgba(255,255,255,0.9)';
     x.font = `500 ${clientSize}px "Open Sans", Helvetica, Arial`;
     x.letterSpacing = '1px';
     x.fillText(p.client.toUpperCase(), cw / 2, ty);
@@ -359,9 +361,25 @@ function buildPool() {
 buildPool();
 
 const pmod = (a, n) => ((a % n) + n) % n;
-const isFiniteGrid = () => filterCaseStudies || hasActiveFilters();
+const isFiniteGrid = () => isMobilePortrait() || filterCaseStudies || hasActiveFilters();
+
+// On mobile portrait the grid collapses to a single vertical column:
+//   CS mode  : intro at (0,0), case studies at (0,-1)..(0,-N)
+//   Archive  : first project at (0,0), rest at (0,-1)..(0,-(N-1))
+const mpColDepth = () => filterCaseStudies ? activeN : Math.max(0, activeN - 1);
+
 const projIndex = (cx, cy) => {
   if (activeN === 0) return 0;
+  if (isMobilePortrait()) {
+    if (cx !== 0) return -1;
+    if (filterCaseStudies) {
+      if (cy === 0) return -1;           // intro slot
+      return (cy < 0 && -cy <= activeN) ? -cy - 1 : -1;
+    }
+    // archive: first project at (0,0), rest below
+    if (cy === 0) return 0;
+    return (cy < 0 && -cy < activeN) ? -cy : -1;
+  }
   if (filterCaseStudies) {
     const i = GRID_POSITIONS.findIndex(p => p.cx === cx && p.cy === cy);
     return (i >= 0 && i < activeN) ? i : -1;
@@ -376,12 +394,18 @@ const projIndex = (cx, cy) => {
 };
 // Returns true if this cell should display a card (always true in infinite archive; bounded in finite modes)
 const isValidCSCell = (cx, cy) => {
+  if (isMobilePortrait()) {
+    if (cx !== 0 || cy > 0) return false;  // single column, nothing above intro
+    return -cy <= mpColDepth();
+  }
   if (!isFiniteGrid()) return true;
   if (cx === 0 && cy === 0) return true;
   const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
   const limit = hasActiveFilters() && !filterCaseStudies ? activeN - 1 : activeN;
   return positions.some((p, i) => p.cx === cx && p.cy === cy && i < limit);
 };
+
+const isMobilePortrait = () => innerWidth <= 640 && innerHeight > innerWidth;
 
 /* ============================================================
    INTERACTION — drag / wheel / arrow keys, inertia, snap
@@ -423,6 +447,9 @@ function rubberBandRange(val, min, max) {
 }
 function getFiniteBounds() {
   if (!isFiniteGrid()) return null;
+  if (isMobilePortrait()) {
+    return { minX: 0, maxX: 0, minY: 0, maxY: mpColDepth() * PITCH_Y };
+  }
   const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
   const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
   const cells = [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
@@ -439,10 +466,15 @@ function snapNearest(allowEaseOut = true) {
   const px = scroll.x;
   const py = scroll.y;
   if (isFiniteGrid()) {
-    const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
-    // CS: intro at (0,0) + N project cells; filtered archive: project[0] at (0,0) + N-1 project cells
-    const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
-    const cells = [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
+    let cells;
+    if (isMobilePortrait()) {
+      const depth = mpColDepth();
+      cells = Array.from({ length: depth + 1 }, (_, i) => ({ cx: 0, cy: -i }));
+    } else {
+      // CS: intro at (0,0) + N project cells; filtered archive: project[0] at (0,0) + N-1 project cells
+      const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
+      cells = [{ cx: 0, cy: 0 }, ...GRID_POSITIONS.slice(0, extraCount)];
+    }
     let bestD = Infinity, bestTx = 0, bestTy = 0;
     for (const { cx, cy } of cells) {
       const tx = -cx * PITCH_X, ty = -cy * PITCH_Y;
@@ -452,12 +484,8 @@ function snapNearest(allowEaseOut = true) {
     // Ease-out snap-back when dragged past the grid boundary (not for wheel — uses distance-scaled duration)
     let overBounds = false;
     if (allowEaseOut) {
-      if (filterCaseStudies) {
-        overBounds = Math.abs(scroll.x) > PITCH_X || Math.abs(scroll.y) > PITCH_Y;
-      } else if (hasActiveFilters()) {
-        const b = getFiniteBounds();
-        overBounds = scroll.x < b.minX || scroll.x > b.maxX || scroll.y < b.minY || scroll.y > b.maxY;
-      }
+      const b = getFiniteBounds();
+      if (b) overBounds = scroll.x < b.minX || scroll.x > b.maxX || scroll.y < b.minY || scroll.y > b.maxY;
     }
     startTween(bestTx, bestTy, overBounds);
     return;
@@ -480,14 +508,21 @@ function onDown(e) {
 function onMove(e) {
   if (!drag.active) return;
   const p = pt(e);
-  const dx = p.x - drag.lastX, dy = p.y - drag.lastY;
+  const rawDx = p.x - drag.lastX, dy = p.y - drag.lastY;
   drag.lastX = p.x; drag.lastY = p.y;
-  drag.moved += Math.abs(dx) + Math.abs(dy);
+  const dx = isMobilePortrait() ? 0 : rawDx;
+  drag.moved += Math.abs(rawDx) + Math.abs(dy);
   rawScroll.x += dx;
   rawScroll.y -= dy;       // screen-down → grid-down (world -y)
   velSmooth.x = velSmooth.x * 0.7 + dx * 0.3;
   velSmooth.y = velSmooth.y * 0.7 + (-dy) * 0.3;
-  if (filterCaseStudies) {
+  if (isMobilePortrait()) {
+    const b = getFiniteBounds();
+    scroll.x = 0; rawScroll.x = 0;
+    scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
+    vel.x = 0;
+    vel.y = (rawScroll.y < b.minY || rawScroll.y > b.maxY) ? 0 : -dy;
+  } else if (filterCaseStudies) {
     scroll.x = rubberBand(rawScroll.x, PITCH_X);
     scroll.y = rubberBand(rawScroll.y, PITCH_Y);
     // Zero out velocity when past boundary so fling doesn't add energy against the snap-back
@@ -535,10 +570,14 @@ addEventListener('wheel', (e) => {
   coasting = false;
   wheeling = true;
   cta.classList.remove('show'); ctaShown = false; ctaBtn.setAttribute('tabindex', '-1');
-  rawScroll.x -= e.deltaX;
+  rawScroll.x -= isMobilePortrait() ? 0 : e.deltaX;
   rawScroll.y += e.deltaY; // wheel-down pans content up
   vel.x = vel.y = 0;
-  if (filterCaseStudies) {
+  if (isMobilePortrait()) {
+    const b = getFiniteBounds();
+    scroll.x = 0; rawScroll.x = 0;
+    scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
+  } else if (filterCaseStudies) {
     scroll.x = rubberBand(rawScroll.x, PITCH_X);
     scroll.y = rubberBand(rawScroll.y, PITCH_Y);
   } else if (hasActiveFilters()) {
@@ -606,8 +645,8 @@ addEventListener('keydown', (e) => {
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
   let nx = ccx, ny = ccy;
-  if (e.key === 'ArrowRight') nx = ccx + 1;
-  else if (e.key === 'ArrowLeft') nx = ccx - 1;
+  if (e.key === 'ArrowRight') { if (isMobilePortrait()) return; nx = ccx + 1; }
+  else if (e.key === 'ArrowLeft') { if (isMobilePortrait()) return; nx = ccx - 1; }
   else if (e.key === 'ArrowUp') ny = ccy + 1;
   else if (e.key === 'ArrowDown') ny = ccy - 1;
   else return;
@@ -624,6 +663,30 @@ addEventListener('keydown', (e) => {
 const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
 const introEl = document.getElementById('intro');
+
+// Cached Y shift for the mobile portrait single-column layout.
+// Updated on resize/init; read per-frame from the cache to avoid DOM access in the render loop.
+let _mpYShift = 0;
+function getMobilePortraitYShift() { return _mpYShift; }
+function updateMobilePortraitLayout() {
+  if (!isMobilePortrait()) {
+    _mpYShift = 0;
+    introEl.style.top = '';
+    introEl.style.transform = '';
+    return;
+  }
+  const navH = document.getElementById('navTop').offsetHeight;
+  const cH = Math.max(ITEM_W, CENTRE_FRAC * innerWidth) * (ITEM_H / ITEM_W);
+  // Intro centre must clear the nav + half card height + a small gap
+  const minCenter = navH + cH / 2 + 80;
+  // Card anchor — determines _mpYShift (where the first card sits relative to screen)
+  const cardAnchor = Math.max(minCenter, innerHeight - 1.8 * PITCH_Y);
+  // HTML panel sits 45px higher than the card anchor to create gap above first card
+  const introCenter = Math.max(minCenter, cardAnchor - 45);
+  _mpYShift = innerHeight / 2 - cardAnchor;
+  introEl.style.top = introCenter + 'px';
+  introEl.style.transform = 'translate(-50%, -50%)';
+}
 
 (function () {
   const years = PROJECTS.map(p => p.year).filter(Boolean);
@@ -737,7 +800,7 @@ let zoomCard = { tx: 0, ty: 0, sx: 1, sy: 1 };
 function positionCTA() {
   const cW = Math.max(ITEM_W, CENTRE_FRAC * innerWidth);
   const cH = cW * (ITEM_H / ITEM_W);
-  const cardBottom = (innerHeight + cH) / 2;
+  const cardBottom = (innerHeight + cH) / 2 - getMobilePortraitYShift();
   cta.style.top = (innerHeight > innerWidth ? cardBottom - 42 : cardBottom - 50) + 'px';
 }
 
@@ -747,7 +810,7 @@ function applyZoomGeometry() {
   const mobile = innerWidth <= 640;
   const zm = mobile ? 12 : GAP_C;
   zoomCard = {
-    l0: (innerWidth  - cW) / 2,  t0: (innerHeight - cH) / 2,  w0: cW,  h0: cH,
+    l0: (innerWidth  - cW) / 2,  t0: (innerHeight - cH) / 2 - getMobilePortraitYShift(),  w0: cW,  h0: cH,
     l1: zm,                      t1: zm,
     w1: innerWidth  - 2 * zm,    h1: innerHeight - 2 * zm,
   };
@@ -847,7 +910,7 @@ function openZoom(p, skipHistory = false) {
   zoomAnim.dir = 1; zoomAnim.active = true;
   setPageMeta(
     `${p.title} — ${p.client || 'Steve Mackey'}`,
-    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — Design & Technology Director.` : `${p.title} — a project by Steve Mackey, Design & Technology Director.`
+    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${p.title} — a project by Steve Mackey, Design Leader & Technologist.`
   );
   if (!skipHistory) history.pushState({ slug: p.slug }, '', '/' + p.slug);
 }
@@ -949,7 +1012,7 @@ function closeZoom(skipHistory = false) {
   // Close target is the default (non-hovered) card size — same min-width guard as the render loop
   const cW = Math.max(ITEM_W, CENTRE_FRAC * innerWidth), cH = cW * (ITEM_H / ITEM_W);
   zoomCard.l0 = (innerWidth - cW) / 2;
-  zoomCard.t0 = (innerHeight - cH) / 2;
+  zoomCard.t0 = (innerHeight - cH) / 2 - getMobilePortraitYShift();
   zoomCard.w0 = cW; zoomCard.h0 = cH;
   zoomHero.style.height = mobile ? cH + 'px' : '';
   zoomAnim.dir = -1; zoomAnim.active = true;
@@ -957,6 +1020,7 @@ function closeZoom(skipHistory = false) {
 
 ctaBtn.addEventListener('click', () => openZoom(centreProject));
 zoomClose.addEventListener('click', () => closeZoom());
+updateMobilePortraitLayout();
 positionCTA();
 
 // Burger menu toggle
@@ -1515,7 +1579,11 @@ function animate() {
     vel.y *= friction;
     rawScroll.x += vel.x;
     rawScroll.y += vel.y;
-    if (filterCaseStudies) {
+    if (isMobilePortrait()) {
+      const b = getFiniteBounds();
+      scroll.x = 0; rawScroll.x = 0;
+      scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
+    } else if (filterCaseStudies) {
       scroll.x = rubberBand(rawScroll.x, PITCH_X);
       scroll.y = rubberBand(rawScroll.y, PITCH_Y);
     } else if (hasActiveFilters()) {
@@ -1559,6 +1627,7 @@ function animate() {
   }
 
   // Position + warp every pooled item
+  const mpYShift = getMobilePortraitYShift();
   for (const m of pool) {
     const cellX = ccx + m.userData.lx - halfCols;
     const cellY = ccy + m.userData.ly - halfRows;
@@ -1575,7 +1644,7 @@ function animate() {
     const z = CONVEX * (x * x + y * y);
     const fall = falloff(Math.hypot(x, y));
     const pShift = 10 + (1 - fall) * 20;   // 10 at centre → 30 at edge
-    m.position.set(x + prlxX * -pShift, y + prlxY * -pShift, z);
+    m.position.set(x + prlxX * -pShift, y + prlxY * -pShift + mpYShift, z);
     m.rotation.y = -Math.atan(2 * CONVEX * x);
     m.rotation.x = Math.atan(2 * CONVEX * y);
 
@@ -1620,7 +1689,7 @@ function animate() {
     } else if (ccx === 0 && ccy === 0 && !hasActiveFilters()) {
       centreProject = null;
       nowTitle.textContent = '';
-      nowMeta.textContent = 'Scroll in any direction to explore';
+      nowMeta.textContent = isMobilePortrait() ? 'Scroll up or down to explore' : 'Scroll in any direction to explore';
     } else {
       const _pi = projIndex(ccx, ccy);
       centreProject = _pi >= 0 ? activeProjects[_pi] : null;
@@ -1707,10 +1776,12 @@ addEventListener('resize', () => {
   updateBgCover();
   computeLayout();
   buildPool();
-  positionCTA();
   positionFilterIndicator(true);
   snapNearest();
   lastCenterKey = null;
+  if (isMobilePortrait()) { scroll.x = 0; rawScroll.x = 0; }
+  updateMobilePortraitLayout();
+  positionCTA();  // must come after updateMobilePortraitLayout so _mpYShift is current
   if (zoomed) { applyZoomGeometry(); setZoomTransform(zoomAnim.p); }  // refit to new viewport
 });
 
