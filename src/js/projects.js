@@ -310,7 +310,7 @@ export const PROJECTS = [
   },
   {
     file:      'index-adornment.jpg',
-    client:    'The BC Society for the Museum of Original Costume',
+    client:    'SMOC / Digital Museums Canada',
     title:     'Adornment & Identity',
     year:      2026,
     casestudy: true,

@@ -15,7 +15,7 @@ export const blocks = [
     spanMd: 5,
     spanSm: 12,
     children: [
-      { type: 'text', span: 6, heading: 'Client',  body: 'The BC Society for the Museum of Original Costume' },
+      { type: 'text', span: 6, heading: 'Client',  body: 'SMOC / Digital Museums Canada' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Story' },
       { type: 'text', span: 6, heading: 'Year',    body: '2026' },
