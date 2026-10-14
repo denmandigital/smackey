@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>The BC Society for the Museum of Costume (SMOC) maintains a large collection of historic fashion, traditional costume and textiles from the 18th century to the present. With support from Digital Museums Canada, SMOC was able to bring this collection online, giving students, fashion enthusiasts and the public outside Vancouver access to its historical holdings.</p><p><em>Adornment & Identity: An Interactive Exploration of Women’s Fashion, 1750–2000</em> explores clothing as a historical artifact.</p>',
+    body: '<p>The BC Society for the Museum of Costume (SMOC) maintains a large collection of historic fashion, traditional costume and textiles from the 18th century to the present. With funding from Digital Museums Canada (DMC), SMOC was able to bring this collection online, giving students, fashion enthusiasts and the public outside Vancouver access to its historical holdings.</p><p><em>Adornment & Identity: An Interactive Exploration of Women’s Fashion, 1750–2000</em> explores clothing as a historical artifact.</p>',
     url: 'https://fashionhistory.ca',
   },
   {
@@ -28,7 +28,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: '<p>Bringing SMOC’s collection online meant more than digitizing garments. Exhibits were carefully curated, each built around garments chosen for their cultural significance and the personal stories they could tell. The challenge was conveying the historical weight and human context behind each piece to audiences who would never see them in a gallery, across a range of visitors from fashion students to the general public, while meeting a high bar for historical accuracy.</p>',
+    body: '<p>Bringing SMOC’s collection online meant more than digitizing garments. Exhibits were carefully curated, each built around garments chosen for their cultural significance and the personal stories they could tell. The challenge was conveying the historical weight and human context behind each piece to audiences who would never see them in a gallery, across a range of visitors from fashion students and academics to the general public, while meeting a high bar for historical accuracy.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
