@@ -713,6 +713,9 @@ const zoomScroll = document.getElementById('zoomScroll');
 const zoomContent = document.getElementById('zoomContent');
 const zoomHero   = document.getElementById('zoomHero');
 const zoomHeroBg = document.getElementById('zoomHeroBg');
+const zoomNext   = document.getElementById('zoomNext');
+const zoomNextTitle  = zoomNext.querySelector('.zoom-next-title');
+const zoomNextClient = zoomNext.querySelector('.zoom-next-client');
 
 function blockStyle(b, extra = {}) {
   const props = {};
@@ -786,6 +789,9 @@ let centreProject = PROJECTS[0];
 let centrePxW = CENTRE_FRAC * innerWidth;   // actual screen px width of centre card (updated per frame)
 let centrePxH = centrePxW * (ITEM_H / ITEM_W);
 let zoomed = false;          // true while open OR animating (blocks grid interaction)
+let zoomProject = null;      // project currently open in the zoom panel
+let zoomOnClose = null;      // callback fired once the close animation completes
+let tweenOnComplete = null;  // callback fired once a snap tween completes
 let ctaShown = false;
 let ctaTimer = null;
 ctaBtn.setAttribute('tabindex', '-1');
@@ -870,10 +876,48 @@ function setPageMeta(title, desc) {
   metaTwDesc.content  = desc;
 }
 
+function cellForProject(p) {
+  const idx = activeProjects.indexOf(p);
+  if (idx < 0) return null;
+  if (isMobilePortrait()) {
+    return filterCaseStudies ? { cx: 0, cy: -(idx + 1) } : { cx: 0, cy: -idx };
+  }
+  if (filterCaseStudies) return GRID_POSITIONS[idx] || null;
+  return idx === 0 ? { cx: 0, cy: 0 } : (GRID_POSITIONS[idx - 1] || null);
+}
+
+function nextProjectInGridOrder(p) {
+  if (isMobilePortrait()) {
+    const idx = activeProjects.indexOf(p);
+    return idx >= 0 ? activeProjects[(idx + 1) % activeProjects.length] : null;
+  }
+  // Build reading order: cy descending (top of screen first), cx ascending (left→right)
+  const cells = activeProjects.map((proj, i) => {
+    const pos = filterCaseStudies
+      ? GRID_POSITIONS[i]
+      : (i === 0 ? { cx: 0, cy: 0 } : GRID_POSITIONS[i - 1]);
+    return { proj, cx: pos ? pos.cx : 0, cy: pos ? pos.cy : 0 };
+  });
+  cells.sort((a, b) => b.cy - a.cy || a.cx - b.cx);
+  const cur = cells.findIndex(c => c.proj === p);
+  return cur >= 0 ? cells[(cur + 1) % cells.length].proj : null;
+}
+
 function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   markViewed(p);
   zoomed = true;
+  zoomProject = p;
+  const nextP = isFiniteGrid() ? nextProjectInGridOrder(p) : null;
+  if (nextP) {
+    zoomNextTitle.textContent = nextP.title;
+    zoomNextClient.textContent = nextP.client || '';
+    zoomNext.style.backgroundImage = `url("${nextP.src}")`;
+    zoomNext.classList.add('visible');
+  } else {
+    zoomNext.classList.remove('visible');
+    zoomNext.style.backgroundImage = '';
+  }
   zoomTriggerEl = document.activeElement;
   zoom.removeAttribute('inert');
   zoom.setAttribute('aria-hidden', 'false');
@@ -1025,6 +1069,19 @@ function closeZoom(skipHistory = false) {
 
 ctaBtn.addEventListener('click', () => openZoom(centreProject));
 zoomClose.addEventListener('click', () => closeZoom());
+zoomNext.addEventListener('click', () => {
+  if (!zoomProject) return;
+  const nextP = nextProjectInGridOrder(zoomProject);
+  if (!nextP) return;
+  const cell = cellForProject(nextP);
+  const tx = cell ? -cell.cx * PITCH_X : 0;
+  const ty = cell ? -cell.cy * PITCH_Y : 0;
+  zoomOnClose = () => {
+    startTween(tx, ty);
+    tweenOnComplete = () => openZoom(nextP);
+  };
+  closeZoom(true);
+});
 updateMobilePortraitLayout();
 positionCTA();
 
@@ -1574,6 +1631,7 @@ function animate() {
       zoom.setAttribute('aria-hidden', 'true');
       zoomed = false;
       if (zoomTriggerEl) { zoomTriggerEl.focus(); zoomTriggerEl = null; }
+      if (zoomOnClose) { const cb = zoomOnClose; zoomOnClose = null; cb(); }
     }
   }
 
@@ -1614,7 +1672,10 @@ function animate() {
       : (1 - Math.cos(Math.PI * p)) / 2;        // sine ease-in-out: gentle ramp, moderate peak, smooth settle
     scroll.x = tween.x0 + (tween.x1 - tween.x0) * e;
     scroll.y = tween.y0 + (tween.y1 - tween.y0) * e;
-    if (p >= 1) { scroll.x = tween.x1; scroll.y = tween.y1; rawScroll.x = tween.x1; rawScroll.y = tween.y1; tween.active = false; }
+    if (p >= 1) {
+      scroll.x = tween.x1; scroll.y = tween.y1; rawScroll.x = tween.x1; rawScroll.y = tween.y1; tween.active = false;
+      if (tweenOnComplete) { const cb = tweenOnComplete; tweenOnComplete = null; cb(); }
+    }
   }
 
   // Which cell currently sits at screen centre
