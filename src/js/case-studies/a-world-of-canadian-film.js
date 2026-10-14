@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Reel Canada’s web platforms had grown unwieldy and disorganized over the years. Navigation was confusing, finding films in the catalogue was slow and complicated, and data, including the film library, lived in several places with no single source of truth.',
+    body: 'Reel Canada’s web platforms had grown unwieldy and disorganized over the years. Navigation was confusing, internal naming conventions overshadowed the user experience, and data, including its Canadian Film Collection, was scattered across multiple databases with no single source of truth.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Solutions',
-    body: '<ul><li>Designed the information architecture and mega menu navigation system</li><li>Directed the development of a custom-built Canadian film catalogue with advanced search and filtering</li><li>Integrated film data from Salesforce with a custom-built plugin</li><li>Directed the development of a flexible, block-based content management system</li></ul>',
+    body: '<ul><li>Designed the information architecture and mega menu navigation system</li><li>Directed the adaptation of the design system and the development of the Canadian Film Collection, with advanced search and filtering</li><li>Rebuilt a custom plugin to import all film-related data from Reel Canada’s Salesforce database</li><li>Oversaw the design and development of a flexible, block-based content management system</li></ul>',
   },
 
   // Outcome callout — full width
@@ -57,7 +57,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul><p>The following year, we developed <em>Reel Opportunities</em>, a digital workforce initiative aimed at attracting young adults to careers in Canada’s film industry, including an interactive career-pathway tool, a career-planning quiz, and a searchable, filterable directory of film-related job profiles.</p>',
+    body: '<ul><li>500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul><br><p>The following year, we developed <em>Reel Opportunities</em>, a digital workforce initiative aimed at attracting young adults to careers in Canada’s film industry, including an interactive career-pathway tool, a career-planning quiz, and a searchable, filterable directory of film-related job profiles.</p>',
   },
 
   { type: 'spacer', span: 12, height: 40 },
