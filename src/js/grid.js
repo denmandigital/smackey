@@ -713,9 +713,10 @@ const zoomScroll = document.getElementById('zoomScroll');
 const zoomContent = document.getElementById('zoomContent');
 const zoomHero   = document.getElementById('zoomHero');
 const zoomHeroBg = document.getElementById('zoomHeroBg');
-const zoomNext   = document.getElementById('zoomNext');
-const zoomNextTitle  = zoomNext.querySelector('.zoom-next-title');
-const zoomNextClient = zoomNext.querySelector('.zoom-next-client');
+const zoomNext        = document.getElementById('zoomNext');
+const zoomNextEyebrow = zoomNext.querySelector('.zoom-next-eyebrow');
+const zoomNextTitle   = zoomNext.querySelector('.zoom-next-title');
+const zoomNextClient  = zoomNext.querySelector('.zoom-next-client');
 
 function blockStyle(b, extra = {}) {
   const props = {};
@@ -910,6 +911,7 @@ function openZoom(p, skipHistory = false) {
   zoomProject = p;
   const nextP = isFiniteGrid() ? nextProjectInGridOrder(p) : null;
   if (nextP) {
+    zoomNextEyebrow.textContent = filterCaseStudies ? 'Next Case Study' : 'Next Project';
     zoomNextTitle.textContent = nextP.title;
     zoomNextClient.textContent = nextP.client || '';
     zoomNext.style.backgroundImage = `url("${nextP.src}")`;
@@ -1491,7 +1493,7 @@ function buildFilterMenu() {
 </div>`;
 
   const header = `<div id="filterHeader">
-  <span id="filterTitle">Filters</span>
+  <span id="filterTitle">Project Filters</span>
   <button id="filterClearBtn">Clear All Filters</button>
   <button id="filterCloseBtn" aria-label="Close filters">&#x2715;</button>
 </div>`;
