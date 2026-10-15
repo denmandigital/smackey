@@ -1087,6 +1087,24 @@ zoomNext.addEventListener('click', () => {
 updateMobilePortraitLayout();
 positionCTA();
 
+// Nav icon tooltips — appended to body so #nav overflow:hidden doesn't clip them
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  document.querySelectorAll('[data-tooltip]').forEach(el => {
+    const tip = document.createElement('div');
+    tip.className = 'nav-tooltip';
+    tip.textContent = el.dataset.tooltip;
+    document.body.appendChild(tip);
+    el.addEventListener('mouseenter', () => {
+      if (el.id === 'navBurger' && el.closest('#nav').classList.contains('open')) return;
+      const r = el.getBoundingClientRect();
+      tip.style.left = (r.left + r.width / 2) + 'px';
+      tip.style.top = r.top + 'px';
+      tip.classList.add('visible');
+    });
+    el.addEventListener('mouseleave', () => tip.classList.remove('visible'));
+  });
+}
+
 // Burger menu toggle
 const nav = document.getElementById('nav');
 const navMenu = document.getElementById('navMenu');

@@ -180,3 +180,35 @@
 	}
 }
 
+.nav-tooltip {
+	position: fixed;
+	background: var(--ink);
+	color: rgba(255, 255, 255, 0.9);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	padding: 5px 10px;
+	border-radius: 6px;
+	pointer-events: none;
+	opacity: 0;
+	translate: -50% calc(-100% - 6px);
+	transition: opacity 0.2s ease, translate 0.2s ease;
+	z-index: 200;
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border: 5px solid transparent;
+		border-top-color: var(--ink);
+	}
+
+	&.visible {
+		opacity: 1;
+		translate: -50% calc(-100% - 10px);
+	}
+}
