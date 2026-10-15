@@ -17,7 +17,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'Canada Wild Productions / Agentic' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive story, Installation' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Story, Installation' },
       { type: 'text', span: 6, heading: 'Year',    body: '2017' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>UX / UI design</li><li>Web development</li></ul>' },
     ],
