@@ -1395,12 +1395,29 @@ function dateRangeLabel(range) {
 
 function updateActiveFilterChips() {
   if (!activeFiltersEl) return;
+  const base = filterCaseStudies ? PROJECTS.filter(p => p.casestudy) : PROJECTS;
+  const now = new Date().getFullYear();
   const chips = [];
-  filterCategories.forEach(c => chips.push({ label: c, type: 'category', value: c }));
-  filterIndustries.forEach(i => chips.push({ label: i, type: 'industry', value: i }));
-  if (filterDateRange) chips.push({ label: dateRangeLabel(filterDateRange), type: 'date', value: filterDateRange });
+  filterCategories.forEach(c => {
+    const count = base.filter(p => p.category.some(cat => cat === c)).length;
+    chips.push({ label: c, type: 'category', value: c, count });
+  });
+  filterIndustries.forEach(i => {
+    const count = base.filter(p => p.industry.some(ind => ind === i)).length;
+    chips.push({ label: i, type: 'industry', value: i, count });
+  });
+  if (filterDateRange) {
+    const count = base.filter(p => {
+      if (p.year === null) return false;
+      if (filterDateRange === 'recent') return p.year >= now - 4;
+      if (filterDateRange === 'mid')    return p.year >= now - 10 && p.year <= now - 5;
+      if (filterDateRange === 'older')  return p.year <= now - 11;
+      return true;
+    }).length;
+    chips.push({ label: dateRangeLabel(filterDateRange), type: 'date', value: filterDateRange, count });
+  }
   activeFiltersEl.innerHTML = chips.map(ch =>
-    `<button class="active-filter-chip" data-type="${ch.type}" data-value="${ch.value}">${ch.label}<span class="chip-x" aria-hidden="true">&#x2715;</span></button>`
+    `<button class="active-filter-chip" data-type="${ch.type}" data-value="${ch.value}">${ch.label} <span class="chip-count">(${ch.count})</span><span class="chip-x" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><line x1="1" y1="1" x2="7" y2="7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><line x1="7" y1="1" x2="1" y2="7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span></button>`
   ).join('');
   activeFiltersEl.classList.toggle('visible', chips.length > 0);
 }
