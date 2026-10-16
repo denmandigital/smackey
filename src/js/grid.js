@@ -1678,6 +1678,7 @@ activateFilter(
 );
 positionFilterIndicator(true);
 if (location.pathname === '/about') openMenu(true);
+setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
 
 function animate() {
   requestAnimationFrame(animate);
