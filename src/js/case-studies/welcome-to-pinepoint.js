@@ -17,7 +17,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'National Film Board of Canada' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Web App, Interactive Documentary' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Documentary' },
       { type: 'text', span: 6, heading: 'Year',    body: '2020' },
       { type: 'text', span: 12, heading: 'Roles',   body: 'Web development' },
     ],

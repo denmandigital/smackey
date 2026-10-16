@@ -17,7 +17,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'CBC News' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Fulscrn' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Interactive Documentary, App' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Interactive Documentary' },
       { type: 'text', span: 6, heading: 'Year',    body: '2012' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>UX / UI design</li><li>App development</li></ul>' },
     ],

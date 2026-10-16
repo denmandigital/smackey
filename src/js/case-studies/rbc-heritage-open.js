@@ -15,8 +15,8 @@ export const blocks = [
     spanSm: 12,
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'RBC' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Touchscreen Application' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'NGX Interactive' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Touchscreen App' },
       { type: 'text', span: 6, heading: 'Year',    body: '2013' },
       { type: 'text', span: 12, heading: 'Role',   body: 'App development' },
     ],

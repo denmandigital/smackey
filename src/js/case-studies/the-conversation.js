@@ -17,7 +17,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'Telus / FNHA / Real World Films' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Documentary' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Documentary, Brand Design' },
       { type: 'text', span: 6, heading: 'Year',    body: '2024' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI / brand design</li><li>Web development</li></ul>' },
     ],

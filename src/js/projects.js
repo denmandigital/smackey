@@ -41,7 +41,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Interactive Story', 'Website'],
     industry:  ['Arts & Culture'],
-    accentColourPrimary:   '#ED683A',
+    accentColourPrimary:   '#d65b32',
     textColour: 'light',
   },
   {
@@ -74,8 +74,8 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Installation'],
     industry:  ['Arts & Culture', 'Media & Broadcasting'],
-    accentColourPrimary:   '#76b7da',
-    textColour: 'dark',
+    accentColourPrimary:   '#000000',
+    textColour: 'light',
   },
   {
     file:      'index-food-for-thought.jpg',
@@ -85,7 +85,7 @@ export const PROJECTS = [
     casestudy: true,
     category:  ['Interactive Documentary', 'Website'],
     industry:  ['Arts & Culture', 'Media & Broadcasting'],
-    accentColourPrimary:   '#313131',
+    accentColourPrimary:   '#312d2d',
     textColour: 'light',
   },
   {
@@ -151,7 +151,7 @@ export const PROJECTS = [
     casestudy: true,
     category:  ['Website', 'Digital Publication'],
     industry:  ['Nonprofit & Charitable Organizations'],
-    accentColourPrimary: '#5B777A',
+    accentColourPrimary: '#476264',
     textColour: 'light',
   },
   {
@@ -173,7 +173,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Website', 'Interactive Documentary'],
     industry:  ['Arts & Culture', 'Media & Broadcasting', 'Indigenous Initiatives'],
-    accentColourPrimary:   '#49908a',
+    accentColourPrimary:   '#438681',
     textColour: 'light',
   },
   {
@@ -250,7 +250,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Interactive Story'],
     industry:  ['Media & Broadcasting', 'Education'],
-    accentColourPrimary:   '#1f9fd6',
+    accentColourPrimary:   '#1790c4',
     textColour: 'light',
   },
   {
@@ -283,7 +283,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Interactive Documentary'],
     industry:  ['Media & Broadcasting'],
-    accentColourPrimary:   '#90ab49',
+    accentColourPrimary:   '#7c953a',
     textColour: 'light',
   },
   {
@@ -294,7 +294,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Installation', 'Website', 'Interactive Documentary'],
     industry:  ['Arts & Culture'],
-    accentColourPrimary:   '#597b83',
+    accentColourPrimary:   '#1b3e52',
     textColour: 'light',
   },
   {
@@ -305,7 +305,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Website', 'Interactive Documentary'],
     industry:  ['Arts & Culture', 'Media & Broadcasting', 'Indigenous Initiatives'],
-    accentColourPrimary:   '#0b202e',
+    accentColourPrimary:   '#0a1d2a',
     textColour: 'light',
   },
   {
@@ -371,7 +371,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Touchscreen App'],
     industry:  ['Education'],
-    accentColourPrimary:   '#025FA6',
+    accentColourPrimary:   '#054170',
     textColour: 'light',
   },
   {
@@ -382,7 +382,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Touchscreen App'],
     industry:  ['Education'],
-    accentColourPrimary:   '#324C4E',
+    accentColourPrimary:   '#2a4244',
     textColour: 'light',
   },
   {
@@ -393,7 +393,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Touchscreen App'],
     industry:  ['Education'],
-    accentColourPrimary:   '#362A1B',
+    accentColourPrimary:   '#010101',
     textColour: 'light',
   },
   {
@@ -404,7 +404,7 @@ export const PROJECTS = [
     casestudy: false,
     category:  ['Touchscreen App'],
     industry:  ['Sports & Recreation'],
-    accentColourPrimary:   '#29270F',
+    accentColourPrimary:   '#1f1d0c',
     textColour: 'light',
   },
   {

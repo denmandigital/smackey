@@ -1471,6 +1471,7 @@ function filterQueryString() {
 
 function syncFilterUrl() {
   if (filterCaseStudies) return;
+  if (location.pathname !== '/archive') return;
   history.replaceState(history.state, '', '/archive' + filterQueryString());
 }
 

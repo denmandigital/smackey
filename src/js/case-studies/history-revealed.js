@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'BC Hydro worked with Indigenous communities in the Peace Region of British Columbia to preserve the unique physical record of their history from the impacts of the Site C hydroelectric project. More than 500 archaeological sites were established and hundreds of thousands of artifacts uncovered and presented in a  exhibition which traveled to the remote indigenous communities involved, before finding a permanent home at Fort St. John North Peace Museum.</p><p>The focus of our work within the exhibition was the development of an immersive touch-screen application that lets users explore the growing database of thousands of artifacts found at archeological sites around the river.',
+    body: 'BC Hydro worked with Indigenous communities in the Peace Region of British Columbia to preserve the unique physical record of their history from the impacts of the Site C hydroelectric project. More than 500 archaeological sites were established and hundreds of thousands of artifacts uncovered and presented in an exhibition which traveled to the remote indigenous communities involved, before finding a permanent home at Fort St. John North Peace Museum.</p><p>The focus of our work within the exhibition was the development of an immersive touch-screen application that lets users explore the growing database of thousands of artifacts found at archeological sites around the river.',
   },
   {
     type: 'container',
@@ -29,7 +29,7 @@ export const blocks = [
     type: 'text',
     span: 12,
     variant: 'callout',
-    body: '<p>The desktop application was built with Electron and uses ArcGIS, a mapping and geospatial  software platform.</p><p>Statamic, a headless CMS solution allowed BC Hydro staff from across the province to add and update archeological entries. Often in remote communities, the app needed to work offline, and have the ability to update itself with new content whenever it came back online.</p>',
+    body: '<p>The desktop application was built with Electron and uses ArcGIS, a mapping and geospatial software platform.</p><p>Statamic, configured as a headless CMS, allowed BC Hydro staff from across the province to add and update archaeological entries. Because the exhibition often travelled to remote communities, the app needed to work offline and update itself with new content whenever it came back online.</p>',
   },
   
   { type: 'image', span: 12, src: 'assets/projects/historyrevealed/bc-hydro_single-img.jpg' },
