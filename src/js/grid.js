@@ -151,7 +151,7 @@ function makeCover(p, idx, w = 1024, img = null) {
   }
 
   // Vertically + horizontally centred label: title → client
-  const titleSize = w * 0.066, clientSize = w * (innerWidth <= 640 ? 0.0286 : 0.026), titleClientGap = w * 0.015;
+  const titleSize = w * 0.066, clientSize = w * (innerWidth <= 640 ? 0.035 : 0.026), titleClientGap = w * 0.015;
   const totalH = titleSize + (p.client ? titleClientGap + clientSize : 0);
   let ty = ch / 2 - totalH / 2;
   x.textAlign = 'center'; x.textBaseline = 'top';

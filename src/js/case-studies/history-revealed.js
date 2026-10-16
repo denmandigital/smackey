@@ -16,7 +16,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'BC Hydro' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Touch-screen Application' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Touch-screen Application, Headless CMS' },
       { type: 'text', span: 6, heading: 'Year',    body: '2021' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
     ],
@@ -24,6 +24,13 @@ export const blocks = [
   { type: 'spacer', span: 12, height: 40 },
 
   { type: 'image', span: 12, src: 'assets/projects/historyrevealed/responsive_bc-hydro.png' },
+
+  {
+    type: 'text',
+    span: 12,
+    variant: 'callout',
+    body: '<p>The desktop application was built with Electron and uses ArcGIS, a mapping and geospatial  software platform.</p><p>Statamic, a headless CMS solution allowed BC Hydro staff from across the province to add and update archeological entries. Often in remote communities, the app needed to work offline, and have the ability to update itself with new content whenever it came back online.</p>',
+  },
   
   { type: 'image', span: 12, src: 'assets/projects/historyrevealed/bc-hydro_single-img.jpg' },
   

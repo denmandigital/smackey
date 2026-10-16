@@ -25,6 +25,13 @@ export const blocks = [
 
   { type: 'image', span: 12, src: 'assets/projects/huntingincanada/hic-responsive.png' },
   
+  {
+    type: 'text',
+    span: 12,
+    variant: 'callout',
+    body: 'Field Guide content for this static website was managed through Craft CMS, configured headless to keep the front end fully decoupled.',
+  },
+
   // Video
   { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721572323?autopause=0' },
   
