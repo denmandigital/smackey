@@ -868,13 +868,15 @@ const metaOgDesc  = document.getElementById('metaOgDesc');
 const metaTwTitle = document.getElementById('metaTwTitle');
 const metaTwDesc  = document.getElementById('metaTwDesc');
 
-function setPageMeta(title, desc) {
+const canonicalEl = document.querySelector('link[rel="canonical"]');
+function setPageMeta(title, desc, path = location.pathname) {
   document.title = title;
   metaDesc.content    = desc;
   metaOgTitle.content = title;
   metaOgDesc.content  = desc;
   metaTwTitle.content = title;
   metaTwDesc.content  = desc;
+  if (canonicalEl) canonicalEl.href = 'https://smackey.ca' + path;
 }
 
 function cellForProject(p) {
@@ -961,7 +963,8 @@ function openZoom(p, skipHistory = false) {
   zoomAnim.dir = 1; zoomAnim.active = true;
   setPageMeta(
     `${p.title} — ${p.client || 'Steve Mackey'}`,
-    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${p.title} — a project by Steve Mackey, Design Leader & Technologist.`
+    p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${p.title} — a project by Steve Mackey, Design Leader & Technologist.`,
+    '/' + p.slug
   );
   if (!skipHistory) history.pushState({ slug: p.slug }, '', '/' + p.slug);
 }
@@ -1120,7 +1123,7 @@ function openMenu(skipHistory = false) {
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
   navMenu.scrollTop = 0;
-  if (!skipHistory) history.pushState({ menu: true }, '', '/about');
+  if (!skipHistory) { history.pushState({ menu: true }, '', '/about'); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
 }
 
 function closeMenu(skipHistory = false) {
@@ -1130,7 +1133,7 @@ function closeMenu(skipHistory = false) {
   navMenu.setAttribute('aria-hidden', 'true');
   navBurger.setAttribute('aria-label', 'Open menu');
   if (innerWidth > 640) navBurger.focus();
-  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive' + filterQueryString());
+  if (!skipHistory) { history.pushState(null, '', filterCaseStudies ? '/' : '/archive' + filterQueryString()); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
@@ -1242,6 +1245,7 @@ brandCanvas.addEventListener('click', () => {
   activateFilter('casestudies');
   startTween(0, 0);
   history.pushState(null, '', '/');
+  setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
 });
 
 // ── Filter system ──────────────────────────────────────────
@@ -1340,6 +1344,7 @@ filterBtns.forEach(btn => {
     startTween(0, 0);
     const url = btn.dataset.filter === 'all' ? '/archive' : '/';
     history.pushState({ filter: btn.dataset.filter }, '', url);
+    setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
     if (menuOpen) closeMenu(true);
   });
 });
