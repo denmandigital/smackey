@@ -1040,7 +1040,7 @@ function closeZoom(skipHistory = false) {
   if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
   vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
   vimeoPlayers = [];
-  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive');
+  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive' + filterQueryString());
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
   // Freeze parallax immediately so the card sits exactly where the panel will land
   prlxX = 0; prlxY = 0;
@@ -1130,7 +1130,7 @@ function closeMenu(skipHistory = false) {
   navMenu.setAttribute('aria-hidden', 'true');
   navBurger.setAttribute('aria-label', 'Open menu');
   if (innerWidth > 640) navBurger.focus();
-  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive');
+  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive' + filterQueryString());
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
@@ -1374,6 +1374,8 @@ addEventListener('popstate', () => {
   } else {
     if (zoomed) closeZoom(true);
   }
+  clearChipFilters();
+  if (isArchive) applyUrlFilters();
   activateFilter(isArchive ? 'all' : 'casestudies');
 });
 
@@ -1456,6 +1458,39 @@ function updateFilterBadge() {
   if (clearBtn) clearBtn.style.display = count > 0 ? 'block' : 'none';
   if (filterTitle) filterTitle.style.display = count > 0 ? 'none' : 'block';
   updateActiveFilterChips();
+  syncFilterUrl();
+}
+
+function filterQueryString() {
+  const params = new URLSearchParams();
+  if (filterCategories.size) params.set('category', [...filterCategories].join(','));
+  if (filterIndustries.size) params.set('industry', [...filterIndustries].join(','));
+  if (filterDateRange) params.set('date', filterDateRange);
+  return params.toString() ? '?' + params.toString() : '';
+}
+
+function syncFilterUrl() {
+  if (filterCaseStudies) return;
+  history.replaceState(history.state, '', '/archive' + filterQueryString());
+}
+
+function applyUrlFilters() {
+  const params = new URLSearchParams(location.search);
+  const cats = params.get('category');
+  const inds = params.get('industry');
+  const date = params.get('date');
+  if (cats) cats.split(',').forEach(c => { const v = c.trim(); if (v) filterCategories.add(v); });
+  if (inds) inds.split(',').forEach(i => { const v = i.trim(); if (v) filterIndustries.add(v); });
+  if (date && ['recent', 'mid', 'older'].includes(date)) filterDateRange = date;
+  filterCategories.forEach(c => filterMenuEl.querySelectorAll(`[data-category="${c}"]`).forEach(el => {
+    el.classList.add('active'); el.setAttribute('aria-pressed', 'true');
+  }));
+  filterIndustries.forEach(i => filterMenuEl.querySelectorAll(`[data-industry="${i}"]`).forEach(el => {
+    el.classList.add('active'); el.setAttribute('aria-pressed', 'true');
+  }));
+  if (filterDateRange) filterMenuEl.querySelectorAll(`[data-daterange="${filterDateRange}"]`).forEach(el => {
+    el.classList.add('active'); el.setAttribute('aria-pressed', 'true');
+  });
 }
 
 function filterNavHeight() {
@@ -1631,6 +1666,7 @@ let prlxX = 0, prlxY = 0;   // smoothed mouse parallax (-1..1)
 const _dlPath = location.pathname.slice(1);
 const _dlProject = _dlPath && _dlPath !== 'archive' && _dlPath !== 'about'
   ? PROJECTS.find(p => p.slug === _dlPath) : null;
+if (location.pathname === '/archive') applyUrlFilters();
 activateFilter(
   location.pathname === '/archive' || (_dlProject && !_dlProject.casestudy) ? 'all' : 'casestudies'
 );
