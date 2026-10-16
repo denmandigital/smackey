@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>An immersive virtual museum with four interactive exhibits</li><li>An interactive 3D model of a House of Worth evening gown from 1900</li><li>Three short films exploring the personal histories behind selected garments</li><li>Educational resources written for fashion students</li><li>An accessible version of the experience, built to WCAG 2.2 AA standards</li></ul>',
+    body: '<ul><li>An immersive virtual museum with four interactive exhibits</li><li>An interactive 3D model of a House of Worth evening gown from 1900</li><li>Three short films exploring the personal histories behind selected garments</li><li>For educators, curriculum written for fashion students, downloadable historical sewing patterns, and a glossary of fashion history and terminology</li><li>An accessible version of the experience, built to WCAG 2.2 AA standards</li><li>Anthem Award finalist in the Digital & Innovative Experiences in Education, Art, and Culture category</li></ul>',
   },
 
 
