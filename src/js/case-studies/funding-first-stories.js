@@ -37,7 +37,7 @@ export const blocks = [
     span: 6,
     spanSm: 12,
     variant: 'callout',
-    heading: 'Approach',
+    heading: 'Solution',
     body: '<p>We worked with ISO to understand its funding process, internal nomenclature and unique pain points, including an audit of existing content, third-party integrations and functional requirements. I developed user journey maps and prototypes, incorporating user feedback throughout, informing a redesigned platform built around how ISO’s funding process actually works.</p>',
   },
 

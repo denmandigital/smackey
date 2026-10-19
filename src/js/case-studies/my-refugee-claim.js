@@ -28,7 +28,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: '<p>Refugee claimants face a demanding legal process with little time, little support, and little familiarity with how things work in Canada. The information they need exists, but it’s scattered across government sites, legal documents, and nonprofit resources, and none of it is written for claimants in plain language. <em>My Refugee Claim</em> was built to change that.</p>',
+    body: '<h2>Making legalese approachable and understandable.</h2><p>Refugee claimants face a demanding legal process with little support and little familiarity with how things work in Canada. The information they need exists, but it’s scattered across government sites, legal documents, and nonprofit resources. The task was to gather that information in one place and present it in plain language, through a friendly interface claimants could trust and act on.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -36,8 +36,8 @@ export const blocks = [
     span: 6,
     spanSm: 12,
     variant: 'callout',
-    heading: 'Approach',
-    body: 'We ran multi-day discovery sessions with settlement workers, content creators and immigration lawyers who work directly with claimants. Their input set the scope and kept the content legally and procedurally accurate. We then tested an MVP prototype with people who had recently been through the claim process, surfacing friction points and blind spots that shaped later iterations. I designed the information architecture and user experience, and directed the development of a flexible, block-based content management system that could scale with new languages and changes to government policies.',
+    heading: 'Solution',
+    body: 'We ran multi-day discovery sessions with settlement workers, content creators, and immigration lawyers who work directly with claimants. Their input set the project’s scope and kept the content legally and procedurally accurate. We then tested an MVP prototype with people who had recently been through the claim process, and the friction points and blind spots it surfaced shaped later iterations. I designed the information architecture and user experience, and directed the development of a flexible, block-based CMS that can scale with new languages and changes to government policy.',
   },
 
   // Outcome callout
@@ -47,18 +47,8 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>A plain-language guide for claimants in thirteen languages, used nationwide</li><li>Integrated registrations for Ready Tour, a virtual workshop helping claimants prepare for their hearings, with HubSpot to automate follow-up communications</li><li>AI text to speech integration, available in eleven languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner</a></li></ul>',
+    body: '<ul><li>A plain-language, eight section guide for claimants in thirteen languages, used nationwide</li><li>Wiki style glossary popovers for quick reference to unfamiliar terms</li><li>Integrated multi-stepped <em>Ready Tour</em> form registrations with HubSpot to automate follow-up communications for this virtual workshop that helps claimants prepare for their hearings</li><li>AI text to speech integration, available in eleven languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner</a></li></ul>',
   },
-
-  // Takeaway callout
-  {
-    type: 'text',
-    span: 12,
-    variant: 'callout',
-    heading: 'Takeaways',
-    body: '<ul><li>Design with vulnerable communities, not just for them</li><li>In high-stakes work, get accuracy and clarity right together, with every stakeholder in the room</li><li>Build systems that can evolve with content, technology, and governance moving in step</li></ul>',
-  },
-
 
   { type: 'spacer', span: 12, height: 40 },
   { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-responsive.png' },

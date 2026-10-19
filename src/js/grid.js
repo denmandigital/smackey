@@ -7,14 +7,17 @@ document.body.classList.add('js');
 
 const _caseStudyModules = import.meta.glob('./case-studies/*.js');
 
-// Fisher-Yates shuffle — new order every page load
+// Keep the order from projects.js for the initial grid and all project lists.
 const PROJECTS = _PROJECTS.slice();
-for (let i = PROJECTS.length - 1; i > 0; i--) {
-  const j = Math.floor(Math.random() * (i + 1));
-  [PROJECTS[i], PROJECTS[j]] = [PROJECTS[j], PROJECTS[i]];
-}
-// Tag each project with its texture-array index (stable after shuffle)
+// Tag each project with its texture-array index (stable in projects.js order)
 PROJECTS.forEach((p, i) => { p._idx = i; });
+
+// Archive mode keeps a randomized order; case study mode uses projects.js order.
+const ARCHIVE_PROJECTS = PROJECTS.slice();
+for (let i = ARCHIVE_PROJECTS.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [ARCHIVE_PROJECTS[i], ARCHIVE_PROJECTS[j]] = [ARCHIVE_PROJECTS[j], ARCHIVE_PROJECTS[i]];
+}
 
 // Finite positions for both CS mode and filtered archive — spiral outward from (0,0), sorted by distance
 const GRID_POSITIONS = (() => {
@@ -25,6 +28,26 @@ const GRID_POSITIONS = (() => {
   pos.sort((a, b) => (Math.hypot(a.cx, a.cy) - Math.hypot(b.cx, b.cy)) || (Math.abs(a.cx) - Math.abs(b.cx)) || (Math.abs(a.cy) - Math.abs(b.cy)));
   return pos;
 })();
+
+// Reserve the top-centre cell for the intro, include (0,0) as a project slot,
+// then assign nearby positions in visual reading order.
+const getCaseStudyPositions = () => [
+  { cx: 0, cy: 0 },
+  ...GRID_POSITIONS.filter(p => p.cx !== 0 || p.cy !== 1),
+].slice(0, activeN).sort((a, b) => b.cy - a.cy || a.cx - b.cx);
+// On desktop the intro sits between the first two projects. On portrait mobile
+// the single-column layout places it first at (0,0).
+const getCaseStudyIntroCell = () => {
+  if (isMobilePortrait()) return { cx: 0, cy: 0 };
+  return { cx: 0, cy: 1 };
+};
+const isIntroCell = (cx, cy) => {
+  if (filterCaseStudies) {
+    const intro = getCaseStudyIntroCell();
+    return cx === intro.cx && cy === intro.cy;
+  }
+  return cx === 0 && cy === 0 && !hasActiveFilters();
+};
 
 
 /* ============================================================
@@ -369,7 +392,7 @@ const pmod = (a, n) => ((a % n) + n) % n;
 const isFiniteGrid = () => isMobilePortrait() || filterCaseStudies || hasActiveFilters();
 
 // On mobile portrait the grid collapses to a single vertical column:
-//   CS mode  : intro at (0,0), case studies at (0,-1)..(0,-N)
+//   CS mode  : intro at the top of the layout, case studies below it
 //   Archive  : first project at (0,0), rest at (0,-1)..(0,-(N-1))
 const mpColDepth = () => filterCaseStudies ? activeN : Math.max(0, activeN - 1);
 
@@ -386,7 +409,7 @@ const projIndex = (cx, cy) => {
     return (cy < 0 && -cy < activeN) ? -cy : -1;
   }
   if (filterCaseStudies) {
-    const i = GRID_POSITIONS.findIndex(p => p.cx === cx && p.cy === cy);
+    const i = getCaseStudyPositions().findIndex(p => p.cx === cx && p.cy === cy);
     return (i >= 0 && i < activeN) ? i : -1;
   }
   if (hasActiveFilters()) {
@@ -404,10 +427,10 @@ const isValidCSCell = (cx, cy) => {
     return -cy <= mpColDepth();
   }
   if (!isFiniteGrid()) return true;
-  if (cx === 0 && cy === 0) return true;
-  const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
+  if (isIntroCell(cx, cy) || (cx === 0 && cy === 0 && !filterCaseStudies)) return true;
+  const positions = filterCaseStudies ? getCaseStudyPositions() : GRID_POSITIONS;
   const limit = hasActiveFilters() && !filterCaseStudies ? activeN - 1 : activeN;
-  return positions.some((p, i) => p.cx === cx && p.cy === cy && i < limit);
+  return positions.some((p, i) => p.cx === cx && p.cy === cy && (filterCaseStudies || i < limit));
 };
 
 const isMobilePortrait = () => innerWidth <= 640 && innerHeight > innerWidth;
@@ -455,10 +478,12 @@ function getFiniteBounds() {
   if (isMobilePortrait()) {
     return { minX: 0, maxX: 0, minY: 0, maxY: mpColDepth() * PITCH_Y };
   }
-  const positions = filterCaseStudies ? GRID_POSITIONS : GRID_POSITIONS;
+  const positions = filterCaseStudies ? getCaseStudyPositions() : GRID_POSITIONS;
   const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
-  const cells = [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
-  let minX = 0, maxX = 0, minY = 0, maxY = 0;
+  const cells = filterCaseStudies
+    ? [getCaseStudyIntroCell(), ...positions]
+    : [{ cx: 0, cy: 0 }, ...positions.slice(0, extraCount)];
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   for (const { cx, cy } of cells) {
     const tx = -cx * PITCH_X, ty = -cy * PITCH_Y;
     if (tx < minX) minX = tx; if (tx > maxX) maxX = tx;
@@ -476,9 +501,12 @@ function snapNearest(allowEaseOut = true) {
       const depth = mpColDepth();
       cells = Array.from({ length: depth + 1 }, (_, i) => ({ cx: 0, cy: -i }));
     } else {
-      // CS: intro at (0,0) + N project cells; filtered archive: project[0] at (0,0) + N-1 project cells
+      // CS: top intro + N project cells; filtered archive: project[0] at (0,0) + N-1 project cells
       const extraCount = hasActiveFilters() && !filterCaseStudies ? Math.max(0, activeN - 1) : activeN;
-      cells = [{ cx: 0, cy: 0 }, ...GRID_POSITIONS.slice(0, extraCount)];
+      const positions = filterCaseStudies ? getCaseStudyPositions() : GRID_POSITIONS.slice(0, extraCount);
+      cells = filterCaseStudies
+        ? [getCaseStudyIntroCell(), ...positions]
+        : [{ cx: 0, cy: 0 }, ...positions];
     }
     let bestD = Infinity, bestTx = 0, bestTy = 0;
     for (const { cx, cy } of cells) {
@@ -527,13 +555,7 @@ function onMove(e) {
     scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
     vel.x = 0;
     vel.y = (rawScroll.y < b.minY || rawScroll.y > b.maxY) ? 0 : -dy;
-  } else if (filterCaseStudies) {
-    scroll.x = rubberBand(rawScroll.x, PITCH_X);
-    scroll.y = rubberBand(rawScroll.y, PITCH_Y);
-    // Zero out velocity when past boundary so fling doesn't add energy against the snap-back
-    vel.x = Math.abs(rawScroll.x) > PITCH_X ? 0 : dx;
-    vel.y = Math.abs(rawScroll.y) > PITCH_Y ? 0 : -dy;
-  } else if (hasActiveFilters()) {
+  } else if (filterCaseStudies || hasActiveFilters()) {
     const b = getFiniteBounds();
     scroll.x = rubberBandRange(rawScroll.x, b.minX, b.maxX);
     scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
@@ -582,10 +604,7 @@ addEventListener('wheel', (e) => {
     const b = getFiniteBounds();
     scroll.x = 0; rawScroll.x = 0;
     scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
-  } else if (filterCaseStudies) {
-    scroll.x = rubberBand(rawScroll.x, PITCH_X);
-    scroll.y = rubberBand(rawScroll.y, PITCH_Y);
-  } else if (hasActiveFilters()) {
+  } else if (filterCaseStudies || hasActiveFilters()) {
     const b = getFiniteBounds();
     scroll.x = rubberBandRange(rawScroll.x, b.minX, b.maxX);
     scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
@@ -885,7 +904,7 @@ function cellForProject(p) {
   if (isMobilePortrait()) {
     return filterCaseStudies ? { cx: 0, cy: -(idx + 1) } : { cx: 0, cy: -idx };
   }
-  if (filterCaseStudies) return GRID_POSITIONS[idx] || null;
+  if (filterCaseStudies) return getCaseStudyPositions()[idx] || null;
   return idx === 0 ? { cx: 0, cy: 0 } : (GRID_POSITIONS[idx - 1] || null);
 }
 
@@ -897,7 +916,7 @@ function nextProjectInGridOrder(p) {
   // Build reading order: cy descending (top of screen first), cx ascending (left→right)
   const cells = activeProjects.map((proj, i) => {
     const pos = filterCaseStudies
-      ? GRID_POSITIONS[i]
+      ? getCaseStudyPositions()[i]
       : (i === 0 ? { cx: 0, cy: 0 } : GRID_POSITIONS[i - 1]);
     return { proj, cx: pos ? pos.cx : 0, cy: pos ? pos.cy : 0 };
   });
@@ -1243,7 +1262,6 @@ brandCanvas.addEventListener('click', () => {
   if (filterPanelOpen) closeFilterPanel();
   clearChipFilters();
   activateFilter('casestudies');
-  startTween(0, 0);
   history.pushState(null, '', '/');
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
 });
@@ -1265,7 +1283,7 @@ let filterDateRange   = null;      // null | 'recent' | 'mid' | 'older' — sele
 const hasActiveFilters = () => filterCategories.size > 0 || filterIndustries.size > 0 || filterDateRange !== null;
 
 function computeActiveProjects() {
-  let result = PROJECTS.slice(); // preserve page-load shuffle order within same year
+  let result = (filterCaseStudies ? PROJECTS : ARCHIVE_PROJECTS).slice();
   if (filterCaseStudies) result = result.filter(p => p.casestudy);
   if (filterCategories.size) result = result.filter(p => p.category.some(c => filterCategories.has(c)));
   if (filterIndustries.size) result = result.filter(p => p.industry.some(i => filterIndustries.has(i)));
@@ -1287,10 +1305,21 @@ function applyFilters(flashScene = false) {
   activeN = activeProjects.length;
   pool.forEach(m => { m.userData.key = null; });
   lastCenterKey = null;
-  if (!flashScene) gridFade = 0;
+  gridFade = 0;
   if (!hasActiveFilters() && !filterCaseStudies) {
     rawScroll.x = 0; rawScroll.y = 0;
     startTween(0, 0);
+  } else if (filterCaseStudies) {
+    const intro = getCaseStudyIntroCell();
+    rawScroll.x = -intro.cx * PITCH_X;
+    rawScroll.y = -intro.cy * PITCH_Y;
+    scroll.x = rawScroll.x;
+    scroll.y = rawScroll.y;
+    tween.active = false;
+    coasting = false;
+    wheeling = false;
+    clearTimeout(wheelTimer);
+    vel.x = vel.y = velSmooth.x = velSmooth.y = 0;
   } else {
     snapNearest();
   }
@@ -1341,7 +1370,7 @@ filterBtns.forEach(btn => {
     e.preventDefault();
     clearChipFilters();
     activateFilter(btn.dataset.filter);
-    startTween(0, 0);
+    if (!filterCaseStudies) startTween(0, 0);
     const url = btn.dataset.filter === 'all' ? '/archive' : '/';
     history.pushState({ filter: btn.dataset.filter }, '', url);
     setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
@@ -1726,10 +1755,7 @@ function animate() {
       const b = getFiniteBounds();
       scroll.x = 0; rawScroll.x = 0;
       scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
-    } else if (filterCaseStudies) {
-      scroll.x = rubberBand(rawScroll.x, PITCH_X);
-      scroll.y = rubberBand(rawScroll.y, PITCH_Y);
-    } else if (hasActiveFilters()) {
+    } else if (filterCaseStudies || hasActiveFilters()) {
       const b = getFiniteBounds();
       scroll.x = rubberBandRange(rawScroll.x, b.minX, b.maxX);
       scroll.y = rubberBandRange(rawScroll.y, b.minY, b.maxY);
@@ -1768,7 +1794,7 @@ function animate() {
   if (hitObj !== hovered) {
     hovered = hitObj;
     const cell = hitObj?.userData.cell;
-    const isIntroCard = cell && cell.x === 0 && cell.y === 0 && !hasActiveFilters();
+    const isIntroCard = cell && isIntroCell(cell.x, cell.y);
     document.body.classList.toggle('hovering', !!hitObj && !isIntroCard);
   }
 
@@ -1815,7 +1841,7 @@ function animate() {
         m.material.uniforms.map.value = introTexture;
         m.userData.projIdx = -1;
       } else {
-        const isIntro = cellX === 0 && cellY === 0 && !hasActiveFilters();
+        const isIntro = isIntroCell(cellX, cellY);
         const pi = isIntro ? -1 : projIndex(cellX, cellY);
         m.material.uniforms.map.value = (isIntro || pi < 0) ? introTexture : textures[activeProjects[pi]._idx];
         m.userData.projIdx = pi;
@@ -1832,7 +1858,7 @@ function animate() {
       centreProject = null;
       nowTitle.textContent = 'No results';
       nowMeta.textContent = 'Try a different filter combination';
-    } else if (ccx === 0 && ccy === 0 && !hasActiveFilters()) {
+    } else if (isIntroCell(ccx, ccy)) {
       centreProject = null;
       nowTitle.textContent = '';
       nowMeta.textContent = isMobilePortrait() ? 'Scroll up or down to explore' : 'Scroll in any direction to explore';
@@ -1870,7 +1896,7 @@ function animate() {
   const tweeningAway = tween.active && (tween.x1 !== 0 || tween.y1 !== 0);
 
   // Show CTA when settled on any project card — (0,0) counts as a project when filters are active
-  const settled = !(drag.active && drag.moved > 6) && !coasting && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && ((ccx !== 0 || ccy !== 0) || hasActiveFilters());
+  const settled = !(drag.active && drag.moved > 6) && !coasting && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && !isIntroCell(ccx, ccy);
   if (settled !== ctaShown) {
     ctaShown = settled;
     clearTimeout(ctaTimer);
@@ -1881,7 +1907,7 @@ function animate() {
     }
   }
 
-  const introSettled = !(drag.active && drag.moved > 3) && !coasting && !tweeningAway && !zoomed && !wheeling && ccx === 0 && ccy === 0 && !hasActiveFilters();
+  const introSettled = !(drag.active && drag.moved > 3) && !coasting && !tweeningAway && !zoomed && !wheeling && isIntroCell(ccx, ccy);
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
@@ -1891,7 +1917,7 @@ function animate() {
   }
 
   // Watermark: fade in when intro card is off-centre, fade out when at centre
-  const wmTarget = (ccx === 0 && ccy === 0 && !hasActiveFilters()) ? 0 : 1;
+  const wmTarget = isIntroCell(ccx, ccy) ? 0 : 1;
   const prevWm = wmOpacity;
   wmOpacity += (wmTarget - wmOpacity) * 0.07;
   if (Math.abs(wmOpacity - prevWm) > 0.001) {
@@ -1985,8 +2011,8 @@ if (initSlug) {
     let bestCell = null, bestDist = Infinity;
     for (let cy = -6; cy <= 6; cy++) {
       for (let cx = -6; cx <= 6; cx++) {
-        // Skip (0,0) when not in casestudies mode — that cell renders the intro card, not a project
-        if (cx === 0 && cy === 0 && !hasActiveFilters()) continue;
+        // Skip the intro cell; (0,0) is a project slot in the desktop case study layout.
+        if (isIntroCell(cx, cy)) continue;
         if (projIndex(cx, cy) === idx) {
           const d = Math.hypot(cx, cy);
           if (d < bestDist) { bestDist = d; bestCell = { cx, cy }; }

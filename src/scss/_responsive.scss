@@ -61,12 +61,11 @@
 		text-align: left;
 	}
 
-	#zoomHero {
-		padding: 24px;
-	}
+	
 
 	#zoomContent {
-		padding: 48px 24px 80px;
+		// padding: 48px 80px 80px;
+		padding: 72px 80px 100px;
 	}
 
 	.cs-grid {
@@ -84,5 +83,11 @@
 @include mobile {
 	body::before {
 		box-shadow: inset 0 0 30px 20px rgba(241, 239, 232, 1);
+	}
+	#zoomContent {
+		padding: 48px 24px 80px;
+	}
+	#zoomHero {
+		padding: 24px;
 	}
 }

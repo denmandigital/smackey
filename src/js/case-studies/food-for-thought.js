@@ -29,7 +29,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: '<p>Designed to reach a broader audience, the challenge was building an interactive companion experience that matched the warmth, humour, and curiosity of Art and Dan’s on-screen presence while delivering substantive content on a complex subject without feeling heavy or preachy.</p>',
+    body: '<p>To reach a broader audience, the interactive companion experience needed to match the warmth, humour, and curiosity of Art and Dan’s on-screen presence while delivering substantive content on a complex subject, without feeling heavy or preachy.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -37,8 +37,8 @@ export const blocks = [
     span: 7,
     spanMd: 12,
     variant: 'callout',
-    heading: 'Approach',
-    body: '<p>I led experience design and directed the UI and technical delivery. The experience unfolded across four regional chapters, each mixing documentary video, researched facts, infographics, and animation as users scrolled from problem to solution, ending with concrete ways to take action. Dan explored salmon fishing and aquaculture on the west coast and the dairy industry in Eastern Canada, while Art reported on prairie grain production and wild and traditional foods in Canada’s far north. Their voices ran throughout, keeping the tone grounded in the show’s blend of humour, tradition, and genuine curiosity.</p>',
+    heading: 'Solution',
+    body: '<p>I led experience design, visual design, and technical delivery. Four regional chapters blended documentary video, researched facts, infographics, and animation, guiding users from problem to solution and ending with concrete ways to act. Dan explored west coast salmon fishing and aquaculture and Eastern dairy; Art covered prairie grain and far north wild and traditional foods. Their voices ran throughout, keeping the tone true to the show’s humour, tradition, and curiosity.</p>',
   },
 
   // Outcome callout
@@ -48,7 +48,7 @@ export const blocks = [
     spanMd: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<p><em>Food For Thought</em> was well received by audiences and the industry alike. The project took home an Applied Arts Award for Best Entertainment, Arts and Tourism (Single), and earned Canadian Screen Award nominations for Best Cross-Platform Project and Best Host, Web Series or Program.</p>',
+    body: '<p><em>Food For Thought</em> was well received by audiences. The project won an Applied Arts Award for Best Entertainment, Arts and Tourism (Single), and earned Canadian Screen Award nominations for Best Cross-Platform Project and Best Host, Web Series or Program.</p>',
   },
 
 

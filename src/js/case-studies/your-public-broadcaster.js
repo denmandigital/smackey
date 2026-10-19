@@ -28,7 +28,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: '<p>Knowledge Network’s previous public-facing website was an extension of their streaming platform. It was outdated, visually tired, and weighed down by years of accumulated content without a clear strategy behind it. Separating the corporate and streaming experiences was an intentional decision, creating space to properly serve the donor and stakeholder audiences the organization depends on, with a site that could stand on its own while still feeling connected to the new streaming platform being built at the same time.</p>',
+    body: '<h2>Cutting the cord.</h2><p>Knowledge Network’s previous public-facing website was embedded within their streaming platform. It was outdated, unimaginative, and weighed down by years of accumulated content without a clear strategy behind it. Separating the corporate and streaming experiences was an intentional decision, creating space to properly serve the donor and stakeholder audiences the organization depends on, with a site that could stand on its own while still feeling connected to the new streaming platform being built at the same time.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -36,8 +36,8 @@ export const blocks = [
     span: 7,
     spanMd: 12,
     variant: 'callout',
-    heading: 'Approach',
-    body: '<p>I led experience design and directed a blended team of Knowledge Network’s internal designers alongside our own designers and developers. Following a full content audit and stakeholder workshops, we established a roadmap and aligned on priorities. Knowledge Network’s designers brought intimate brand knowledge and direct visibility into the streaming platform as it was being built, which required close collaboration and adaptability from both teams. Their internal review process added coordination overhead we accounted for early to keep production on track.</p>',
+    heading: 'Solution',
+    body: '<h2>A blended team.</h2><p>Following a full content audit and stakeholder workshops, we established a roadmap and aligned on priorities. I led experience design and directed a blended team of Knowledge Network’s internal designers alongside our own designers and developers. Knowledge Network’s designers brought intimate brand knowledge and direct visibility into the streaming platform as it was being built, which required close collaboration and adaptability from both teams. Their internal review process added coordination overhead we accounted for early to keep production on track.</p>',
   },
 
   // Outcome callout
@@ -47,7 +47,7 @@ export const blocks = [
     spanMd: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<p>The site launched in sync with the streaming platform, presenting a coherent brand experience across both. Clear information architecture reduced friction for donors and stakeholders, independent producers got a dedicated intake process, and a flexible, custom CMS gives the Knowledge Network team the tools to manage and grow the site on their own terms.</p>',
+    body: '<h2>Distinct, yet connected.</h2><p>The site launched in sync with the streaming platform, delivering a consistent brand experience across both. Clear information architecture reduces friction for donors and stakeholders, independent producers have a dedicated intake process, and a flexible custom CMS lets the Knowledge Network team manage content on their own.</p>',
   },
 
 

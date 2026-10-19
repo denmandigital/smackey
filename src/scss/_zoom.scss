@@ -288,12 +288,11 @@
 	}
 
 	@media (max-width: 1024px) {
-		--_span: var(--span-md, var(--span, 12));
-	}
-
-	@media (max-width: 640px) {
+		// --_span: var(--span-md, var(--span, 12));
 		--_span: var(--span-sm, var(--span-md, var(--span, 12)));
 	}
+
+	
 }
 
 .cs-container {
@@ -303,6 +302,19 @@
 	row-gap: 30px;
 	align-items: start;
 	align-content: start;
+
+	.cs-block {
+		--_span: var(--span, 12);
+		grid-column: span var(--_span);
+
+		@media (max-width: 1024px) {
+			--_span: var(--span, var(--span, 12));
+		}
+
+		// @media (max-width: 640px) {
+			// --_span: var(--span-sm, var(--span-md, var(--span, 12)));
+		// }
+	}
 }
 
 .cs-block {
@@ -407,8 +419,8 @@
 
 	&--intro {
 		padding: 0 6rem 2.5rem 0;
-		@include mobile {
-			padding-right: 0;
+		@include tablet-down {
+			padding-right: 2rem;
 		}
 		p {
 			font-size: clamp(20px, 2.4vw, 24px);
@@ -428,13 +440,27 @@
 			padding: 38px 24px;
 		}
 
+		h2 {
+			font-size: clamp(1.38rem, calc(1.148rem + 1.136vw), 2.00rem);
+			margin: 0.15em 0 0.5em;
+		}
+
 		h3 {
 			//color: rgba(255, 255, 255, 0.45);
 			background: rgba(255, 255, 255, 0.36);
 		}
 
+		@include desktop {
+			&[style*="--span: 12;"] {
+				 p {
+					font-size: clamp(20px, 2.4vw, 24px);
+				}
+			}
+		}
+
 		p, ul li, a {
-			font-size: clamp(17px, 1.7vw, 22px);
+			font-size: clamp(17px, 1.7vw, 20px);
+			//font-size: clamp(1.06rem, calc(0.949rem + 0.568vw), 1.38rem);
 			font-weight: 400;
 			line-height: 1.55;
 		}

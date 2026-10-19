@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'Reel Canada promotes Canadian film through national education programs and workforce development initiatives, reaching tens of thousands of teachers and students, and millions of Canadians, each year.',
+    body: 'Reel Canada is a charitable organization that uses national education programs and workforce development initiatives to bring Canadian film to tens of thousands of teachers and students, and millions of people across the country, each year. Its mission is to showcase the power and diversity of cinema and prompt audiences to ask what it means to be Canadian.',
     url: 'https://reelcanada.ca'
   },
   {
@@ -29,7 +29,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Reel Canada’s web platforms had grown unwieldy and disorganized over the years. Navigation was confusing, internal naming conventions overshadowed the user experience, and data, including its Canadian Film Collection, was scattered across multiple databases with no single source of truth.',
+    body: '<h2>A Canadian cultural leader.</h2><p>Reel Canada’s digital presence had fallen out of step with its ambition to lead the conversation on Canadian cinema, culture, and national identity. Over time, the platforms had become cluttered and hard to navigate, internal jargon had crept into the user experience, and key data, including the Canadian Film Collection, lived in multiple databases with no single source of truth.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -38,7 +38,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'We started with a content and technology audit of the existing platforms. Working with key stakeholders, we used analytics and audience needs to identify the most valuable content, challenging some long-held internal assumptions. We then removed outdated and irrelevant material, reorganized the program structure, and moved topical content to social channels.',
+    body: '<h2>Data and audience driven.</h2><p>We started with a content and technology audit of the existing platforms. Working with key stakeholders, we used analytics and audience needs to identify the most valuable content, challenging  long-held internal assumptions while advocating the users. We removed outdated and irrelevant material, reorganized the program structure, and moved topical content to social channels.</p>',
   },
 
   {
@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Solutions',
-    body: '<ul><li>Designed the information architecture and mega menu navigation system</li><li>Directed the adaptation of the design system and the development of the Canadian Film Collection, with advanced search and filtering</li><li>Rebuilt a custom plugin to import all film-related data from Reel Canada’s Salesforce database</li><li>Oversaw the design and development of a flexible, block-based content management system</li></ul>',
+    body: '<h2>User centred design.</h2><ul><li>Promoted a new information architecture and mega menu navigation system providing  quick access to individual pages within sections organized by audience needs</li><li>Led overall design direction and transformation of inherited brand elements into a Figma design system of components, styles, and variables that streamlined developer handoff and kept the brand consistent across products</li><li>Rebuilt a custom outdated plugin that syncs data from Salesforce to their websites establishing a single source of truth for all film and event data</li><li>Led the design and development of a block-based content management system, giving Reel Canada’s team the flexibility to build and update pages in English and French without developer support</li></ul>',
   },
 
   // Outcome callout — full width
@@ -57,7 +57,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul><br><p>The following year, we developed <em>Reel Opportunities</em>, a digital workforce initiative aimed at attracting young adults to careers in Canada’s film industry, including an interactive career-pathway tool, a career-planning quiz, and a searchable, filterable directory of film-related job profiles.</p>',
+    body: '<h2>A lasting partnership.</h2><p>Following a well-received 2023 launch, we became Reel Canada’s agency of record, supporting the continued evolution of their flagship website and the National Canadian Film Day event site.</p><ul><li>145% website traffic increase and 500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul><br><p>The most notable success was <em>Reel Opportunities</em>, a digital workforce initiative that attracts young adults to careers in Canada’s film industry and accounted for two-thirds of total website traffic in the first year. It includes an interactive career-pathway tool, a career-planning quiz, and a searchable, filterable directory of film-related job profiles.</p>',
   },
 
   { type: 'spacer', span: 12, height: 40 },

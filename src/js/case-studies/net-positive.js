@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'Foran Mining is a copper-zinc-gold-silver exploration and development company focused on sustainable mining, community partnership and circular economies.',
+    body: 'Foran Mining is a copper-zinc-gold-silver exploration and development company focused on sustainable mining, community partnership and circular economies. They are developing the world’s first carbon neutral copper mine at McIlvenna Bay in Saskatchewan, Canada.',
   },
   {
     type: 'container',
@@ -28,7 +28,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'Foran wanted to stand out in a traditionally staid resource sector, and to share its values and vision for sustainable mining with investors, stakeholders, prospective employees and Indigenous partners.',
+    body: 'In a traditionally staid resource sector, Foran wanted to distinguish itself and communicate its vision for sustainable mining to investors, stakeholders, prospective employees, and Indigenous partners. Foran needed a website that balanced bold ambition with the technical detail investors rely on.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -37,13 +37,23 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'Foran’s approach to mining, built on sustainable value chains and circular economies, called for a brand as bold as its ambitions. Our strategy centred on strength, commitment, and the infinite, and found its simplest expression in a ring symbol used in the logotype and across the brand. I directed the design of the identity system, built an interactive scrolly-telling experience for its Ethos section, and an illustrated, interactive map explaining its mining infrastructure.',
+    body: 'Foran’s approach to mining is built on sustainable value chains and circular economies. Working with Foran’s appointed steering committee, our strategy centred on key concepts of strength, commitment, and the infinite.',
+  },
+
+  {
+    type: 'text',
+    span: 6,
+    spanSm: 12,
+    variant: 'callout',
+    heading: 'Solution',
+    body: '<p>A ring symbol was designed to express Foran’s brand ideas and the future the company is working to create. Flexible enough for many uses, it finds its principal expression as the “o” in Foran’s wordmark.</p><p>I directed the brand identity, user experience, and visual design of the website. Hands-on, I designed and built an interactive scrollytelling experience for the Ethos section, and created an illustrated, interactive map explaining Foran’s mining infrastructure.</p>',
   },
 
   // Outcome callout
   {
     type: 'text',
-    span: 12,
+    span: 6,
+    spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
     body: '<ul><li>A brand and website that conveyed Foran’s ambitions by balancing high-impact, emotional visuals with technical reports, metallurgical results and feasibility studies</li><li>In September 2025, the federal government referred Foran’s McIlvenna Bay project to the Major Projects Office as one of five potential projects of national interest</li><li>In April 2026, Eldorado Gold acquired Foran in a C$3.8-billion deal</li></ul>',

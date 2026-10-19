@@ -25,8 +25,7 @@ export const blocks = [
   { type: 'spacer', span: 12, height: 40 },
   {
     type: 'text',
-    span: 6,
-    spanSm: 12,
+    span: 12,
     variant: 'callout',
     heading: 'Challenge',
     body: 'The Hub needed a brand that felt both modern and rooted in tradition, and a flexible publishing platform for news, analysis and debate aimed at a news-savvy audience. As a charitable news organization, it was also limited in how it could raise money.',
@@ -44,7 +43,8 @@ export const blocks = [
   // Outcome callout — full width
   {
     type: 'text',
-    span: 12,
+    span: 6,
+    spanSm: 12,
     variant: 'callout',
     heading: 'Outcome',
     body: 'We built and ran the platform through The Hub’s early years. It grew its audience over this period, and in 2024 moved digital in-house and relaunched.',
