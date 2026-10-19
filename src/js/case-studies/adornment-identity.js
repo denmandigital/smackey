@@ -17,7 +17,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client',  body: 'SMOC / Digital Museums Canada' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Story' },
+      { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Story, Interactive Documentary' },
       { type: 'text', span: 6, heading: 'Year',    body: '2026' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],

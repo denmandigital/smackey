@@ -28,7 +28,7 @@ export const PROJECTS = [
     title:     'Adornment & Identity',
     year:      2026,
     casestudy: true,
-    category:  ['Website', 'Interactive Story'],
+    category:  ['Website', 'Interactive Story', 'Interactive Documentary'],
     industry:  ['Arts & Culture'],
     accentColourPrimary:   '#323C36',
     textColour: 'light',
