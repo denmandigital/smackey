@@ -122,13 +122,6 @@ function remap(f, pitch, tab) {
 /* ============================================================
    PORTFOLIO DATA — edit content in projects.js
 ============================================================ */
-const PALETTE = [
-  ['#1b3a4b', '#3b6978'], ['#4a2545', '#a4508b'], ['#2d3142', '#bfc0c0'],
-  ['#0b3d2e', '#1e8a5b'], ['#3a2618', '#c08552'], ['#1a1a2e', '#6c5ce7'],
-  ['#37123c', '#71677c'], ['#102542', '#f87060'], ['#222a2f', '#d9b26a'],
-  ['#1f2d3d', '#5bc0be'], ['#2b2118', '#b08968'], ['#0f1f2e', '#48a9a6'],
-];
-
 const N = PROJECTS.length;
 let activeProjects = PROJECTS;
 let activeN = N;
@@ -144,7 +137,7 @@ const viewedSlugs = new Set();
    COVER TEXTURE
    Photo (if loaded) or generated colour art, with card text overlaid.
 ============================================================ */
-function makeCover(p, idx, w = 1024, img = null) {
+function makeCover(p, w = 1024, img = null) {
   const c = document.createElement('canvas');
   c.width = w; c.height = Math.round(w * (ITEM_H / ITEM_W));
   const x = c.getContext('2d');
@@ -157,20 +150,8 @@ function makeCover(p, idx, w = 1024, img = null) {
     if (ir > cr) { dh = ch; dw = ch * ir; } else { dw = cw; dh = cw / ir; }
     x.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
   } else {
-    const [a, b] = PALETTE[idx % PALETTE.length];
-    const g = x.createLinearGradient(0, 0, cw, ch);
-    g.addColorStop(0, a); g.addColorStop(1, b);
-    x.fillStyle = g; x.fillRect(0, 0, cw, ch);
-    let seed = idx * 9301 + 49297;
-    const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
-    x.globalAlpha = 0.12;
-    for (let i = 0; i < 6; i++) {
-      x.fillStyle = '#ffffff';
-      x.beginPath();
-      x.arc(rnd() * cw, rnd() * ch, 50 + rnd() * 190, 0, Math.PI * 2);
-      x.fill();
-    }
-    x.globalAlpha = 1;
+    x.fillStyle = p.accentColourPrimary;
+    x.fillRect(0, 0, cw, ch);
   }
 
   // Vertically + horizontally centred label: title → client
@@ -290,7 +271,7 @@ new THREE.TextureLoader().load('/assets/grid-bg.jpg', (tex) => {
 
 /* ---------- textures (start as generated art, photos swap in on load) ---------- */
 const textures = PROJECTS.map((p, i) => {
-  const t = new THREE.CanvasTexture(makeCover(p, i));
+  const t = new THREE.CanvasTexture(makeCover(p));
   t.anisotropy = renderer.capabilities.getMaxAnisotropy();
   return t;
 });
@@ -300,7 +281,7 @@ const _bgPreloads = new Map(PROJECTS.map(p => [p.src, new Image()]));
 PROJECTS.forEach((p, i) => {
   const img = _bgPreloads.get(p.src);
   img.onload = () => {
-    textures[i].image = makeCover(p, i, 1024, img);
+    textures[i].image = makeCover(p, 1024, img);
     textures[i].needsUpdate = true;
   };
   img.onerror = () => console.warn('Card image not found, using generated art:', p.src);
@@ -312,7 +293,7 @@ function markViewed(p) {
   viewedSlugs.add(p.slug);
   const img = _bgPreloads.get(p.src);
   const loaded = img && img.complete && img.naturalWidth > 0 ? img : null;
-  textures[p._idx].image = makeCover(p, p._idx, 1024, loaded);
+  textures[p._idx].image = makeCover(p, 1024, loaded);
   textures[p._idx].needsUpdate = true;
 }
 
@@ -1893,7 +1874,9 @@ function animate() {
   const tweenTargetCcx = Math.round(-tween.x1 / PITCH_X);
   const tweenTargetCcy = Math.round(-tween.y1 / PITCH_Y);
   const tweenChangesCell = tween.active && (tweenTargetCcx !== ccx || tweenTargetCcy !== ccy);
-  const tweeningAway = tween.active && (tween.x1 !== 0 || tween.y1 !== 0);
+  const tweeningAway = tween.active
+    && isIntroCell(ccx, ccy)
+    && !isIntroCell(tweenTargetCcx, tweenTargetCcy);
 
   // Show CTA when settled on any project card — (0,0) counts as a project when filters are active
   const settled = !(drag.active && drag.moved > 6) && !coasting && !tweenChangesCell && !zoomed && !wheeling && activeN > 0 && !isIntroCell(ccx, ccy);
