@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Solutions',
-    body: '<h2>User centred design.</h2><ul><li>Introduced an audience-based information architecture and mega menu, making it quick to reach any page within each section</li><li>Led overall design direction and transformation of inherited brand elements into a Figma design system of components, styles, and variables that streamlined developer handoff and kept the brand consistent across products</li><li>Rebuilt a custom outdated plugin that syncs data from Salesforce to their websites establishing a single source of truth for all film and event data</li><li>Led the design and development of a block-based content management system, giving Reel Canada’s team the flexibility to build and update pages in English and French without developer support</li></ul>',
+    body: '<h2>User centred design.</h2><ul><li>Introduced an audience-based information architecture and mega menu navigation system, making it quick to reach any page within each section</li><li>Led overall design direction and transformation of inherited brand elements into a Figma design system of components, styles, and variables that streamlined developer handoff and kept the brand consistent across products</li><li>Rebuilt a custom outdated plugin that syncs data from Salesforce to their websites establishing a single source of truth for all film and event data</li><li>Led the design and development of a block-based content management system, giving Reel Canada’s team the flexibility to build and update pages in English and French without developer support</li></ul>',
   },
 
   // Outcome callout — full width
