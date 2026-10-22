@@ -24,7 +24,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <meta id="metaDesc" name="description"
     content="Steve Mackey — Design Leader & Technologist. A portfolio of work spanning product and experience design primarily for nonprofit, media, cultural, and public-sector organizations." />
-  <link rel="canonical" href="https://smackey.ca" />
+  <link rel="canonical" href="" />
+  <script>
+    (() => {
+      const path = location.pathname.replace(/\/+$/, '') || '/';
+      const canonicalPath = path === '/index.html' ? '/' : path;
+      document.querySelector('link[rel="canonical"]').href = 'https://smackey.ca' + canonicalPath;
+    })();
+  </script>
 
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

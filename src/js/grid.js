@@ -869,6 +869,7 @@ const metaTwTitle = document.getElementById('metaTwTitle');
 const metaTwDesc  = document.getElementById('metaTwDesc');
 
 const canonicalEl = document.querySelector('link[rel="canonical"]');
+const PRODUCTION_ORIGIN = 'https://smackey.ca';
 function setPageMeta(title, desc, path = location.pathname) {
   document.title = title;
   metaDesc.content    = desc;
@@ -876,7 +877,7 @@ function setPageMeta(title, desc, path = location.pathname) {
   metaOgDesc.content  = desc;
   metaTwTitle.content = title;
   metaTwDesc.content  = desc;
-  if (canonicalEl) canonicalEl.href = 'https://smackey.ca' + path;
+  if (canonicalEl) canonicalEl.setAttribute('href', new URL(path, PRODUCTION_ORIGIN).href);
 }
 
 function cellForProject(p) {
@@ -1375,19 +1376,28 @@ addEventListener('popstate', () => {
   const isArchive = path === 'archive';
   const isAbout = path === 'about';
   const slug = (!isArchive && !isAbout && path) ? path : '';
+  const project = slug ? PROJECTS.find(proj => proj.slug === slug) : null;
 
   if (isAbout) {
     if (!menuOpen) openMenu(true);
+    setPageMeta(DEFAULT_TITLE, DEFAULT_DESC, '/about');
     return;
   }
 
   if (menuOpen) closeMenu(true);
 
   if (slug) {
-    const p = PROJECTS.find(proj => proj.slug === slug);
-    if (p && !zoomed) openZoom(p, true);
+    if (project && !zoomed) openZoom(project, true);
+    if (project) {
+      setPageMeta(
+        `${project.title} — ${project.client || 'Steve Mackey'}`,
+        project.client ? `${project.title} by ${project.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${project.title} — a project by Steve Mackey, Design Leader & Technologist.`,
+        '/' + project.slug
+      );
+    }
   } else {
     if (zoomed) closeZoom(true);
+    setPageMeta(DEFAULT_TITLE, DEFAULT_DESC, isArchive ? '/archive' : '/');
   }
   clearChipFilters();
   if (isArchive) applyUrlFilters();
@@ -1688,7 +1698,15 @@ activateFilter(
 );
 positionFilterIndicator(true);
 if (location.pathname === '/about') openMenu(true);
-setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
+if (_dlProject) {
+  setPageMeta(
+    `${_dlProject.title} — ${_dlProject.client || 'Steve Mackey'}`,
+    _dlProject.client ? `${_dlProject.title} by ${_dlProject.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${_dlProject.title} — a project by Steve Mackey, Design Leader & Technologist.`,
+    '/' + _dlProject.slug
+  );
+} else {
+  setPageMeta(DEFAULT_TITLE, DEFAULT_DESC, location.pathname === '/about' ? '/about' : location.pathname === '/archive' ? '/archive' : '/');
+}
 
 function animate() {
   requestAnimationFrame(animate);
