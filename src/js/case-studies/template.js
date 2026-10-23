@@ -19,7 +19,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Agency',  body: 'Agency Name' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website' },
       { type: 'text', span: 6, heading: 'Year',    body: 'yyyy' },
-      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
+      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
     ],
   },
 

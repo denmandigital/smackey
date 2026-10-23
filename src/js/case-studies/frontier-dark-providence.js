@@ -18,7 +18,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital,<br>Switch United' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Storytelling' },
       { type: 'text', span: 6, heading: 'Year',    body: '2016' },
-      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design direction</li><li>Web development</li></ul>' },
+      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI design direction</li><li>Web development</li></ul>' },
     ],
   },
   { type: 'spacer', span: 12, height: 40 },

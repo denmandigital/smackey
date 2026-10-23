@@ -19,7 +19,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Agency',  body: 'Fulscrn' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Interactive Storytelling' },
       { type: 'text', span: 6, heading: 'Year',    body: '2013' },
-      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
+      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI design</li><li>Web development</li></ul>' },
     ],
   },
 

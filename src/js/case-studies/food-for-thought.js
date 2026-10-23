@@ -19,7 +19,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Documentary' },
       { type: 'text', span: 6, heading: 'Year',    body: '2018' },
-      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Experience strategy</li><li>UX / UI design</li><li>Technical direction</li></ul>' },
+      { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI design</li><li>Technical direction</li></ul>' },
     ],
   },
 
