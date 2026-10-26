@@ -860,7 +860,7 @@ zoomScroll.addEventListener('scroll', () => {
   zoomHeroBg.style.transform = `scale(${1 + progress * 0.12})`;
 }, { passive: true });
 
-const DEFAULT_TITLE = 'Steve Mackey — Design & Technology Director';
+const DEFAULT_TITLE = 'Steve Mackey — Digital Strategy and Design Leadership';
 const DEFAULT_DESC  = document.getElementById('metaDesc').content;
 const metaDesc    = document.getElementById('metaDesc');
 const metaOgTitle = document.getElementById('metaOgTitle');

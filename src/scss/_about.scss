@@ -35,6 +35,10 @@
 	@include extra-wide {
 		width: 70%;
 	}
+
+	.about-text {
+		text-wrap: pretty;
+	}
 }
 
 .about-connect {
