@@ -415,7 +415,7 @@ export const PROJECTS = [
     year:      2014,
     casestudy: false,
     category:  ['Website'],
-    industry:  ['Industrial & Construction'],
+    industry:  ['Industrial & Construction', 'Technology'],
     accentColourPrimary:   '#2B1950',
     textColour: 'light',
   },
@@ -441,5 +441,17 @@ export const PROJECTS = [
     accentColourPrimary:   '#473f39',
     textColour: 'light',
   },
+  {
+    file:      'index-allocadia.jpg',
+    client:    'Allocadia',
+    title:     'Performance Marketing',
+    year:      2015,
+    casestudy: false,
+    category:  ['Website'],
+    industry:  ['Technology'],
+    accentColourPrimary:   '#640f71',
+    textColour: 'light',
+  },
+  
 
 ].map(p => ({ ...p, src: 'assets/' + p.file, slug: toSlug(p.title) }));

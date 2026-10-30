@@ -18,7 +18,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Client',  body: 'APTN / Real World Films' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website, Interactive Documentary' },
-      { type: 'text', span: 6, heading: 'Year',    body: '2024' },
+      { type: 'text', span: 6, heading: 'Years',    body: '2024—2026' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],
   },

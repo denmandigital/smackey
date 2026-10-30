@@ -17,7 +17,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Client',  body: 'Centre for Civic Engagement' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website, Digital Publication, Digital Commerce, Brand Design' },
-      { type: 'text', span: 6, heading: 'Year',    body: '2021' },
+      { type: 'text', span: 6, heading: 'Year',    body: '2021—2024' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI / brand design direction</li><li>Technical direction</li></ul>' },
     ],
   },
