@@ -62,7 +62,7 @@ export const blocks = [
     type: 'text',
     span: 12,
     variant: 'callout',
-    body: 'BCCA’s multiple audiences required different approaches to learning. After defining how particular persons would approach the training we created unique user pathways, determined key communication touch points for each, and customized the content at each stage to meet their individual requirements.',
+    body: 'BCCA’s multiple audiences required different approaches to learning. After defining how particular learners would approach the training we created unique user pathways, determined key communication touch points for each, and customized the content at each stage to meet their individual requirements.',
   },
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/future-of-construction-journey.png' },
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/future-of-construction-landing.png' },
