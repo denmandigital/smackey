@@ -82,7 +82,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     center: true,
-    body: 'In the third and fourth modules, we changed things up by adding scenario-based storytelling. Simple illustrations and voice-over show a fictional character handling a situation poorly, then well. The contrast gave learners a visual break and sparked their imagination.',
+    body: 'In the third and fourth modules, we changed things up by adding scenario-based storytelling. Simple illustrations and voice-over show fictional characters handling situations poorly, then well. The contrast gave learners a visual break and sparked their imagination.',
   },
 
   { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-01.png' },
