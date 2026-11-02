@@ -1163,6 +1163,37 @@ brandCube.rotation.y = -Math.PI / 4;  // S+M corner facing forward at rest
 brandScene.add(brandCube);
 brandRenderer.render(brandScene, brandCamera);  // draw static frame immediately
 
+// Loading mark — the same SM block as the navbar, rotating while the page starts.
+const loaderCanvas = document.getElementById('loaderCanvas');
+const loaderRenderer = new THREE.WebGLRenderer({ canvas: loaderCanvas, antialias: true, alpha: true });
+loaderRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+loaderRenderer.setSize(29, 29);
+const loaderScene = new THREE.Scene();
+loaderScene.add(new THREE.AmbientLight(0xffffff, 1.4));
+const loaderLight = new THREE.DirectionalLight(0xffffff, 1.2);
+loaderLight.position.set(2, 3, 3);
+loaderScene.add(loaderLight);
+const loaderCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+loaderCamera.position.set(0, 0, 2.2);
+const loaderCube = createSMBlock({ size: 1 });
+loaderCube.rotation.y = -Math.PI / 4;
+loaderScene.add(loaderCube);
+const loaderProgress = document.getElementById('loaderProgress');
+function setLoaderProgress(value) {
+  loaderProgress.style.strokeDashoffset = String(157.08 * (1 - value / 100));
+}
+setLoaderProgress(18);
+function spinLoader() {
+  if (document.getElementById('loader').classList.contains('hidden')) {
+    loaderRenderer.dispose();
+    return;
+  }
+  loaderCube.rotation.y -= 0.05 * (1 + 0.70 * Math.cos(4 * loaderCube.rotation.y));
+  loaderRenderer.render(loaderScene, loaderCamera);
+  requestAnimationFrame(spinLoader);
+}
+spinLoader();
+
 
 // Render the monogram once to an offscreen canvas for use as a texture watermark
 wmStamp = (() => {
@@ -1959,7 +1990,9 @@ addEventListener('resize', () => {
 });
 
 animate();
+setLoaderProgress(72);
 setTimeout(() => {
+  setLoaderProgress(100);
   document.getElementById('loader').classList.add('hidden');
   const _startSlug = location.pathname.slice(1);
   const gridDelay = !_startSlug ? 3100 : 0; // home page only: wait for intro word animation

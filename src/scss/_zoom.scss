@@ -287,12 +287,13 @@
 		transform: none;
 	}
 
-	@media (max-width: 1024px) {
-		// --_span: var(--span-md, var(--span, 12));
-		--_span: var(--span-sm, var(--span-md, var(--span, 12)));
+	@include tablet {
+		--_span: var(--span-md, var(--span, 12));
 	}
 
-	
+	@include mobile {
+		--_span: var(--span-sm, var(--span-md, var(--span, 12)));
+	}
 }
 
 .cs-container {
@@ -302,19 +303,6 @@
 	row-gap: 30px;
 	align-items: start;
 	align-content: start;
-
-	.cs-block {
-		--_span: var(--span, 12);
-		grid-column: span var(--_span);
-
-		@media (max-width: 1024px) {
-			--_span: var(--span, var(--span, 12));
-		}
-
-		// @media (max-width: 640px) {
-			// --_span: var(--span-sm, var(--span-md, var(--span, 12)));
-		// }
-	}
 }
 
 .cs-block {
