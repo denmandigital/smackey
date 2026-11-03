@@ -235,10 +235,16 @@
 	}
 }
 
-.cs-project-link {
-	display: block;
-	width: fit-content;
+.cs-project-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
 	margin-top: 28px;
+}
+
+.cs-project-link {
+	display: inline-flex;
+	width: fit-content;
 	padding: 14px 36px;
 	//border: 2px solid rgba(255, 255, 255, 0.35);
 	//border-color: rgb(var(--text-colour) / 35%);

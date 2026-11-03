@@ -729,6 +729,12 @@ function blockStyle(b, extra = {}) {
   return s ? ` style="${s}"` : '';
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[char]);
+}
+
 function renderBlock(b) {
   const span = blockStyle(b);
   if (b.type === 'container') {
@@ -738,8 +744,16 @@ function renderBlock(b) {
     const mod = b.variant === 'callout' ? ' cs-block--callout' : b.variant === 'intro' ? ' cs-block--intro' : '';
     const center = (b.variant === 'callout' && b.center) ? ' cs-block--v-center' : '';
     const bodyHtml = /^\s*</.test(b.body) ? b.body : `<p>${b.body}</p>`;
-    const btnHtml = (b.variant === 'intro' && b.url)
-      ? `<a class="cs-project-link" href="${b.url}" target="_blank" rel="noopener noreferrer">View the work</a>`
+    const projectLinks = b.variant === 'intro'
+      ? [
+          { url: b.url, label: b.urlLabel || 'View the work' },
+          { url: b.url2, label: b.url2Label || 'View the work' },
+        ].filter(link => link.url)
+      : [];
+    const btnHtml = projectLinks.length
+      ? `<div class="cs-project-links">${projectLinks.map(link =>
+          `<a class="cs-project-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`
+        ).join('')}</div>`
       : '';
     return `<div class="cs-block${mod}${center}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}${btnHtml}</div>`;
   }

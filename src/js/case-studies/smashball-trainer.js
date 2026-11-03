@@ -6,7 +6,11 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: '<p>Volleyball Canada is a national association dedicated to improving performance and growing participation in volleyball across Canada.</p><p>They have developed programming around Smashball, a modified version of Volleyball designed for boys and girls between the ages of 6-12. Smashball Trainer is a mobile app that gives coaches everything they need to teach this exciting game and provide kids with the motivation and skills to become the next generation of champions.</p>',
+    body: '<p>Volleyball Canada is a national association dedicated to improving performance and growing participation in volleyball across Canada.</p><p>They have developed programming around Smashball, a modified version of Volleyball designed for boys and girls between the ages of 6-12. Smashball Trainer is a mobile app that provides coaches free training to teach this exciting game and provide kids with the motivation and skills needed to develop in the sport of volleyball.</p>',
+    url: 'https://apps.apple.com/ca/app/smashball-trainer/id1482721400',
+    urlLabel: 'Download for iOS',
+    url2: 'https://play.google.com/store/apps/details?id=com.denmandigital.smashballtrainer',
+    url2Label: 'Download for Android'
   },
   {
     type: 'container',
