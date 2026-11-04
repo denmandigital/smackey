@@ -849,6 +849,11 @@ function positionCTA() {
   cta.style.top = (innerHeight > innerWidth ? cardBottom - 42 : cardBottom - 50) + 'px';
 }
 
+window.visualViewport?.addEventListener('resize', () => {
+  updateMobilePortraitLayout();
+  positionCTA();
+});
+
 // Store card start + full-viewport end geometry for the FLIP animation
 function applyZoomGeometry() {
   const cW = centrePxW, cH = centrePxH;
@@ -1270,6 +1275,7 @@ function setAccessibleListMode(enabled, updateUrl = false) {
   introEl.inert = accessibleListMode && (menuOpen || (zoomed && zoomFromAccessibleList));
   introAboutBtn.setAttribute('tabindex', accessibleListMode ? '0' : '-1');
   updateMobilePortraitLayout();
+  positionCTA();
   if (updateUrl) {
     const currentUrl = location.pathname + location.search + location.hash;
     const targetUrl = closingAboutPanel
