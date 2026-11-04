@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { PROJECTS as _PROJECTS } from './projects.js';
 import { createSMBlock } from './SMBlock.js';
-import Player from '@vimeo/player';
 
 document.body.classList.add('js');
 
@@ -671,7 +670,19 @@ addEventListener('keydown', (e) => {
 const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
 const introEl = document.getElementById('intro');
-let accessibleListMode = false;
+const accessibleParamEnabled = () => ['true', '1', 'yes'].includes(new URLSearchParams(location.search).get('accessible'));
+let accessibleListMode = accessibleParamEnabled();
+if (accessibleListMode) {
+  document.documentElement.classList.add('accessible-list');
+  document.body.classList.add('accessible-list');
+}
+
+function withAccessibleParam(path) {
+  const url = new URL(path, location.origin);
+  if (accessibleListMode) url.searchParams.set('accessible', 'true');
+  else url.searchParams.delete('accessible');
+  return url.pathname + url.search + url.hash;
+}
 
 // Cached Y shift for the mobile portrait single-column layout.
 // Updated on resize/init; read per-frame from the cache to avoid DOM access in the render loop.
@@ -707,7 +718,7 @@ function updateMobilePortraitLayout() {
 
 const zoom = document.getElementById('zoom');
 zoom.setAttribute('inert', '');
-document.getElementById('project-grid-html').setAttribute('inert', '');
+if (!accessibleListMode) document.getElementById('project-grid-html').setAttribute('inert', '');
 const zoomMeta = document.getElementById('zoomMeta');
 const zoomCat = document.getElementById('zoomCat');
 const zoomTitle = document.getElementById('zoomTitle');
@@ -1006,20 +1017,35 @@ function openZoom(p, skipHistory = false) {
     p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${p.title} — a project by Steve Mackey, Design Leader & Technologist.`,
     '/' + p.slug
   );
-  if (!skipHistory) history.pushState({ slug: p.slug }, '', '/' + p.slug);
+  if (!skipHistory) history.pushState({ slug: p.slug }, '', withAccessibleParam('/' + p.slug));
 }
 
 let csObserver = null;
 let vimeoPlayers = [];
 let vimeoObserver = null;
+let vimeoInitToken = 0;
 
-function initVimeoPlayers() {
+function destroyVimeoPlayers() {
+  vimeoInitToken++;
   if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
   vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
   vimeoPlayers = [];
+}
 
+async function initVimeoPlayers() {
+  destroyVimeoPlayers();
+  const initToken = vimeoInitToken;
   const iframes = zoomContent.querySelectorAll('iframe[data-vimeo-autoplay]');
   if (!iframes.length) return;
+
+  let Player;
+  try {
+    ({ default: Player } = await import('@vimeo/player'));
+  } catch (error) {
+    console.error('Unable to load the Vimeo player.', error);
+    return;
+  }
+  if (initToken !== vimeoInitToken || ![...iframes].every(iframe => zoomContent.contains(iframe))) return;
 
   iframes.forEach(iframe => {
     const player = new Player(iframe);
@@ -1081,10 +1107,8 @@ function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (zoomFromAccessibleList) zoom.style.opacity = '0';
   if (csObserver) { csObserver.disconnect(); csObserver = null; }
-  if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
-  vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
-  vimeoPlayers = [];
-  if (!skipHistory) history.pushState(null, '', filterCaseStudies ? '/' : '/archive' + filterQueryString());
+  destroyVimeoPlayers();
+  if (!skipHistory) history.pushState(null, '', withAccessibleParam(filterCaseStudies ? '/' : '/archive' + filterQueryString()));
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
   // Freeze parallax immediately so the card sits exactly where the panel will land
   prlxX = 0; prlxY = 0;
@@ -1122,9 +1146,7 @@ zoomNext.addEventListener('click', () => {
 
   if (accessibleListMode) {
     if (csObserver) { csObserver.disconnect(); csObserver = null; }
-    if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
-    vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
-    vimeoPlayers = [];
+    destroyVimeoPlayers();
 
     markViewed(nextP);
     zoomProject = nextP;
@@ -1175,7 +1197,7 @@ zoomNext.addEventListener('click', () => {
       }
     });
 
-    history.replaceState({ slug: nextP.slug }, '', '/' + nextP.slug);
+    history.replaceState({ slug: nextP.slug }, '', withAccessibleParam('/' + nextP.slug));
     setPageMeta(
       `${nextP.title} — ${nextP.client || 'Steve Mackey'}`,
       nextP.client ? `${nextP.title} by ${nextP.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${nextP.title} — a project by Steve Mackey, Design Leader & Technologist.`,
@@ -1233,20 +1255,31 @@ let aboutTriggerEl = null;
 const aboutHeading = navMenu.querySelector('.about-name');
 aboutHeading.setAttribute('tabindex', '-1');
 
-accessibleViewToggle.addEventListener('click', () => {
-  accessibleListMode = !accessibleListMode;
-  if (accessibleListMode) {
+function setAccessibleListMode(enabled, updateUrl = false) {
+  const isEnabling = enabled && !accessibleListMode;
+  const closingAboutPanel = isEnabling && menuOpen;
+  accessibleListMode = enabled;
+  if (isEnabling) {
     if (menuOpen) closeMenu(true);
     if (filterPanelOpen) closeFilterPanel();
   }
   accessibleViewToggle.setAttribute('aria-checked', String(accessibleListMode));
   document.documentElement.classList.toggle('accessible-list', accessibleListMode);
   document.body.classList.toggle('accessible-list', accessibleListMode);
-  if (accessibleListMode) projectGridSection.removeAttribute('inert');
-  else projectGridSection.setAttribute('inert', '');
+  projectGridSection.inert = !accessibleListMode || menuOpen || (zoomed && zoomFromAccessibleList);
+  introEl.inert = accessibleListMode && (menuOpen || (zoomed && zoomFromAccessibleList));
   introAboutBtn.setAttribute('tabindex', accessibleListMode ? '0' : '-1');
   updateMobilePortraitLayout();
-});
+  if (updateUrl) {
+    const currentUrl = location.pathname + location.search + location.hash;
+    const targetUrl = closingAboutPanel
+      ? (filterCaseStudies ? '/' : '/archive' + filterQueryString())
+      : currentUrl;
+    history.replaceState(history.state, '', withAccessibleParam(targetUrl));
+  }
+}
+
+accessibleViewToggle.addEventListener('click', () => setAccessibleListMode(!accessibleListMode, true));
 
 function openMenu(skipHistory = false) {
   aboutTriggerEl = document.activeElement;
@@ -1264,7 +1297,7 @@ function openMenu(skipHistory = false) {
   navBurger.setAttribute('aria-expanded', 'true');
   navMenu.scrollTop = 0;
   aboutHeading.focus({ preventScroll: true });
-  if (!skipHistory) { history.pushState({ menu: true }, '', '/about'); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
+  if (!skipHistory) { history.pushState({ menu: true }, '', withAccessibleParam('/about')); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
 }
 
 function closeMenu(skipHistory = false) {
@@ -1287,7 +1320,7 @@ function closeMenu(skipHistory = false) {
     (triggerIsAvailable ? aboutTriggerEl : navBurger).focus();
   }
   aboutTriggerEl = null;
-  if (!skipHistory) { history.pushState(null, '', filterCaseStudies ? '/' : '/archive' + filterQueryString()); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
+  if (!skipHistory) { history.pushState(null, '', withAccessibleParam(filterCaseStudies ? '/' : '/archive' + filterQueryString())); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
@@ -1428,7 +1461,7 @@ brandCanvas.addEventListener('click', () => {
   if (filterPanelOpen) closeFilterPanel();
   clearChipFilters();
   activateFilter('casestudies');
-  history.pushState(null, '', '/');
+  history.pushState(null, '', withAccessibleParam('/'));
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
 });
 
@@ -1539,7 +1572,7 @@ filterBtns.forEach(btn => {
     activateFilter(btn.dataset.filter);
     if (!filterCaseStudies) startTween(0, 0);
     const url = btn.dataset.filter === 'all' ? '/archive' : '/';
-    history.pushState({ filter: btn.dataset.filter }, '', url);
+    history.pushState({ filter: btn.dataset.filter }, '', withAccessibleParam(url));
     setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
     if (menuOpen) closeMenu(true);
   });
@@ -1551,12 +1584,13 @@ document.addEventListener('click', (e) => {
   if (!a) return;
   e.preventDefault();
   activateFilter('casestudies');
-  history.pushState({ filter: 'casestudies' }, '', '/');
+  history.pushState({ filter: 'casestudies' }, '', withAccessibleParam('/'));
   if (menuOpen) closeMenu(true);
 });
 
 // Back/forward navigation
 addEventListener('popstate', () => {
+  setAccessibleListMode(accessibleParamEnabled());
   const path = location.pathname.slice(1); // e.g. '' | 'archive' | 'about' | 'project-slug'
   const isArchive = path === 'archive';
   const isAbout = path === 'about';
@@ -1676,13 +1710,14 @@ function filterQueryString() {
   if (filterCategories.size) params.set('category', [...filterCategories].join(','));
   if (filterIndustries.size) params.set('industry', [...filterIndustries].join(','));
   if (filterDateRange) params.set('date', filterDateRange);
+  if (accessibleListMode) params.set('accessible', 'true');
   return params.toString() ? '?' + params.toString() : '';
 }
 
 function syncFilterUrl() {
   if (filterCaseStudies) return;
   if (location.pathname !== '/archive') return;
-  history.replaceState(history.state, '', '/archive' + filterQueryString());
+  history.replaceState(history.state, '', withAccessibleParam('/archive' + filterQueryString()));
 }
 
 function applyUrlFilters() {
@@ -1790,7 +1825,7 @@ function buildFilterMenu() {
         filterCaseStudies = false;
         filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
         introEl.classList.add('mode-archive');
-        history.pushState({ filter: 'all' }, '', '/archive');
+        history.pushState({ filter: 'all' }, '', withAccessibleParam('/archive'));
         positionFilterIndicator();
       }
       if (chip.dataset.daterange) {
@@ -1852,6 +1887,7 @@ function clearChipFilters() {
 }
 
 buildFilterMenu();
+setAccessibleListMode(accessibleListMode);
 
 navFilterBtn.addEventListener('click', () => filterPanelOpen ? closeFilterPanel() : openFilterPanel());
 
