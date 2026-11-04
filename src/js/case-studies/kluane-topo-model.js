@@ -25,13 +25,13 @@ export const blocks = [
     { type: 'spacer', span: 12, height: 40 },
     
     
-  { type: 'image', span: 12, spanSm: 12, src: 'assets/projects/kluanetopo/KLU_TPM_01.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kluanetopo/KLU_TPM_02.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kluanetopo/KLU_TPM_03.jpg' },
+  { type: 'image', span: 12, spanSm: 12, src: 'assets/projects/kluanetopo/KLU_TPM_01.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kluanetopo/KLU_TPM_02.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kluanetopo/KLU_TPM_03.jpg', alt: '' },
   
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanetopo/kluane6.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanetopo/kluane7.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanetopo/kluane8.jpg' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanetopo/kluane6.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanetopo/kluane7.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanetopo/kluane8.jpg', alt: '' },
   
  
 ];

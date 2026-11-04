@@ -22,14 +22,14 @@ export const blocks = [
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],
   },
-  { type: 'image', span: 12, src: 'assets/projects/spf/spf-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/spf/spf-responsive.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9.15', src: 'https://player.vimeo.com/video/1233595873?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9.15', src: 'https://player.vimeo.com/video/1233595873?autopause=0', title: '' },
   
-  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9.25', src: 'https://player.vimeo.com/video/1233597031?autopause=0' },
-  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9.25', src: 'https://player.vimeo.com/video/1233598071?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9.25', src: 'https://player.vimeo.com/video/1233597031?autopause=0', title: '' },
+  { type: 'vimeo', span: 6, spanSm: 12, autoplay: true, aspect: '16/9.25', src: 'https://player.vimeo.com/video/1233598071?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/spf/spf-screens-perspective.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/spf/spf-screens-perspective.jpg', alt: '' },
   
 ];

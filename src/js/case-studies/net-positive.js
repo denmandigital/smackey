@@ -59,9 +59,9 @@ export const blocks = [
     body: '<ul><li>A brand and website that conveyed Foran’s ambitions by balancing high-impact, emotional visuals with technical reports, metallurgical results and feasibility studies</li><li>In September 2025, the federal government referred Foran’s McIlvenna Bay project to the Major Projects Office as one of five potential projects of national interest</li><li>In April 2026, Eldorado Gold acquired Foran in a C$3.8-billion deal</li></ul>',
   },
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/foran/foran-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/foran/foran-responsive.png', alt: 'Responsive project screens.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/foran/foran-logotype.png' },
+  { type: 'image', span: 12, src: 'assets/projects/foran/foran-logotype.png', alt: 'Foran logotype' },
   { type: 'spacer', span: 12, height: 30 },
   {
     type: 'text',
@@ -72,11 +72,11 @@ export const blocks = [
     body: '<h2>Colour Palette</h2><p>The brand palette is driven by an energetic citrus orange, conveying enthusiasm, creativity, success, change, determination, and balance. It’s paired with neutral black, white, and greys. A secondary palette of blues and ivory provide accents.</p>',
   },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-palette.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-palette.png', alt: 'Foran colour palette.' },
   
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-typography.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-typography.png', alt: 'Foran typography.' },
 
   {
     type: 'text',
@@ -87,13 +87,13 @@ export const blocks = [
     body: '<h2>Typography</h2><p>The same geometric sans typeface used in the wordmark is used throughout their written assets. Four highly readable weights in title and sentence case drive type systems developed to create effective information hierarchies and dynamic layouts on both screen and in print.</p>',
   },
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-home.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-ethos.jpg' },
-  { type: 'image', span: 12, src: 'assets/projects/foran/foran-screens-perspective.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-home.jpg', alt: 'Foran homepage.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foran/foran-ethos.jpg', alt: 'Foran Ethos page.' },
+  { type: 'image', span: 12, src: 'assets/projects/foran/foran-screens-perspective.png', alt: 'Foran project screens.' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.45', src: 'https://player.vimeo.com/video/841292720?autopause=0' },
-  { type: 'image', span: 5, src: 'assets/projects/foran/foran-poster.png' },
-  { type: 'image', span: 7, src: 'assets/projects/foran/foran-poster-details.png', contain: true },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.45', src: 'https://player.vimeo.com/video/841292720?autopause=0', title: 'Foran mine interactive demo.' },
+  { type: 'image', span: 5, src: 'assets/projects/foran/foran-poster.png', alt: 'Making Mining Better poster.' },
+  { type: 'image', span: 7, src: 'assets/projects/foran/foran-poster-details.png', contain: true, alt: 'Making Mining Better poster details.' },
   
 ];

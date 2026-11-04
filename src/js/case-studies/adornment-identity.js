@@ -55,11 +55,11 @@ export const blocks = [
 
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/adornment/adornment-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/adornment/adornment-responsive.png', alt: '' },
   
-  { type: 'vimeo', span: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231806231?autopause=0' },
+  { type: 'vimeo', span: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231806231?autopause=0', title: 'Virtual museum walkthrough.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/adornment/floorplan-model.png' },
+  { type: 'image', span: 12, src: 'assets/projects/adornment/floorplan-model.png', alt: 'Floorplan and 3D model rendering.' },
 
   {
     type: 'text',
@@ -70,9 +70,9 @@ export const blocks = [
     body: '<h2 class="my-0">Dressed for History</h2><p><em>Women’s fashion 1750–2000</em></p><p>Just as fashion constantly evolves, it is continuously informed and held together by a common thread: the past. This exhibit highlights the importance of collecting and preserving the clothing of the past in order to inform the future.</p>',
   },
 
-  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231911203?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231911203?autopause=0', title: 'Dressed for History walkthrough.' },
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231801301?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231801301?autopause=0', title: 'Deconstructing Worth walkthrough.' },
   {
     type: 'text',
     span: 6,
@@ -91,11 +91,11 @@ export const blocks = [
     variant: 'callout',
     body: '<h2 class="my-0">Mirror Image</h2><p><em>Clothing as a reflection of the times</em></p><p>This exhibit compares two dresses from distinct periods in fashion history, examining their design, materials and construction within the social, political and cultural context of each era.</p>',
   },
-  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231801037?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231801037?autopause=0', title: 'Mirror Image walkthrough.' },
   
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231847664?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231847664?autopause=0', title: 'Woven Together walkthrough.' },
   {
     type: 'text',
     span: 6,
@@ -108,7 +108,7 @@ export const blocks = [
 
 
   
-  { type: 'image', span: 12, src: 'assets/projects/adornment/ai-screens-perspective.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/adornment/ai-screens-perspective.jpg', alt: 'Adornment & Identity screens.' },
   
 
   

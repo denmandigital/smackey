@@ -143,15 +143,16 @@ function makeCover(p, w = 1024, img = null) {
   const x = c.getContext('2d');
   const cw = c.width, ch = c.height;
 
+  // Keep a project-coloured backing under images, including transparent PNGs.
+  x.fillStyle = p.accentColourPrimary;
+  x.fillRect(0, 0, cw, ch);
+
   if (img) {
     // cover-fit the photo, then a top scrim so card text stays legible
     const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
     let dw, dh;
     if (ir > cr) { dh = ch; dw = ch * ir; } else { dw = cw; dh = cw / ir; }
     x.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
-  } else {
-    x.fillStyle = p.accentColourPrimary;
-    x.fillRect(0, 0, cw, ch);
   }
 
   // Vertically + horizontally centred label: title → client
@@ -432,11 +433,12 @@ const nearestMultiple = (v, pitch) => Math.round(v / pitch) * pitch;
 // Single ease-in-out tween for every settle (snap / arrows / click).
 // Smootherstep: gentle in and out with no overshoot.
 const tween = { active: false, x0: 0, y0: 0, x1: 0, y1: 0, t: 0, dur: 0.5, easeOut: false };
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function startTween(tx, ty, easeOut = false) {
   tween.x0 = scroll.x; tween.y0 = scroll.y;
   tween.x1 = tx; tween.y1 = ty;
   const dist = Math.hypot(tx - scroll.x, ty - scroll.y);
-  tween.dur = easeOut ? SNAP_MIN : THREE.MathUtils.clamp(0.42 + dist / 1200, 0.42, 0.85);
+  tween.dur = prefersReducedMotion() ? 0.001 : easeOut ? SNAP_MIN : THREE.MathUtils.clamp(0.42 + dist / 1200, 0.42, 0.85);
   tween.easeOut = easeOut;
   tween.t = 0; tween.active = true;
 }
@@ -571,7 +573,7 @@ addEventListener('touchend', onUp);
 let wheelTimer = null;
 let wheeling = false;
 addEventListener('wheel', (e) => {
-  if (zoomed || menuOpen) return;
+  if (accessibleListMode || zoomed || menuOpen) return;
   e.preventDefault();
   if (tween.active) { rawScroll.x = scroll.x; rawScroll.y = scroll.y; }
   tween.active = false;
@@ -644,6 +646,7 @@ addEventListener('keydown', (e) => {
     }
     return;
   }
+  if (accessibleListMode) return;
   const active = document.activeElement;
   const interactiveHasFocus = active && active !== document.body && active !== document.documentElement && active !== canvas;
   if (e.key === 'Enter' && centreProject && !interactiveHasFocus) { openZoom(centreProject); return; }
@@ -668,13 +671,14 @@ addEventListener('keydown', (e) => {
 const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
 const introEl = document.getElementById('intro');
+let accessibleListMode = false;
 
 // Cached Y shift for the mobile portrait single-column layout.
 // Updated on resize/init; read per-frame from the cache to avoid DOM access in the render loop.
 let _mpYShift = 0;
 function getMobilePortraitYShift() { return _mpYShift; }
 function updateMobilePortraitLayout() {
-  if (!isMobilePortrait()) {
+  if (accessibleListMode || !isMobilePortrait()) {
     _mpYShift = 0;
     introEl.style.top = '';
     introEl.style.transform = '';
@@ -759,7 +763,7 @@ function renderBlock(b) {
   }
   if (b.type === 'image') {
     const contain = b.contain ? ' cs-block--image-contain' : '';
-    return `<figure class="cs-block cs-block--image${contain}"${span}><img src="${b.src}" alt="${b.alt || ''}" loading="lazy"></figure>`;
+    return `<figure class="cs-block cs-block--image${contain}"${span}><img src="${b.src}" alt="${escapeHtml(b.alt || '')}" loading="lazy"></figure>`;
   }
   if (b.type === 'video') {
     const once = b.autoplay && b.loop === false;
@@ -767,7 +771,9 @@ function renderBlock(b) {
     const attrs = b.autoplay ? `autoplay muted${loop} playsinline` : 'controls playsinline';
     const mod = b.autoplay ? ' cs-block--video-autoplay' : '';
     const onceAttr = once ? ' data-autoplay-once' : '';
-    return `<figure class="cs-block cs-block--video${mod}"${span}><video src="${b.src}"${onceAttr} ${attrs}></video></figure>`;
+    const videoTitleText = escapeHtml(b.title || 'Project video');
+    const videoTitle = ` title="${videoTitleText}" aria-label="${videoTitleText}"`;
+    return `<figure class="cs-block cs-block--video${mod}"${span}><video src="${b.src}"${onceAttr}${videoTitle} ${attrs}></video></figure>`;
   }
   if (b.type === 'vimeo') {
     let vimeoSrc = b.src;
@@ -778,7 +784,8 @@ function renderBlock(b) {
       vimeoSrc += `${sep}title=0&byline=0&portrait=0&play_button_position=center`;
     }
     const autoAttr = b.autoplay ? ' data-vimeo-autoplay' : '';
-    return `<figure class="cs-block cs-block--vimeo"${span}><iframe src="${vimeoSrc}"${autoAttr} frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></figure>`;
+    const videoTitle = escapeHtml(b.title || 'Embedded video');
+    return `<figure class="cs-block cs-block--vimeo"${span}><iframe src="${vimeoSrc}" title="${videoTitle}"${autoAttr} frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></figure>`;
   }
   if (b.type === 'spacer') {
     const h = typeof b.height === 'number' ? `${b.height}px` : (b.height || '40px');
@@ -806,6 +813,7 @@ let centrePxH = centrePxW * (ITEM_H / ITEM_W);
 let zoomed = false;          // true while open OR animating (blocks grid interaction)
 let zoomProject = null;      // project currently open in the zoom panel
 let zoomOnClose = null;      // callback fired once the close animation completes
+let zoomFromAccessibleList = false;
 let tweenOnComplete = null;  // callback fired once a snap tween completes
 let ctaShown = false;
 let ctaTimer = null;
@@ -856,6 +864,11 @@ function setZoomTransform(p) {
 let scrollToken = 0;
 
 function smoothScrollTo(el, target, ms) {
+  if (prefersReducedMotion()) {
+    scrollToken++;
+    el.scrollTop = target;
+    return;
+  }
   const token = ++scrollToken;
   const start = el.scrollTop, dist = target - start, t0 = performance.now();
   (function step(now) {
@@ -925,8 +938,14 @@ function openZoom(p, skipHistory = false) {
   if (zoomed || !p) return;
   markViewed(p);
   zoomed = true;
+  zoomFromAccessibleList = accessibleListMode;
+  if (zoomFromAccessibleList) {
+    document.body.classList.add('accessible-project-open');
+    introEl.inert = true;
+    projectGridSection.inert = true;
+  }
   zoomProject = p;
-  const nextP = isFiniteGrid() ? nextProjectInGridOrder(p) : null;
+  const nextP = (accessibleListMode || isFiniteGrid()) ? nextProjectInGridOrder(p) : null;
   if (nextP) {
     zoomNextEyebrow.textContent = filterCaseStudies ? 'Next Case Study' : 'Next Project';
     zoomNextTitle.textContent = nextP.title;
@@ -944,6 +963,7 @@ function openZoom(p, skipHistory = false) {
   // backgroundImage, backgroundColor already pre-painted in the render loop while hidden;
   // set again here as a safety net for edge cases (deep links, popstate)
   zoomHeroBg.style.backgroundImage = `url("${p.src}")`;
+  zoomHeroBg.style.backgroundColor = p.accentColourPrimary;
   zoomHeroBg.style.transform = 'scale(1)';
   zoomHeroBg.classList.remove('fading');
   zoom.classList.remove('fading');
@@ -973,9 +993,14 @@ function openZoom(p, skipHistory = false) {
   zoomClose.style.transition = 'none';
   zoomClose.style.opacity = '0';
   requestAnimationFrame(() => { zoomClose.style.transition = ''; });
-  zoom.style.opacity = '1';
+  zoom.style.opacity = zoomFromAccessibleList ? '0' : '1';
   zoom.classList.add('open');
-  zoomAnim.dir = 1; zoomAnim.active = true;
+  if (zoomFromAccessibleList) {
+    requestAnimationFrame(() => {
+      if (zoomed && zoomFromAccessibleList) zoom.style.opacity = '1';
+    });
+  }
+  zoomAnim.dir = 1; zoomAnim.dur = prefersReducedMotion() ? 0.001 : 0.55; zoomAnim.active = true;
   setPageMeta(
     `${p.title} — ${p.client || 'Steve Mackey'}`,
     p.client ? `${p.title} by ${p.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${p.title} — a project by Steve Mackey, Design Leader & Technologist.`,
@@ -1054,6 +1079,7 @@ function observeBlocks() {
 
 function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
+  if (zoomFromAccessibleList) zoom.style.opacity = '0';
   if (csObserver) { csObserver.disconnect(); csObserver = null; }
   if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
   vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
@@ -1084,7 +1110,7 @@ function closeZoom(skipHistory = false) {
   zoomCard.t0 = (innerHeight - cH) / 2 - getMobilePortraitYShift();
   zoomCard.w0 = cW; zoomCard.h0 = cH;
   zoomHero.style.height = mobile ? cH + 'px' : '';
-  zoomAnim.dir = -1; zoomAnim.active = true;
+  zoomAnim.dir = -1; zoomAnim.dur = prefersReducedMotion() ? 0.001 : 0.55; zoomAnim.active = true;
 }
 
 ctaBtn.addEventListener('click', () => openZoom(centreProject));
@@ -1093,6 +1119,75 @@ zoomNext.addEventListener('click', () => {
   if (!zoomProject) return;
   const nextP = nextProjectInGridOrder(zoomProject);
   if (!nextP) return;
+
+  if (accessibleListMode) {
+    if (csObserver) { csObserver.disconnect(); csObserver = null; }
+    if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
+    vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
+    vimeoPlayers = [];
+
+    markViewed(nextP);
+    zoomProject = nextP;
+    const followingProject = nextProjectInGridOrder(nextP);
+    if (followingProject) {
+      zoomNextEyebrow.textContent = filterCaseStudies ? 'Next Case Study' : 'Next Project';
+      zoomNextTitle.textContent = followingProject.title;
+      zoomNextClient.textContent = followingProject.client || '';
+      zoomNext.style.backgroundImage = `url("${followingProject.src}")`;
+      zoomNext.classList.add('visible');
+    } else {
+      zoomNext.classList.remove('visible');
+      zoomNext.style.backgroundImage = '';
+    }
+
+    zoomHeroBg.style.backgroundImage = `url("${nextP.src}")`;
+    zoomHeroBg.style.backgroundColor = nextP.accentColourPrimary;
+    zoomHeroBg.style.transform = 'scale(1)';
+    zoom.style.backgroundColor = nextP.accentColourPrimary;
+    zoomContent.style.backgroundColor = nextP.accentColourPrimary;
+    zoomCat.textContent = nextP.category.join(', ');
+    zoomTitle.textContent = nextP.title;
+    zoomClient.textContent = nextP.client || '';
+    zoomSlug = nextP.slug;
+    document.documentElement.style.setProperty('--text-colour', nextP.textColour === 'light' ? 'var(--text-light)' : 'var(--text-dark)');
+    document.documentElement.style.setProperty('--accent-colour', nextP.textColour === 'dark' ? 'var(--ink)' : nextP.accentColourPrimary);
+
+    zoomContent.classList.remove('visible');
+    zoomContent.style.transform = 'translateY(0)';
+    zoomContent.innerHTML = '';
+    zoomScroll.scrollTop = 0;
+    loadCaseStudyHtml(nextP).then(html => {
+      if (zoomSlug !== nextP.slug) return;
+      zoomContent.innerHTML = html;
+      requestAnimationFrame(() => {
+        if (zoomSlug !== nextP.slug) return;
+        zoomContent.style.transform = 'translateY(-30px)';
+        zoomContent.classList.add('visible');
+        observeBlocks();
+      });
+      if (innerWidth > 640) {
+        const loadedSlug = nextP.slug;
+        setTimeout(() => {
+          if (zoomed && zoomSlug === loadedSlug) {
+            smoothScrollTo(zoomScroll, zoomScroll.clientHeight / 2, 2000);
+          }
+        }, 1000);
+      }
+    });
+
+    history.replaceState({ slug: nextP.slug }, '', '/' + nextP.slug);
+    setPageMeta(
+      `${nextP.title} — ${nextP.client || 'Steve Mackey'}`,
+      nextP.client ? `${nextP.title} by ${nextP.client}. A project by Steve Mackey — Design Leader & Technologist.` : `${nextP.title} — a project by Steve Mackey, Design Leader & Technologist.`,
+      '/' + nextP.slug
+    );
+    if (usingKeyboard) {
+      zoomTitle.tabIndex = -1;
+      zoomTitle.focus({ preventScroll: true });
+    }
+    return;
+  }
+
   const cell = cellForProject(nextP);
   const tx = cell ? -cell.cx * PITCH_X : 0;
   const ty = cell ? -cell.cy * PITCH_Y : 0;
@@ -1111,12 +1206,14 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const tip = document.createElement('div');
     tip.className = 'nav-tooltip';
     tip.textContent = el.dataset.tooltip;
+    tip.setAttribute('aria-hidden', 'true');
     document.body.appendChild(tip);
     el.addEventListener('mouseenter', () => {
       if (el.id === 'navBurger' && el.closest('#nav').classList.contains('open')) return;
       const r = el.getBoundingClientRect();
       tip.style.left = (r.left + r.width / 2) + 'px';
-      tip.style.top = r.top + 'px';
+      const tipTop = el.id === 'accessibleViewToggle' && r.top < 40 ? r.bottom + 12 : r.top;
+      tip.style.top = tipTop + 'px';
       tip.classList.add('visible');
     });
     el.addEventListener('mouseleave', () => tip.classList.remove('visible'));
@@ -1127,27 +1224,69 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 const nav = document.getElementById('nav');
 const navMenu = document.getElementById('navMenu');
 const navBurger = document.getElementById('navBurger');
+const accessibleViewToggle = document.getElementById('accessibleViewToggle');
+const projectGridSection = document.getElementById('project-grid-html');
+const projectGridEl = projectGridSection.querySelector('.pg-grid');
 let menuOpen = false;
 navMenu.setAttribute('inert', '');
+let aboutTriggerEl = null;
+const aboutHeading = navMenu.querySelector('.about-name');
+aboutHeading.setAttribute('tabindex', '-1');
+
+accessibleViewToggle.addEventListener('click', () => {
+  accessibleListMode = !accessibleListMode;
+  if (accessibleListMode) {
+    if (menuOpen) closeMenu(true);
+    if (filterPanelOpen) closeFilterPanel();
+  }
+  accessibleViewToggle.setAttribute('aria-checked', String(accessibleListMode));
+  document.documentElement.classList.toggle('accessible-list', accessibleListMode);
+  document.body.classList.toggle('accessible-list', accessibleListMode);
+  if (accessibleListMode) projectGridSection.removeAttribute('inert');
+  else projectGridSection.setAttribute('inert', '');
+  introAboutBtn.setAttribute('tabindex', accessibleListMode ? '0' : '-1');
+  updateMobilePortraitLayout();
+});
 
 function openMenu(skipHistory = false) {
+  aboutTriggerEl = document.activeElement;
   menuOpen = true;
+  document.body.classList.toggle('accessible-about-open', accessibleListMode);
+  if (accessibleListMode) {
+    introEl.inert = true;
+    projectGridSection.inert = true;
+  }
   closeFilterPanel();
   nav.classList.add('open');
   navMenu.removeAttribute('inert');
   navMenu.setAttribute('aria-hidden', 'false');
   navBurger.setAttribute('aria-label', 'Close menu');
+  navBurger.setAttribute('aria-expanded', 'true');
   navMenu.scrollTop = 0;
+  aboutHeading.focus({ preventScroll: true });
   if (!skipHistory) { history.pushState({ menu: true }, '', '/about'); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
 }
 
 function closeMenu(skipHistory = false) {
+  const restoreFocus = navMenu.contains(document.activeElement);
   menuOpen = false;
+  document.body.classList.remove('accessible-about-open');
   nav.classList.remove('open');
   navMenu.setAttribute('inert', '');
   navMenu.setAttribute('aria-hidden', 'true');
   navBurger.setAttribute('aria-label', 'Open menu');
-  if (innerWidth > 640) navBurger.focus();
+  navBurger.setAttribute('aria-expanded', 'false');
+  if (accessibleListMode) {
+    introEl.inert = false;
+    projectGridSection.inert = false;
+  }
+  if (restoreFocus) {
+    const triggerIsAvailable = aboutTriggerEl && aboutTriggerEl.isConnected &&
+      aboutTriggerEl !== document.body && aboutTriggerEl !== document.documentElement &&
+      !aboutTriggerEl.closest('[aria-hidden="true"]');
+    (triggerIsAvailable ? aboutTriggerEl : navBurger).focus();
+  }
+  aboutTriggerEl = null;
   if (!skipHistory) { history.pushState(null, '', filterCaseStudies ? '/' : '/archive' + filterQueryString()); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
 }
 
@@ -1330,6 +1469,7 @@ function computeActiveProjects() {
 function applyFilters(flashScene = false) {
   activeProjects = computeActiveProjects();
   activeN = activeProjects.length;
+  renderProjectList();
   pool.forEach(m => { m.userData.key = null; });
   lastCenterKey = null;
   gridFade = 0;
@@ -1580,6 +1720,7 @@ function filterNavHeight() {
 function openFilterPanel() {
   if (menuOpen) closeMenu(true);
   filterPanelOpen = true;
+  navFilterBtn.setAttribute('aria-expanded', 'true');
   nav.classList.add('filter-open');
   activeFiltersEl.classList.add('panel-open');
   filterMenuEl.removeAttribute('inert');
@@ -1598,6 +1739,7 @@ function openFilterPanel() {
 
 function closeFilterPanel() {
   filterPanelOpen = false;
+  navFilterBtn.setAttribute('aria-expanded', 'false');
   nav.classList.remove('filter-open');
   activeFiltersEl.classList.remove('panel-open');
   filterMenuEl.setAttribute('inert', '');
@@ -1773,7 +1915,7 @@ function animate() {
       zoomMeta.style.opacity = '1';
       zoomMeta.style.transform = 'translateY(-30px)';
       zoomClose.style.opacity = '1';
-      if (usingKeyboard) zoomClose.focus();
+      if (usingKeyboard || accessibleListMode) zoomClose.focus();
       if (innerWidth > 640) setTimeout(() => smoothScrollTo(zoomScroll, zoomScroll.clientHeight / 2, 2000), 1000);
     }
     if (zoomAnim.dir < 0 && zoomAnim.p <= 0) {
@@ -1783,6 +1925,12 @@ function animate() {
       zoom.setAttribute('inert', '');
       zoom.setAttribute('aria-hidden', 'true');
       zoomed = false;
+      if (zoomFromAccessibleList) {
+        introEl.inert = false;
+        projectGridSection.inert = false;
+        document.body.classList.remove('accessible-project-open');
+        zoomFromAccessibleList = false;
+      }
       if (zoomTriggerEl) { zoomTriggerEl.focus(); zoomTriggerEl = null; }
       if (zoomOnClose) { const cb = zoomOnClose; zoomOnClose = null; cb(); }
     }
@@ -1832,8 +1980,9 @@ function animate() {
   const ccx = Math.round(-scroll.x / PITCH_X);
   const ccy = Math.round(-scroll.y / PITCH_Y);
 
+  const gridIsMoving = drag.active || coasting || wheeling || tween.active;
   raycaster.setFromCamera(mouse, camera);
-  const hit = (!drag.active && !zoomed) ? raycaster.intersectObjects(pool, false)[0] : null;
+  const hit = (!gridIsMoving && !zoomed) ? raycaster.intersectObjects(pool, false)[0] : null;
   const hitObj = hit ? hit.object : null;
   if (hitObj !== hovered) {
     hovered = hitObj;
@@ -1865,7 +2014,7 @@ function animate() {
     m.rotation.x = Math.atan(2 * CONVEX * y);
 
     // Hover lift — disabled while zoom panel is open or closing
-    const target = (!zoomed && m === hovered) ? 1 : 0;
+    const target = (!gridIsMoving && !zoomed && m === hovered) ? 1 : 0;
     m.userData.hover += (target - m.userData.hover) * 0.18;
     const s = S0 * fall * (1 + m.userData.hover * 0.05);
     m.scale.set(ITEM_W * s, ITEM_H * s, 1);
@@ -1921,6 +2070,7 @@ function animate() {
         // can't overwrite the open project's colours with a different project's.
         if (!zoomed) {
           zoomHeroBg.style.backgroundImage = `url("${centreProject.src}")`;
+          zoomHeroBg.style.backgroundColor = centreProject.accentColourPrimary;
           zoom.style.backgroundColor = centreProject.accentColourPrimary;
           zoomContent.style.backgroundColor = centreProject.accentColourPrimary;
         }
@@ -1953,7 +2103,7 @@ function animate() {
     }
   }
 
-  const introSettled = !(drag.active && drag.moved > 3) && !coasting && !tweeningAway && !zoomed && !wheeling && isIntroCell(ccx, ccy);
+  const introSettled = accessibleListMode || (!(drag.active && drag.moved > 3) && !coasting && !tweeningAway && !zoomed && !wheeling && isIntroCell(ccx, ccy));
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
@@ -2013,42 +2163,43 @@ setTimeout(() => {
   setTimeout(() => requestAnimationFrame(() => canvas.classList.add('ready')), gridDelay);
 }, 300);
 
-// HTML project grid — SEO / progressive enhancement
-(function buildProjectGrid() {
-  const grid = document.querySelector('#project-grid-html .pg-grid');
-  if (!grid) return;
-  const sorted = [..._PROJECTS].sort((a, b) => {
-    if (a.year === null && b.year === null) return 0;
-    if (a.year === null) return 1;
-    if (b.year === null) return -1;
-    return b.year - a.year;
-  });
-  grid.innerHTML = sorted.map(p => {
-    const yearTag = p.year ? `<span class="pg-card-year">${p.year}</span>` : '';
+// Semantic project list mirrors the active case-study/archive and filter state.
+function renderProjectList() {
+  projectGridEl.innerHTML = activeProjects.length ? activeProjects.map(p => {
     const catTags = p.category.map(c => `<span class="pg-card-cat">${c}</span>`).join('');
     const clientHtml = p.client ? `<p class="pg-card-client">${p.client}</p>` : '';
-    const csClass = p.casestudy ? ' pg-card--casestudy' : '';
-    return `<article class="pg-card${csClass}" style="--pg-accent:${p.accentColourPrimary}">
+    return `<article class="pg-card" style="--pg-accent:${p.accentColourPrimary}">
   <a href="#${p.slug}" class="pg-card-link">
-    <div class="pg-card-img"><img src="${p.src}" alt="${p.title}${p.client ? ' — ' + p.client : ''}" loading="lazy"></div>
+    <div class="pg-card-img"><img src="${p.src}" alt="${escapeHtml(p.alt || '')}" loading="lazy"></div>
     <div class="pg-card-overlay">
-      <div class="pg-card-tags">${yearTag}${catTags}</div>
+      <div class="pg-card-tags">${catTags}</div>
       <h2 class="pg-card-title">${p.title}</h2>
       ${clientHtml}
     </div>
   </a>
 </article>`;
-  }).join('');
+  }).join('') : '<p class="pg-empty">No projects match these filters.</p>';
 
-  grid.addEventListener('click', e => {
-    const link = e.target.closest('a[href^="#"]');
-    if (!link) return;
-    e.preventDefault();
-    const slug = link.getAttribute('href').slice(1);
-    const p = _PROJECTS.find(pr => pr.slug === slug);
-    if (p) openZoom(p);
-  });
-})();
+  const yearProjects = activeProjects.filter(p => p.year !== null);
+  const maxYear = yearProjects.length ? Math.max(...yearProjects.map(p => p.year)) : '';
+  const minYear = yearProjects.length ? Math.min(...yearProjects.map(p => p.year)) : '';
+  const archiveChip = document.getElementById('archiveChip');
+  if (archiveChip) {
+    const range = maxYear && minYear ? ` | ${maxYear}–${minYear}` : '';
+    archiveChip.textContent = `${activeProjects.length} project${activeProjects.length === 1 ? '' : 's'}${range}`;
+  }
+}
+
+projectGridEl.addEventListener('click', e => {
+  const link = e.target.closest('a[href^="#"]');
+  if (!link) return;
+  e.preventDefault();
+  const slug = link.getAttribute('href').slice(1);
+  const p = PROJECTS.find(project => project.slug === slug);
+  if (p) openZoom(p);
+});
+
+renderProjectList();
 
 // Deep-link: snap the grid and open the zoom for a project referenced in the URL path
 const initSlug = (location.pathname !== '/archive') ? location.pathname.slice(1) : '';

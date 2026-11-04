@@ -24,15 +24,15 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/nativeplanet/nativeplanet-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/nativeplanet/nativeplanet-responsive.png', alt: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/nativeplanet/native-planet_wireframes.png' },
+  { type: 'image', span: 12, src: 'assets/projects/nativeplanet/native-planet_wireframes.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.7', src: 'https://player.vimeo.com/video/705551452?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.7', src: 'https://player.vimeo.com/video/705551452?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/nativeplanet/nativeplanet-screens-perspective.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/nativeplanet/nativeplanet-screens-perspective.jpg', alt: '' },
   
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/282761076' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/282761076', title: '' },
   
 ];

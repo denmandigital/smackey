@@ -25,14 +25,14 @@ export const blocks = [
 
     { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/storyofmedicines/journey-of-a-drug-05.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/storyofmedicines/journey-of-a-drug-04.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/storyofmedicines/journey-of-a-drug-01.jpg' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/storyofmedicines/journey-of-a-drug-05.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/storyofmedicines/journey-of-a-drug-04.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/storyofmedicines/journey-of-a-drug-01.jpg', alt: '' },
 
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/storyofmedicines/role-of-pharmacy-01.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/storyofmedicines/role-of-pharmacy-02.jpg' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/storyofmedicines/role-of-pharmacy-01.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/storyofmedicines/role-of-pharmacy-02.jpg', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/8.5', src: 'https://player.vimeo.com/video/49650537?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/8.5', src: 'https://player.vimeo.com/video/49650537?autopause=0', title: '' },
  
 ];

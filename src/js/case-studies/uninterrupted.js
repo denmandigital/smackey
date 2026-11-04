@@ -23,11 +23,11 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/uninterrupted/uninterrupted-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/uninterrupted/uninterrupted-responsive.png', alt: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/uninterrupted/screens-perspective_uninterrupted.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/uninterrupted/screens-perspective_uninterrupted.jpg', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/225621053?autopause=0' },
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/236457502' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/225621053?autopause=0', title: '' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/236457502', title: '' },
 ];

@@ -17,7 +17,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Client',  body: 'Centre for Civic Engagement' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website, Digital Publication, Digital Commerce, Brand Design' },
-      { type: 'text', span: 6, heading: 'Year',    body: '2021—2024' },
+      { type: 'text', span: 6, heading: 'Years',    body: '2021—2024' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI / brand design direction</li><li>Technical direction</li></ul>' },
     ],
   },
@@ -52,10 +52,10 @@ export const blocks = [
 
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/thehub/thehub-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/thehub/thehub-responsive.png', alt: 'Responsive project screens.' },
 
   { type: 'spacer', span: 12, height: 20 },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/the_hub_visual_identity.png', contain: true },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/the_hub_visual_identity.png', contain: true, alt: 'The Hub visual identity.' },
   {
     type: 'text',
     span: 6, spanSm: 12,
@@ -65,8 +65,8 @@ export const blocks = [
   },
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_side_brand_colours.png', contain: true },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_typography.png', contain: true },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_side_brand_colours.png', contain: true, alt: 'The Hub brand colours.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_typography.png', contain: true, alt: 'The Hub typography.' },
   { type: 'spacer', span: 12, height: 40 },
   {
     type: 'text',
@@ -77,14 +77,14 @@ export const blocks = [
   { type: 'spacer', span: 12, height: 40 },
 
 
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_homepage.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_newsdispatch.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_homepage.png', alt: 'The Hub homepage.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/thehub/thehub_newsdispatch.png', alt: 'The Hub News Dispatch.' },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/721609588?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/721609588?autopause=0', title: 'The Hub platform walkthrough.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/thehub/thehub_email_campaigns.png' },
+  { type: 'image', span: 12, src: 'assets/projects/thehub/thehub_email_campaigns.png', alt: 'The Hub email campaigns.' },
 
-  { type: 'image', span: 12, src: 'assets/projects/thehub/screens-perspective_thehub.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/thehub/screens-perspective_thehub.jpg', alt: 'The Hub project screens.' },
   
 ];

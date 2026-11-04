@@ -24,13 +24,13 @@ export const blocks = [
   },
   // { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/doc/doc-responsive.png' },
-  { type: 'image', span: 12, src: 'assets/projects/doc/doc-ux.png' },
-  { type: 'image', span: 12, src: 'assets/projects/doc/doc-screens.png' },
+  { type: 'image', span: 12, src: 'assets/projects/doc/doc-responsive.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/doc/doc-ux.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/doc/doc-screens.png', alt: '' },
   
   // Video
   // { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/560618015?autopause=0' },
   
-  { type: 'image', span: 12, src: 'assets/projects/doc/doc-screens-perspective.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/doc/doc-screens-perspective.jpg', alt: '' },
   
 ];

@@ -23,7 +23,7 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/pinepoint/pinepoint-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/pinepoint/pinepoint-responsive.png', alt: '' },
   
   {
     type: 'text',
@@ -33,19 +33,19 @@ export const blocks = [
   },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721557130?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721557130?autopause=0', title: '' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-1.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-2.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-3.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-4.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-5.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-6.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-7.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-8.jpg' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-1.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-2.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-3.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-4.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-5.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-6.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-7.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/pinepoint/pinepoint-screen-8.jpg', alt: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/pinepoint/screens-perspective_pinepoint.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/pinepoint/screens-perspective_pinepoint.jpg', alt: '' },
   
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/721564857' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/721564857', title: '' },
 
 ];

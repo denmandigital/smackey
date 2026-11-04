@@ -22,14 +22,14 @@ export const blocks = [
     ],
   },
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/allocadia/allocadia-responsive.png' },
-  { type: 'image', span: 12, src: 'assets/projects/allocadia/allocadia_ux.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/allocadia/allocadia_single-image.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/allocadia/allocadia_sidebyside.png' },
+  { type: 'image', span: 12, src: 'assets/projects/allocadia/allocadia-responsive.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/allocadia/allocadia_ux.png', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/allocadia/allocadia_single-image.png', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/allocadia/allocadia_sidebyside.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/5.4', src: 'https://player.vimeo.com/video/704676668?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/5.4', src: 'https://player.vimeo.com/video/704676668?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/allocadia/screens-perspective_allocadia.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/allocadia/screens-perspective_allocadia.jpg', alt: '' },
   
 ];

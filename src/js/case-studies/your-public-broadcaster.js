@@ -52,20 +52,20 @@ export const blocks = [
 
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/knowledge/knowledge-responsive.png' },
-  { type: 'image', span: 12, src: 'assets/projects/knowledge/knowledge-ux-screens.png' },
+  { type: 'image', span: 12, src: 'assets/projects/knowledge/knowledge-responsive.png', alt: 'Responsive project screens.' },
+  { type: 'image', span: 12, src: 'assets/projects/knowledge/knowledge-ux-screens.png', alt: 'UX wireframes.' },
   
-  { type: 'vimeo', span: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/1233122138?autopause=0' },
+  { type: 'vimeo', span: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/1233122138?autopause=0', title: 'Knowledge homepage walkthrough.' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/knowledge/knowledge-our-story-hero.jpg' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/knowledge/knowledge-our-story-hero.jpg', alt: 'Our story hero.' },
   // { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/knowledge/knowldege-funding.jpg' },
-  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/1233136922?autopause=0' },
-  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/1233129782?autopause=0' },
+  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/1233136922?autopause=0', title: 'Stats, collage and guiding values scroll through.' },
+  { type: 'vimeo', span: 6, spanSm: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/1233129782?autopause=0', title: 'Leadership scroll through.' },
   
   // { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/knowledge/knowledge-our-programming.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/knowledge/knowledge-rewards-and-benefits.jpg' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/knowledge/knowledge-rewards-and-benefits.jpg', alt: 'Knowledge rewards and benefits.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/knowledge/knowledge-screens.png' },
-  { type: 'image', span: 12, contain: true, src: 'assets/projects/knowledge/knowledge-cms-guide.png' },
+  { type: 'image', span: 12, src: 'assets/projects/knowledge/knowledge-screens.png', alt: 'Knowledge screens.' },
+  { type: 'image', span: 12, contain: true, src: 'assets/projects/knowledge/knowledge-cms-guide.png', alt: 'Knowledge CMS guide.' },
   
 ];

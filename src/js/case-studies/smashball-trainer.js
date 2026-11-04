@@ -26,10 +26,10 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-1.png' },
-  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-2.png' },
-  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-3.png' },
-  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-4.png' },
+  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-1.png', alt: '' },
+  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-2.png', alt: '' },
+  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-3.png', alt: '' },
+  { type: 'image', span: 3, spanMd: 6, spanSm: 12, src: 'assets/projects/smashball/smashball_devices-parallax-4.png', alt: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/smashball/phone-perspective_lightbg_smashball.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/smashball/phone-perspective_lightbg_smashball.jpg', alt: '' },
 ];

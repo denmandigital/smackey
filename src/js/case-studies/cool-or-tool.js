@@ -41,11 +41,11 @@ export const blocks = [
   },
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/coolortool/cool-or-tool-screens.png' },
+  { type: 'image', span: 12, src: 'assets/projects/coolortool/cool-or-tool-screens.png', alt: '' },
 
   
   { type: 'spacer', span: 2, height: 40 },
-  { type: 'vimeo', span: 3, spanSm: 12, aspect: '7.5/16', autoplay: true, src: 'https://player.vimeo.com/video/704637210?autopause=0' },
+  { type: 'vimeo', span: 3, spanSm: 12, aspect: '7.5/16', autoplay: true, src: 'https://player.vimeo.com/video/704637210?autopause=0', title: '' },
   {
     type: 'text',
     span: 5,
@@ -55,7 +55,7 @@ export const blocks = [
     body: '<h2>Gameplay</h2><p>The scenarios featured a playful cast of animated characters based on the physical tools construction workers use everyday. These characters could be helpful and polite or rude and obnoxious. Right or wrong, players received a brief explanation of why the behaviour shown was positive or negative, along with a description of the real impact it could have on a worksite.</p>',
   },
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/coolortool/phone-perspective_coolortool.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/coolortool/phone-perspective_coolortool.jpg', alt: '' },
   { type: 'spacer', span: 12, height: 40 },
 
   { type: 'spacer', span: 2, height: 40 },
@@ -67,7 +67,7 @@ export const blocks = [
     variant: 'callout',
     body: '<h2>Scoring</h2><p>Players received an app notification twice daily telling them that it was time to play. After answering the scenario, they were directed to a personal scoreboard that tracked cumulative performance and flagged any missed scenarios to return to.</p>',
   },
-  { type: 'vimeo', span: 3, spanSm: 12, aspect: '7.5/16', autoplay: true, src: 'https://player.vimeo.com/video/704651145?autopause=0' },
+  { type: 'vimeo', span: 3, spanSm: 12, aspect: '7.5/16', autoplay: true, src: 'https://player.vimeo.com/video/704651145?autopause=0', title: '' },
   
   { type: 'spacer', span: 12, height: 40 },
 
@@ -77,7 +77,7 @@ export const blocks = [
     variant: 'callout',
     body: '<p><em>Cool or Tool?</em> was publicly available, but most users were invited by their employer. Companies registering for an account received a unique code to distribute to their crew, placing employees into a crew-specific game. Supervisors gained access to a web-based dashboard where they could monitor employee progress and engagement in real time, giving employers a meaningful window into how their crews were responding to the training.</p><p>The app ran successfully until 2024, when it was decommissioned.</p>',
   },
-  { type: 'image', span: 12, src: 'assets/projects/coolortool/cool-or-tool-dashboard.png' },
+  { type: 'image', span: 12, src: 'assets/projects/coolortool/cool-or-tool-dashboard.png', alt: '' },
 
   
 ];

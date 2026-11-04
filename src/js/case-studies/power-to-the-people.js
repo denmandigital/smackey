@@ -23,15 +23,15 @@ export const blocks = [
     ],
   },
   
-  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-responsive.png', alt: '' },
   
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/powertothepeople/pttp-screen-1.png' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/powertothepeople/pttp-screen-2.png' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/powertothepeople/pttp-screen-3.png' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/powertothepeople/pttp-screen-1.png', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/powertothepeople/pttp-screen-2.png', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/powertothepeople/pttp-screen-3.png', alt: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-carbon-calculator.jpg' },
-  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-quiz.jpg' },
-  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-poll.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-carbon-calculator.jpg', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-quiz.jpg', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/powertothepeople/pttp-poll.jpg', alt: '' },
 
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/724653523?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/724653523?autopause=0', title: '' },
 ];

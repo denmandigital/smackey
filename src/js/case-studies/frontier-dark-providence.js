@@ -23,12 +23,12 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/frontier/frontier-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/frontier/frontier-responsive.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721229239?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721229239?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/frontier/screens-perspective_frontier.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/frontier/screens-perspective_frontier.jpg', alt: '' },
 
   {
     type: 'text',
@@ -37,10 +37,10 @@ export const blocks = [
     body: 'After selecting a character featured on the menu, and entering their story, the audience is invited to interact with the video using their keyboard. Each key activates a different visual effects layer within the video, which, in turn, exposes a deeper narrative truth in the story.',
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/frontier/frontier-stills.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/frontier/frontier-stills.jpg', alt: '' },
   
   
-  { type: 'image', span: 12, src: 'assets/projects/frontier/frontier-studio.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/frontier/frontier-studio.jpg', alt: '' },
   
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/205339161' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/205339161', title: '' },
 ];

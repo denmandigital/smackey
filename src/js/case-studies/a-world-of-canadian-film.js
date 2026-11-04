@@ -62,21 +62,21 @@ export const blocks = [
 
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-responsive.png', alt: 'Responsive project screens.' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-01a.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-01b.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-01a.png', alt: 'Canadian Film Collection index screen.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-01b.png', alt: 'Canadian Film Collection film detail page.' },
   
-  { type: 'video', span: 12, autoplay: true, src: 'assets/projects/reelcanada/cs-reelcanada_tableau.mp4' },
+  { type: 'video', span: 12, autoplay: true, src: 'assets/projects/reelcanada/cs-reelcanada_tableau.mp4', title: 'Career tableau' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-careers.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-careers-quiz.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-careers.png', alt: 'Careers in film index page.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/reelcanada/cs-reelcanada-careers-quiz.png', alt: 'Reel Opportunities career quiz.' },
 
 
   
   // Full-width screenshots
-  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-education.png' },
-  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-02.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-education.png', alt: 'Reel Canada education screens.' },
+  { type: 'image', span: 12, src: 'assets/projects/reelcanada/cs-reelcanada-02.jpg', alt: 'Reel Canada project screens' },
 
 
   // Three equal images — 4 + 4 + 4
@@ -85,5 +85,5 @@ export const blocks = [
   // { type: 'image', span: 4, src: 'assets/projects/reelcanada/cs-reelcanada-09.jpg' },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/10.66', src: 'https://player.vimeo.com/video/810732633?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/10.66', src: 'https://player.vimeo.com/video/810732633?autopause=0', title: 'Reel Canada website walkthrough.' },
 ];

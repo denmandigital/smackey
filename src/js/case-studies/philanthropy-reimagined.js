@@ -23,9 +23,9 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive-responsive.png' },
-  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_ux.png' },
-  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_brochure.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive-responsive.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_ux.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_brochure.jpg', alt: '' },
   
   {
     type: 'text',
@@ -33,12 +33,12 @@ export const blocks = [
     variant: 'callout',
     body: 'The initial engagement included the creation of a dynamic new website, a comprehensive client onboarding document, and branded email newsletters.',
   },
-  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_newsletter.png' },
+  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_newsletter.png', alt: '' },
 
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1008938152?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1008938152?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_screens.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/powertogive/powertogive_screens.jpg', alt: '' },
   
 ];

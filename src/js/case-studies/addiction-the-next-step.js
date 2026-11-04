@@ -24,11 +24,11 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/addiction/addiction-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/addiction/addiction-responsive.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9.1', src: 'https://player.vimeo.com/video/225482597?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9.1', src: 'https://player.vimeo.com/video/225482597?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/addiction/screens-perspective_addiction.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/addiction/screens-perspective_addiction.jpg', alt: '' },
   
 ];

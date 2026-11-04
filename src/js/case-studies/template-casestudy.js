@@ -52,7 +52,7 @@ export const blocks = [
 
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/xxx/xxx-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/xxx/xxx-responsive.png', alt: '' },
 
   {
     type: 'text',
@@ -61,9 +61,9 @@ export const blocks = [
     body: 'Callout text.',
   },
 
-  { type: 'vimeo', span: 12, aspect: '16/11.15', autoplay: true, src: 'https://player.vimeo.com/video/812203483?autopause=0' },
+  { type: 'vimeo', span: 12, aspect: '16/11.15', autoplay: true, title: '', src: 'https://player.vimeo.com/video/812203483?autopause=0' },
   
-  { type: 'vimeo', span: 12, aspect: '16/10.66', src: 'https://player.vimeo.com/video/812199615' },
+  { type: 'vimeo', span: 12, aspect: '16/10.66', src: 'https://player.vimeo.com/video/812199615', title: '' },
   
   
 ];

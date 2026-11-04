@@ -23,16 +23,16 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/kennysjazzpad/kjp-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/kennysjazzpad/kjp-responsive.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/703870653?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/703870653?autopause=0', title: '' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/01-Kennys-jazz-pad-exterior.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/02b-Kennys-jazz-pad-LoungeSinger.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/03-Kennys-jazz-pad-Theatre.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/04-Kennys-wall-of-fame.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/01-Kennys-jazz-pad-exterior.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/02b-Kennys-jazz-pad-LoungeSinger.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/03-Kennys-jazz-pad-Theatre.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/kennysjazzpad/04-Kennys-wall-of-fame.png', alt: '' },
   
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/8.45', src: 'https://player.vimeo.com/video/338775388' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/8.45', src: 'https://player.vimeo.com/video/338775388', title: '' },
   
 ];

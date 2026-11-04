@@ -25,11 +25,11 @@ export const blocks = [
     { type: 'spacer', span: 12, height: 40 },
     
     // Video
-    { type: 'video', span: 12, autoplay: true, aspect: '16/9', src: 'assets/projects/kluanegrizzly/KLU_BEAR_compressed.mp4' },
+    { type: 'video', span: 12, autoplay: true, aspect: '16/9', src: 'assets/projects/kluanegrizzly/KLU_BEAR_compressed.mp4', title: '' },
 
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanegrizzly/kluane-01.png' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanegrizzly/kluane-02.png' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanegrizzly/kluane-03.png' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanegrizzly/kluane-01.png', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanegrizzly/kluane-02.png', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/kluanegrizzly/kluane-03.png', alt: '' },
   
  
 ];

@@ -3,6 +3,7 @@
 
    Each entry:
      file      — filename in assets/ (card thumbnail)
+     alt       — alternative text for the card thumbnail (optional; empty when decorative)
      client    — client name
      title     — project title (also generates the URL slug)
      year      — year the project was completed (number, or null if unknown)

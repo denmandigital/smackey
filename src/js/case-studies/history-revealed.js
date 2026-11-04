@@ -23,7 +23,7 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/historyrevealed/responsive_bc-hydro.png' },
+  { type: 'image', span: 12, src: 'assets/projects/historyrevealed/responsive_bc-hydro.png', alt: '' },
 
   {
     type: 'text',
@@ -32,13 +32,13 @@ export const blocks = [
     body: '<p>The desktop application was built with Electron and uses ArcGIS, a mapping and geospatial software platform.</p><p>Statamic, configured as a headless CMS, allowed BC Hydro staff from across the province to add and update archaeological entries. Because the exhibition often travelled to remote communities, the app needed to work offline and update itself with new content whenever it came back online.</p>',
   },
   
-  { type: 'image', span: 12, src: 'assets/projects/historyrevealed/bc-hydro_single-img.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/historyrevealed/bc-hydro_single-img.jpg', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8', src: 'https://player.vimeo.com/video/721578563?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8', src: 'https://player.vimeo.com/video/721578563?autopause=0', title: '' },
 
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721577871?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721577871?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/historyrevealed/screens-perspective_BCHydro.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/historyrevealed/screens-perspective_BCHydro.jpg', alt: '' },
   
 ];

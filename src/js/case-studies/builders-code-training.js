@@ -18,7 +18,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Client', body: 'British Columbia Construction Association' },
       { type: 'text', span: 6, heading: 'Agency', body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type', body: 'LMS, self-directed training' },
-      { type: 'text', span: 6, heading: 'Year', body: '2023—2025' },
+      { type: 'text', span: 6, heading: 'Years', body: '2023—2025' },
       { type: 'text', span: 12, heading: 'Roles', body: '<ul><li>Instructional design</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],
   },
@@ -52,10 +52,10 @@ export const blocks = [
 
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/builderscodetraining/future-of-construction-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/builderscodetraining/future-of-construction-responsive.png', alt: 'Project responsive screens.' },
 
 
-  { type: 'vimeo', span: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/856971088?autopause=0' },
+  { type: 'vimeo', span: 12, aspect: '16/9', autoplay: true, src: 'https://player.vimeo.com/video/856971088?autopause=0', title: 'Future of Contstruction - Know Your Part LMS walkthrough.' },
 
 
   {
@@ -64,10 +64,10 @@ export const blocks = [
     variant: 'callout',
     body: 'BCCA’s multiple audiences required different approaches to learning. After defining how particular learners would approach the training we created unique user pathways, determined key communication touch points for each, and customized the content at each stage to meet their individual requirements.',
   },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/future-of-construction-journey.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/future-of-construction-landing.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/future-of-construction-journey.png', alt: 'User journey map and user flow.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/future-of-construction-landing.png', alt: 'Course entry landing page and curriculum.' },
 
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/Goehring-BCCA-BuildingBuilders_3692 1.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/Goehring-BCCA-BuildingBuilders_3692 1.png', alt: 'BCCA trainer on film set.' },
   {
     type: 'text',
     span: 6,
@@ -85,18 +85,18 @@ export const blocks = [
     body: 'In the third and fourth modules, we changed things up by adding scenario-based storytelling. Simple illustrations and voice-over show fictional characters handling situations poorly, then well. The contrast gave learners a visual break and sparked their imagination.',
   },
 
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-01.png' },
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-03.png' },
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-05.png' },
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-06.png' },
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-07.png' },
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-09.png' },
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-10.png' },
-  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-12.png' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-01.png', alt: 'Scenario screen 1' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-03.png', alt: 'Scenario screen 2' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-05.png', alt: 'Scenario screen 3' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-06.png', alt: 'Scenario screen 4' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-07.png', alt: 'Scenario screen 5' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-09.png', alt: 'Scenario screen 6' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-10.png', alt: 'Scenario screen 7' },
+  { type: 'image', span: 3, spanMd: 4, src: 'assets/projects/builderscodetraining/04.c.scenario-12.png', alt: 'Scenario screen 8' },
 
 
 
-  { type: 'image', span: 12, src: 'assets/projects/builderscodetraining/future-of-construction-screens-perspective.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/builderscodetraining/future-of-construction-screens-perspective.jpg', alt: 'Builders Code training screens.' },
 
 
 

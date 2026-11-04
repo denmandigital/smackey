@@ -23,7 +23,7 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/huntingincanada/hic-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/huntingincanada/hic-responsive.png', alt: '' },
   
   {
     type: 'text',
@@ -33,11 +33,11 @@ export const blocks = [
   },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721572323?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/721572323?autopause=0', title: '' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/huntingincanada/hic-guide-entry-1.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/huntingincanada/hic-guide-entry-1.png', alt: '' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/huntingincanada/hic-guide-entry-2.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/huntingincanada/hic-guide-entry-2.png', alt: '' },
   
   {
     type: 'text',
@@ -46,10 +46,10 @@ export const blocks = [
     body: 'Each entry in the Field Guide features well-researched written content, and custom illustrations, habitat maps, and small interactive modules.',
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/huntingincanada/hic-illustrations.png' },
+  { type: 'image', span: 12, src: 'assets/projects/huntingincanada/hic-illustrations.png', alt: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/huntingincanada/screens-perspective_hunting.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/huntingincanada/screens-perspective_hunting.jpg', alt: '' },
   
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/10.8', src: 'https://player.vimeo.com/video/341406705' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/10.8', src: 'https://player.vimeo.com/video/341406705', title: '' },
   
 ];

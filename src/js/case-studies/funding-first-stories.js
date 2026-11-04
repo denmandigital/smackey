@@ -18,7 +18,7 @@ export const blocks = [
       { type: 'text', span: 6, heading: 'Client',  body: 'Indigenous Screen Office' },
       { type: 'text', span: 6, heading: 'Agency',  body: 'Denman Digital' },
       { type: 'text', span: 6, heading: 'Type',    body: 'Website' },
-      { type: 'text', span: 6, heading: 'Year',    body: '2024—2026' },
+      { type: 'text', span: 6, heading: 'Years',    body: '2024—2026' },
       { type: 'text', span: 12, heading: 'Roles',   body: '<ul><li>Digital strategy</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],
   },
@@ -52,18 +52,18 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/iso/iso-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/iso/iso-responsive.png', alt: 'Responsive project screens.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/iso/iso-ux.png' },
+  { type: 'image', span: 12, src: 'assets/projects/iso/iso-ux.png', alt: 'ISO wireframes' },
   
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-home.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-funding-opportunities.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-get-inspired.jpg' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-home.jpg', alt: 'ISO homepage' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-funding-opportunities.jpg', alt: 'ISO Funding Opportunities' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/iso/iso-get-inspired.jpg', alt: 'ISO Get Inspired' },
   
-  { type: 'image', span: 12, src: 'assets/projects/iso/iso-screens-perspective.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/iso/iso-screens-perspective.jpg', alt: 'ISO project screens.' },
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/907945251' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/907945251??autopause=0', title: 'ISO project walkthrough.' },
   
   
 ];

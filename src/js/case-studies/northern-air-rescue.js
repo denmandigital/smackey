@@ -24,10 +24,10 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/northernairrescue/nar-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/northernairrescue/nar-responsive.png', alt: '' },
   
   // Video
-  { type: 'video', span: 12, autoplay: true, src: 'assets/projects/northernairrescue/northern_air_rescue_opening_title_sequence_1080p.mp4' },
+  { type: 'video', span: 12, autoplay: true, src: 'assets/projects/northernairrescue/northern_air_rescue_opening_title_sequence_1080p.mp4', title: '' },
   
   {
     type: 'text',
@@ -36,8 +36,8 @@ export const blocks = [
     body: 'A logomark was designed around the energy and magic of the northern lights, with the base of the phenomenon formed by a negative space silhouette of a plane.',
   },
 
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/northernairrescue/nar-brand-design.png', contain: true },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/northernairrescue/nar-full-img.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/northernairrescue/nar-brand-design.png', contain: true, alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/northernairrescue/nar-full-img.png', alt: '' },
   
   {
     type: 'text',
@@ -46,10 +46,10 @@ export const blocks = [
     body: 'Users select from six “deep-dive” interactive stories that combine informative creative writing, documentary photography and video, and information modules.',
   },
 
-  { type: 'video', span: 12, autoplay: true, src: 'assets/projects/northernairrescue/northern_air_rescue_explore_cards_1080p.mp4' },
+  { type: 'video', span: 12, autoplay: true, src: 'assets/projects/northernairrescue/northern_air_rescue_explore_cards_1080p.mp4', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/northernairrescue/nar-ux.png' },
+  { type: 'image', span: 12, src: 'assets/projects/northernairrescue/nar-ux.png', alt: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/northernairrescue/nar-parallax-screens.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/northernairrescue/nar-parallax-screens.jpg', alt: '' },
   
 ];

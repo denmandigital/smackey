@@ -95,7 +95,7 @@
         <a class="filter-btn" href="/archive" data-filter="all">Archive</a>
       </div>
       <div class="nav-actions">
-        <button id="navFilterBtn" aria-label="Filter projects" data-tooltip="Filter Projects">
+        <button id="navFilterBtn" aria-label="Filter projects" aria-expanded="false" aria-controls="filterMenu" data-tooltip="Filter Projects">
           <svg width="22" height="15" viewBox="0 0 22 15" fill="none" aria-hidden="true">
             <line x1="0" y1="0.75" x2="22" y2="0.75" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
             <circle cx="7" cy="0.75" r="2.5" stroke="currentColor" stroke-width="1" />
@@ -106,7 +106,7 @@
           </svg>
           <span id="filterBadge" aria-hidden="true"></span>
         </button>
-        <button id="navBurger" aria-label="Open menu" data-tooltip="About Me">
+        <button id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu" data-tooltip="About Me">
           <span></span>
           <span></span>
           <span></span>
@@ -288,6 +288,11 @@
 
     </div>
   </nav>
+  <button id="accessibleViewToggle" class="accessibility-toggle" type="button" role="switch" aria-checked="false" aria-controls="project-grid-html" aria-label="Accessible project list" data-tooltip="Accessible project list">
+    <img src="/assets/accessability-icon.svg" alt="" aria-hidden="true">
+    <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+  </button>
+  <main id="main-content">
   <div id="activeFilters" aria-label="Active filters" aria-live="polite"></div>
 
   <!-- <div id="navEdge" aria-hidden="true"></div> -->
@@ -346,6 +351,7 @@
   </section>
 
   <div id="filterAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  </main>
 
   <script type="module" src="/src/js/grid.js"></script>
 </body>

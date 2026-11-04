@@ -24,13 +24,13 @@ export const blocks = [
 
     { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-00.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-01.jpg' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-00.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-01.jpg', alt: '' },
 
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-03.jpg' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-04.jpg' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-03.jpg', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/watershed/TMM-04.jpg', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/98166166?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/98166166?autopause=0', title: '' },
  
 ];

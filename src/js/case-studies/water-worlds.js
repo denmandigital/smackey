@@ -23,14 +23,14 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/waterworlds/waterworlds-responsive.png' },
-  { type: 'image', span: 12, src: 'assets/projects/waterworlds/water_worlds_UX_Screens.png' },
+  { type: 'image', span: 12, src: 'assets/projects/waterworlds/waterworlds-responsive.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/waterworlds/water_worlds_UX_Screens.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1046569910?autopause=0' },
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1046571262?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1046569910?autopause=0', title: '' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1046571262?autopause=0', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/waterworlds/water-worlds_screens.jpg' },
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/1046572575' },
+  { type: 'image', span: 12, src: 'assets/projects/waterworlds/water-worlds_screens.jpg', alt: '' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/1046572575', title: '' },
   
 ];

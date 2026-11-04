@@ -25,14 +25,14 @@ export const blocks = [
     { type: 'spacer', span: 12, height: 40 },
   
     // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1233206378?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/1233206378?autopause=0', title: '' },
     
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_01.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_02.jpg' },
-  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_03.jpg' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_01.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_02.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_03.jpg', alt: '' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_04.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_05.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_04.png', alt: '' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/rbcgolf/RBC_HHI_05.png', alt: '' },
   
  
 ];

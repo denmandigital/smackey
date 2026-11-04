@@ -57,29 +57,24 @@ export const blocks = [
 
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/foodforthought/foodforthought-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/foodforthought/foodforthought-responsive.png', alt: 'Responsive project screens.' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/704697293?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/8.75', src: 'https://player.vimeo.com/video/704697293?autopause=0', title: 'Food for Thought intro.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/foodforthought/fft_wireframes.png' },
-  { type: 'image', span: 12, src: 'assets/projects/foodforthought/mm4-food-for-thought-screens.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/foodforthought/fft_wireframes.png', alt: 'Food for Thought chapter intro screens.' },
+  { type: 'image', span: 12, src: 'assets/projects/foodforthought/mm4-food-for-thought-screens.jpg', alt: 'Food for Thought all page screens.' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foodforthought/c-mm4-food-for-thought.jpg' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foodforthought/c-mm4-food-for-thought.jpg', alt: 'Food for Thought - West video screen.' },
   // { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foodforthought/d-mm4-food-for-thought.jpg' },
 
-  { type: 'video', span: 6, autoplay: true, loop: false, aspect: '16/9', src: '/assets/projects/foodforthought/wheat-chart-compressed.mp4' },
-  { type: 'video', span: 6, autoplay: true, loop: false, aspect: '16/9', src: '/assets/projects/foodforthought/salmon-chart-compressed.mp4' },
-  // { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foodforthought/g-mm4-food-for-thought.jpg' },
-
-  
-
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foodforthought/f-mm4-food-for-thought.jpg' },
+  { type: 'video', span: 6, autoplay: true, loop: false, aspect: '16/9', src: '/assets/projects/foodforthought/wheat-chart-compressed.mp4', title: 'Food for Thought - Central chart.' },
+  { type: 'video', span: 6, autoplay: true, loop: false, aspect: '16/9', src: '/assets/projects/foodforthought/salmon-chart-compressed.mp4', title: 'Food for Thought - West chart.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/foodforthought/f-mm4-food-for-thought.jpg', alt: 'Food for Thought - East screen.' },
   
   
+  { type: 'image', span: 12, src: 'assets/projects/foodforthought/screens-perspective_fft.jpg', alt: 'Food for Thought project screens.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/foodforthought/screens-perspective_fft.jpg' },
-  
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/10', src: 'https://player.vimeo.com/video/285148959' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/10', src: 'https://player.vimeo.com/video/285148959?autopause=0', title: 'Food for Thought project walkthrough.' },
   
 ];

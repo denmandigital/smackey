@@ -51,9 +51,9 @@ export const blocks = [
   },
 
   { type: 'spacer', span: 12, height: 40 },
-  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-responsive.png', alt: 'Responsive project screens.' },
 
-  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-illustrations-2.png' },
+  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-illustrations-2.png', alt: 'Project illustrations' },
 
   {
     type: 'text',
@@ -62,14 +62,14 @@ export const blocks = [
     body: 'Hand-sketched illustrations give the guide a welcoming, approachable feel, paired with a consistent colour palette that codes related content for easy navigation.',
   },
 
-  { type: 'vimeo', span: 12, aspect: '16/11.15', autoplay: true, src: 'https://player.vimeo.com/video/812203483?autopause=0' },
+  { type: 'vimeo', span: 12, aspect: '16/11.15', autoplay: true, src: 'https://player.vimeo.com/video/812203483?autopause=0', title: 'Guide menu' },
   
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-readytours-01.png' },
-  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-readytours-02.png' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-readytours-01.png', alt: 'Ready Tours landing page.' },
+  { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-readytours-02.png', alt: 'Hearing Ready Tour landing page.' },
   
-  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-basisofclaimform.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/myrefugeeclaim/cs-mrc-basisofclaimform.jpg', alt: 'Guide section 2.1 Starting the refugee claim.' },
   
-  { type: 'vimeo', span: 12, aspect: '16/10.66', src: 'https://player.vimeo.com/video/812199615' },
+  { type: 'vimeo', span: 12, aspect: '16/10.66', src: 'https://player.vimeo.com/video/812199615', title: 'My Refugee Claim website walkthrough.' },
   
   
 ];

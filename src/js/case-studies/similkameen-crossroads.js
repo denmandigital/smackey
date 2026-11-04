@@ -23,13 +23,13 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/similkameen/similkameen-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/similkameen/similkameen-responsive.png', alt: '' },
   
-  { type: 'image', span: 4, spanSm:12, src: 'assets/projects/similkameen/similkameen-1.jpg' },
-  { type: 'image', span: 4, spanSm:12, src: 'assets/projects/similkameen/similkameen-2.jpg' },
-  { type: 'image', span: 4, spanSm:12, src: 'assets/projects/similkameen/similkameen-3.jpg' },
+  { type: 'image', span: 4, spanSm:12, src: 'assets/projects/similkameen/similkameen-1.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm:12, src: 'assets/projects/similkameen/similkameen-2.jpg', alt: '' },
+  { type: 'image', span: 4, spanSm:12, src: 'assets/projects/similkameen/similkameen-3.jpg', alt: '' },
 
-  { type: 'image', span: 12, src: 'assets/projects/similkameen/similkameen_church_burned_down.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/similkameen/similkameen_church_burned_down.jpg', alt: '' },
   {
     type: 'text',
     span: 12,
@@ -37,11 +37,11 @@ export const blocks = [
     body: 'On June 26, 2021 St. Anne, the church at the center of the story, was burned to the ground – a casualty of the anger which spread across Canada with the discovery of unmarked graves at Catholic residential schools.',
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/similkameen/screens_perspective_similkameen.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/similkameen/screens_perspective_similkameen.jpg', alt: '' },
 
 
   // Video
-  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/725470857' },
+  { type: 'vimeo', span: 12, autoplay: false, aspect: '16/9', src: 'https://player.vimeo.com/video/725470857', title: '' },
   
   {
     type: 'text',

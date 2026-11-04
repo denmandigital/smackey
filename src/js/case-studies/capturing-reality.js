@@ -24,9 +24,9 @@ export const blocks = [
   },
   { type: 'spacer', span: 12, height: 40 },
 
-  { type: 'image', span: 12, src: 'assets/projects/capturingreality/capturing-reality-responsive.png' },
+  { type: 'image', span: 12, src: 'assets/projects/capturingreality/capturing-reality-responsive.png', alt: '' },
   
   // Video
-  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/339386110?autopause=0' },
+  { type: 'vimeo', span: 12, autoplay: true, aspect: '16/9', src: 'https://player.vimeo.com/video/339386110?autopause=0', title: '' },
 
 ];

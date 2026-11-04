@@ -23,14 +23,14 @@ export const blocks = [
     ],
   },
 
-  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-responsive.png' },
-  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-ux.png' },
-  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-screens.png' },
+  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-responsive.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-ux.png', alt: '' },
+  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-screens.png', alt: '' },
   
   // Video
-  { type: 'video', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'assets/projects/northernlink/northernlink-home-compressed.mp4' },
-  { type: 'video', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'assets/projects/northernlink/northernlink-products-compressed.mp4' },
+  { type: 'video', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'assets/projects/northernlink/northernlink-home-compressed.mp4', title: '' },
+  { type: 'video', span: 6, spanSm: 12, autoplay: true, aspect: '16/9', src: 'assets/projects/northernlink/northernlink-products-compressed.mp4', title: '' },
   
-  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-screens-perspective.jpg' },
+  { type: 'image', span: 12, src: 'assets/projects/northernlink/northernlink-screens-perspective.jpg', alt: '' },
   
 ];
