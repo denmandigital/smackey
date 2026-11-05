@@ -211,4 +211,19 @@
 		opacity: 1;
 		translate: -50% calc(-100% - 10px);
 	}
+
+	&--right {
+		text-align: right;
+		translate: -100% calc(-100% - 6px);
+
+		&::after {
+			left: auto;
+			right: var(--tooltip-arrow-right, 12px);
+			transform: translateX(50%);
+		}
+
+		&.visible {
+			translate: -100% calc(-100% - 10px);
+		}
+	}
 }

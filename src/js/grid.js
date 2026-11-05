@@ -1234,13 +1234,15 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   document.querySelectorAll('[data-tooltip]').forEach(el => {
     const tip = document.createElement('div');
     tip.className = 'nav-tooltip';
+    if (el.id === 'accessibleViewToggle') tip.classList.add('nav-tooltip--right');
     tip.textContent = el.dataset.tooltip;
     tip.setAttribute('aria-hidden', 'true');
     document.body.appendChild(tip);
     el.addEventListener('mouseenter', () => {
       if (el.id === 'navBurger' && el.closest('#nav').classList.contains('open')) return;
       const r = el.getBoundingClientRect();
-      tip.style.left = (r.left + r.width / 2) + 'px';
+      tip.style.left = (el.id === 'accessibleViewToggle' ? r.right : r.left + r.width / 2) + 'px';
+      if (el.id === 'accessibleViewToggle') tip.style.setProperty('--tooltip-arrow-right', (r.width / 2) + 'px');
       const tipTop = el.id === 'accessibleViewToggle' && r.top < 40 ? r.bottom + 12 : r.top;
       tip.style.top = tipTop + 'px';
       tip.classList.add('visible');
