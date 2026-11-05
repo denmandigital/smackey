@@ -84,11 +84,7 @@
 
 @media (max-width: 768px) {
 	.accessibility-toggle {
-		top: auto;
-		right: auto;
-		bottom: 20px;
-		left: 50%;
-		transform: translateX(-50%);
+		display: none;
 	}
 }
 

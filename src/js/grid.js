@@ -670,8 +670,9 @@ addEventListener('keydown', (e) => {
 const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
 const introEl = document.getElementById('intro');
+const mobileAccessibleOnly = () => innerWidth <= 768;
 const accessibleParamEnabled = () => ['true', '1', 'yes'].includes(new URLSearchParams(location.search).get('accessible'));
-let accessibleListMode = accessibleParamEnabled();
+let accessibleListMode = mobileAccessibleOnly() || accessibleParamEnabled();
 if (accessibleListMode) {
   document.documentElement.classList.add('accessible-list');
   document.body.classList.add('accessible-list');
@@ -1261,6 +1262,7 @@ const aboutHeading = navMenu.querySelector('.about-name');
 aboutHeading.setAttribute('tabindex', '-1');
 
 function setAccessibleListMode(enabled, updateUrl = false) {
+  enabled = mobileAccessibleOnly() || enabled;
   const isEnabling = enabled && !accessibleListMode;
   const closingAboutPanel = isEnabling && menuOpen;
   accessibleListMode = enabled;
@@ -1269,6 +1271,7 @@ function setAccessibleListMode(enabled, updateUrl = false) {
     if (filterPanelOpen) closeFilterPanel();
   }
   accessibleViewToggle.setAttribute('aria-checked', String(accessibleListMode));
+  accessibleViewToggle.hidden = mobileAccessibleOnly();
   document.documentElement.classList.toggle('accessible-list', accessibleListMode);
   document.body.classList.toggle('accessible-list', accessibleListMode);
   projectGridSection.inert = !accessibleListMode || menuOpen || (zoomed && zoomFromAccessibleList);
@@ -1286,6 +1289,9 @@ function setAccessibleListMode(enabled, updateUrl = false) {
 }
 
 accessibleViewToggle.addEventListener('click', () => setAccessibleListMode(!accessibleListMode, true));
+window.addEventListener('resize', () => {
+  setAccessibleListMode(mobileAccessibleOnly() || accessibleParamEnabled());
+});
 
 function openMenu(skipHistory = false) {
   aboutTriggerEl = document.activeElement;
