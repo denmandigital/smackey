@@ -13,6 +13,38 @@
 	}
 }
 
+.cta-categories {
+	position: absolute;
+	bottom: calc(100% + 8px);
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 5px;
+	width: max-content;
+	max-width: calc(var(--card-w, 480px) - 24px);
+	list-style: none;
+	pointer-events: none;
+}
+
+.cta-category {
+	padding: 3px 8px;
+	border-radius: 100px;
+	//background: rgba(234, 232, 228, 0.15);
+	background: rgba(255, 255, 255, 0.6);
+	color: var(--grey-med);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	line-height: 1;
+	text-transform: uppercase;
+	white-space: nowrap;
+	line-height: 1.1;
+	text-shadow: 4px 4px 4px rgba(0,0,0,0.1);
+	backdrop-filter: blur(10px);
+}
+
 #ctaBtn {
 	font: inherit;
 	cursor: pointer;

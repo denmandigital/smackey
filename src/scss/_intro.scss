@@ -74,12 +74,14 @@
 		line-height: 1.2; //1.55;
 		font-size: 40px;
 	}
+	/*
 	@media (orientation: landscape) {
 		@include tablet-down {
 			line-height: 1.2; //1.55;
 			font-size: 28px;
 		}
 	}
+	*/
 	// @include tablet  { font-size: 18px; }
 	
 	@include desktop { 

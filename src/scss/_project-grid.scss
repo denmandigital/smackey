@@ -68,7 +68,7 @@ body.accessible-list {
 	#canvas-backdrop,
 	#fade,
 	.hud,
-	#cta {
+		#cta {
 		display: none;
 	}
 
@@ -192,12 +192,12 @@ body.accessible-list.accessible-about-open #project-grid-html {
 		display: flex;
 		gap: 5px;
 		flex-wrap: wrap;
-		margin-bottom: 8px;
+		margin-top: 10px;
 	}
 
 	&-year,
 	&-cat {
-		font-size: 9px;
+		font-size: 10px;
 		font-weight: 600;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
@@ -207,6 +207,8 @@ body.accessible-list.accessible-about-open #project-grid-html {
 		border-radius: 100px;
 		padding: 3px 8px;
 		white-space: nowrap;
+		text-shadow: 4px 4px 4px rgba(0,0,0,0.1);
+		backdrop-filter: blur(5px);
 	}
 
 	&-year {
@@ -214,7 +216,8 @@ body.accessible-list.accessible-about-open #project-grid-html {
 	}
 
 	&-title {
-		font-size: clamp(16px, 1.3vw, 20px);
+		//font-size: clamp(16px, 1.3vw, 20px);
+		font-size: clamp(1.00rem, calc(0.583rem + 1.042vw), 1.25rem);
 		font-weight: 800;
 		color: #fff;
 		letter-spacing: -0.01em;

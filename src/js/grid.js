@@ -669,8 +669,9 @@ addEventListener('keydown', (e) => {
 ============================================================ */
 const cta = document.getElementById('cta');
 const ctaBtn = document.getElementById('ctaBtn');
+const ctaCategories = document.getElementById('ctaCategories');
 const introEl = document.getElementById('intro');
-const mobileAccessibleOnly = () => innerWidth <= 768;
+const mobileAccessibleOnly = () => innerWidth <= 1024;
 const accessibleParamEnabled = () => ['true', '1', 'yes'].includes(new URLSearchParams(location.search).get('accessible'));
 let accessibleListMode = mobileAccessibleOnly() || accessibleParamEnabled();
 if (accessibleListMode) {
@@ -2097,22 +2098,28 @@ function animate() {
     lastCenterKey = centerKey;
     if (activeN === 0) {
       centreProject = null;
+      ctaCategories.replaceChildren();
       nowTitle.textContent = 'No results';
       nowMeta.textContent = 'Try a different filter combination';
     } else if (isIntroCell(ccx, ccy)) {
       centreProject = null;
+      ctaCategories.replaceChildren();
       nowTitle.textContent = '';
       nowMeta.textContent = isMobilePortrait() ? 'Scroll up or down to explore' : 'Scroll in any direction to explore';
     } else {
       const _pi = projIndex(ccx, ccy);
       centreProject = _pi >= 0 ? activeProjects[_pi] : null;
       if (!centreProject) {
+        ctaCategories.replaceChildren();
         nowTitle.textContent = '';
         nowMeta.textContent = '';
       } else {
         nowTitle.textContent = centreProject.title;
         nowMeta.textContent = centreProject.category.join(', ');
         ctaBtn.textContent = centreProject.casestudy ? 'View Case Study' : 'View Project';
+        ctaCategories.innerHTML = centreProject.category
+          .map(category => `<li class="cta-category">${escapeHtml(category)}</li>`)
+          .join('');
         // Pre-paint the zoom hero while the panel is hidden so the image is already
         // rendered when openZoom makes it visible — skip when zoomed so a resize
         // can't overwrite the open project's colours with a different project's.
@@ -2145,7 +2152,10 @@ function animate() {
     ctaShown = settled;
     clearTimeout(ctaTimer);
     if (settled) {
-      ctaTimer = setTimeout(() => { cta.classList.add('show'); ctaBtn.setAttribute('tabindex', '0'); }, 250);
+      ctaTimer = setTimeout(() => {
+        cta.classList.add('show');
+        ctaBtn.setAttribute('tabindex', '0');
+      }, 250);
     } else {
       cta.classList.remove('show'); ctaBtn.setAttribute('tabindex', '-1');
     }
@@ -2220,9 +2230,9 @@ function renderProjectList() {
   <a href="#${p.slug}" class="pg-card-link">
     <div class="pg-card-img"><img src="${p.src}" alt="${escapeHtml(p.alt || '')}" loading="lazy"></div>
     <div class="pg-card-overlay">
-      <div class="pg-card-tags">${catTags}</div>
       <h2 class="pg-card-title">${p.title}</h2>
       ${clientHtml}
+      <div class="pg-card-tags">${catTags}</div>
     </div>
   </a>
 </article>`;
