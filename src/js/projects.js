@@ -317,7 +317,7 @@ export const PROJECTS = [
     year:      2024,
     casestudy: false,
     category:  ['Website', 'Interactive Documentary', 'Brand Design'],
-    industry:  ['Arts & Culture', 'Media & Broadcasting', 'Indigenous Initiatives'],
+    industry:  ['Arts & Culture', 'Media & Broadcasting', 'Indigenous Initiatives', 'Health & Wellness'],
     accentColourPrimary: '#0c0e11',
     textColour: 'light',
   },
