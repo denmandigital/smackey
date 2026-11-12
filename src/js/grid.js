@@ -1815,19 +1815,24 @@ function openFilterPanel() {
   if (menuOpen) closeMenu(true);
   filterPanelOpen = true;
   navFilterBtn.setAttribute('aria-expanded', 'true');
-  nav.classList.add('filter-open');
   activeFiltersEl.classList.add('panel-open');
   filterMenuEl.removeAttribute('inert');
   filterMenuEl.setAttribute('aria-hidden', 'false');
-  // Interrupt any ongoing height transition and measure at unconstrained height
-  // so flex children aren't squeezed mid-animation (e.g. switching from about menu).
+  const startWidth = nav.getBoundingClientRect().width;
+  // Measure the expanded layout without animating, then animate width and height
+  // together from the nav's current dimensions.
   nav.style.transition = 'none';
+  nav.classList.add('filter-open');
+  nav.style.width = '';
   nav.style.height = '2000px';       // overflow:hidden keeps this invisible
   void nav.offsetHeight;             // force reflow — children now have room
+  const targetWidth = getComputedStyle(nav).width;
   const { navTopH, targetH } = filterNavHeight();
+  nav.style.width = startWidth + 'px';
   nav.style.height = navTopH + 'px'; // snap to closed height as animation start point
   void nav.offsetHeight;             // force reflow — establishes "from" for transition
   nav.style.transition = '';         // restore transition
+  nav.style.width = targetWidth;
   nav.style.height = targetH + 'px'; // animate open
 }
 
@@ -1839,6 +1844,7 @@ function closeFilterPanel() {
   filterMenuEl.setAttribute('inert', '');
   filterMenuEl.setAttribute('aria-hidden', 'true');
   filterMenuEl.style.maxHeight = '';
+  nav.style.width = '';
   nav.style.height = '';
 }
 
