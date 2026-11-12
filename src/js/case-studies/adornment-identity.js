@@ -49,16 +49,20 @@ export const blocks = [
     spanMd: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<h2>An immersive virtual museum with four interactive exhibits.</h2><ul><li>Interactive 3d clone of a House of Worth evening gown from 1900</li><li>Three short documentary films exploring the personal histories behind selected garments</li><li>Educational curriculum written for fashion students, downloadable historical sewing patterns, and a glossary of fashion history and terminology</li><li>Accessible version of the experience, built to WCAG 2.2 AA standards</li></ul><p><em>Adornment & Identity</em> is an Anthem Award finalist in the Digital & Innovative Experiences in Education, Art, and Culture category.</p>',
+    body: '<h2>An immersive virtual museum with four interactive exhibits.</h2><ul><li>Interactive 3d clone of a House of Worth evening gown from 1900</li><li>Three short documentary films exploring the personal histories behind selected garments</li><li>Educational curriculum written for fashion students, downloadable historical sewing patterns, and a glossary of fashion history and terminology</li><li>Accessible version of the experience, built to WCAG 2.2 AA standards</li></ul><p><em>Adornment & Identity</em> is an <a href="https://www.anthemawards.com/winners/list/entry/bc-society-for-the-museum-of-original-costume-adornment-identity-740071/" target="_blank">Anthem Award winner</a> in the Digital & Innovative Experiences in Education, Art, and Culture category.</p>',
   },
 
 
   { type: 'spacer', span: 12, height: 40 },
-
+  
   { type: 'image', span: 12, src: 'assets/projects/adornment/adornment-responsive.png', alt: '' },
   
   { type: 'vimeo', span: 12, aspect: '16/10', autoplay: true, src: 'https://player.vimeo.com/video/1231806231?autopause=0', title: 'Virtual museum walkthrough.' },
   
+  { type: 'spacer', span: 12, height: 40 },
+  
+  { type: 'image', span: 12, src: 'assets/projects/adornment/adornment-sitemap-user-journey.png', alt: 'Sitemap and user journey.' },
+
   { type: 'image', span: 12, src: 'assets/projects/adornment/floorplan-model.png', alt: 'Floorplan and 3D model rendering.' },
 
   {

@@ -740,6 +740,9 @@ function blockStyle(b, extra = {}) {
   if (b.span)   props['--span']    = b.span;
   if (b.spanMd) props['--span-md'] = b.spanMd;
   if (b.spanSm) props['--span-sm'] = b.spanSm;
+  if (b.offset != null) props['--offset-start'] = `calc(${b.offset} + 1)`;
+  if (b.offsetMd != null) props['--offset-md-start'] = `calc(${b.offsetMd} + 1)`;
+  if (b.offsetSm != null) props['--offset-sm-start'] = `calc(${b.offsetSm} + 1)`;
   if (b.aspect) props['--aspect']  = b.aspect;
   Object.assign(props, extra);
   const s = Object.entries(props).map(([k, v]) => `${k}:${v}`).join(';');
@@ -777,6 +780,14 @@ function renderBlock(b) {
   if (b.type === 'image') {
     const contain = b.contain ? ' cs-block--image-contain' : '';
     return `<figure class="cs-block cs-block--image${contain}"${span}><img src="${b.src}" alt="${escapeHtml(b.alt || '')}" loading="lazy"></figure>`;
+  }
+  if (b.type === 'imageGallery') {
+    const images = Array.isArray(b.images) ? b.images.filter(image => image && image.src) : [];
+    if (!images.length) return '';
+    const duration = Number.isFinite(Number(b.duration)) && Number(b.duration) > 0 ? Number(b.duration) : 4000;
+    return `<figure class="cs-block cs-block--image-gallery" data-duration="${duration}"${span}>${images.map((image, i) =>
+      `<img class="cs-gallery-slide${i === 0 ? ' is-active' : ''}" src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt || '')}" loading="${i === 0 ? 'eager' : 'lazy'}">`
+    ).join('')}</figure>`;
   }
   if (b.type === 'video') {
     const once = b.autoplay && b.loop === false;
@@ -1028,6 +1039,8 @@ function openZoom(p, skipHistory = false) {
 }
 
 let csObserver = null;
+let galleryObserver = null;
+let galleryTimers = [];
 let vimeoPlayers = [];
 let vimeoObserver = null;
 let vimeoInitToken = 0;
@@ -1037,6 +1050,12 @@ function destroyVimeoPlayers() {
   if (vimeoObserver) { vimeoObserver.disconnect(); vimeoObserver = null; }
   vimeoPlayers.forEach(({ player }) => { player.destroy().catch(() => {}); });
   vimeoPlayers = [];
+}
+
+function destroyImageGalleries() {
+  if (galleryObserver) { galleryObserver.disconnect(); galleryObserver = null; }
+  galleryTimers.forEach(timer => clearInterval(timer));
+  galleryTimers = [];
 }
 
 async function initVimeoPlayers() {
@@ -1077,6 +1096,7 @@ async function initVimeoPlayers() {
 
 function observeBlocks() {
   if (csObserver) csObserver.disconnect();
+  destroyImageGalleries();
   const els = zoomContent.querySelectorAll('.cs-block, .cs-container');
   if (!els.length) return;
   csObserver = new IntersectionObserver((entries) => {
@@ -1091,6 +1111,28 @@ function observeBlocks() {
   }, { root: zoomScroll, threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
   els.forEach(el => csObserver.observe(el));
   initVimeoPlayers();
+
+  const galleries = zoomContent.querySelectorAll('.cs-block--image-gallery');
+  if (galleries.length) {
+    galleryObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const gallery = entry.target;
+        const slides = [...gallery.querySelectorAll('.cs-gallery-slide')];
+        if (slides.length < 2 || gallery.dataset.playing === 'true') return;
+        gallery.dataset.playing = 'true';
+        let current = 0;
+        const duration = Math.max(1000, Number(gallery.dataset.duration) || 4000);
+        galleryTimers.push(setInterval(() => {
+          slides[current].classList.remove('is-active');
+          current = (current + 1) % slides.length;
+          slides[current].classList.add('is-active');
+        }, duration));
+        galleryObserver.unobserve(gallery);
+      });
+    }, { root: zoomScroll, threshold: 0.1 });
+    galleries.forEach(gallery => galleryObserver.observe(gallery));
+  }
 
   // One-shot autoplay videos: reset and replay each time they enter the viewport
   const onceVideos = zoomContent.querySelectorAll('video[data-autoplay-once]');
@@ -1114,6 +1156,7 @@ function closeZoom(skipHistory = false) {
   if (!zoomed || zoomAnim.dir < 0) return;
   if (zoomFromAccessibleList) zoom.style.opacity = '0';
   if (csObserver) { csObserver.disconnect(); csObserver = null; }
+  destroyImageGalleries();
   destroyVimeoPlayers();
   if (!skipHistory) history.pushState(null, '', withAccessibleParam(filterCaseStudies ? '/' : '/archive' + filterQueryString()));
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
@@ -1153,6 +1196,7 @@ zoomNext.addEventListener('click', () => {
 
   if (accessibleListMode) {
     if (csObserver) { csObserver.disconnect(); csObserver = null; }
+    destroyImageGalleries();
     destroyVimeoPlayers();
 
     markViewed(nextP);

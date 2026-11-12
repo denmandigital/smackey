@@ -287,7 +287,8 @@
 .cs-container,
 .cs-block {
 	--_span: var(--span, 12);
-	grid-column: span var(--_span);
+	--_start: var(--offset-start, auto);
+	grid-column: var(--_start) / span var(--_span);
 	opacity: 0;
 	transform: translateY(16px);
 	transition: opacity 0.55s ease, transform 0.55s ease;
@@ -299,10 +300,12 @@
 
 	@include tablet {
 		--_span: var(--span-md, var(--span, 12));
+		--_start: var(--offset-md-start, var(--offset-start, auto));
 	}
 
 	@include mobile {
 		--_span: var(--span-sm, var(--span-md, var(--span, 12)));
+		--_start: var(--offset-sm-start, var(--offset-md-start, var(--offset-start, auto)));
 	}
 }
 
@@ -315,15 +318,16 @@
 	align-content: start;
 
 	> .cs-block {
-		grid-column: span var(--span, 12);
+		--_start: var(--offset-start, auto);
+		grid-column: var(--_start) / span var(--span, 12);
 
-		// @include tablet {
-		// 	grid-column: span var(--span-md, var(--span, 12));
-		// }
+		@include tablet {
+			--_start: var(--offset-md-start, var(--offset-start, auto));
+		}
 
-		// @include mobile {
-		// 	grid-column: span var(--span-sm, var(--span-md, var(--span, 12)));
-		// }
+		@include mobile {
+			--_start: var(--offset-sm-start, var(--offset-md-start, var(--offset-start, auto)));
+		}
 	}
 }
 
@@ -382,6 +386,27 @@
 
 		&-contain img {
 			object-fit: contain;
+		}
+	}
+
+	&--image-gallery {
+		position: relative;
+		aspect-ratio: var(--aspect, 16 / 9);
+		overflow: hidden;
+		border-radius: var(--border-radius-cs-block);
+
+		.cs-gallery-slide {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			opacity: 0;
+			transition: opacity 0.8s ease;
+
+			&.is-active {
+				opacity: 1;
+			}
 		}
 	}
 
