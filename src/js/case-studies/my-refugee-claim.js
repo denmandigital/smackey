@@ -28,7 +28,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: '<h2>Making legalese approachable and understandable.</h2><p>Refugee claimants face a demanding legal process with little support and little familiarity with how things work in Canada. The information they need exists, but it’s scattered across government sites, legal documents, and nonprofit resources. The task was to gather that information in one place and present it in plain language, through a friendly interface claimants could trust and act on.</p>',
+    body: '<h2>Making legal language clear and approachable.</h2><p>Refugee claimants face a demanding legal process with little support and little familiarity with how things work in Canada. The information they need exists, but it’s scattered across government sites, legal documents, and nonprofit resources. The task was to gather that information in one place and present it in plain language, through a friendly interface claimants could trust and act on.</p>',
   },
   // Approach text + UI screenshot — 4 + 8
   {

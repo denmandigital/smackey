@@ -17,7 +17,7 @@ export const blocks = [
     children: [
       { type: 'text', span: 6, heading: 'Client', body: 'British Columbia Construction Association' },
       { type: 'text', span: 6, heading: 'Agency', body: 'Denman Digital' },
-      { type: 'text', span: 6, heading: 'Type', body: 'LMS, self-directed training' },
+      { type: 'text', span: 6, heading: 'Type', body: 'E-Learning (LMS), Self-directed training' },
       { type: 'text', span: 6, heading: 'Years', body: '2023—2025' },
       { type: 'text', span: 12, heading: 'Roles', body: '<ul><li>Instructional design</li><li>UX / UI design direction</li><li>Technical direction</li></ul>' },
     ],

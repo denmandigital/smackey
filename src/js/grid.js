@@ -1844,17 +1844,24 @@ function closeFilterPanel() {
 
 function buildFilterMenu() {
   const now = new Date().getFullYear();
+  const dateCount = range => ARCHIVE_PROJECTS.filter(p => {
+    if (p.year === null) return false;
+    if (range === 'recent') return p.year >= now - 4;
+    if (range === 'mid') return p.year >= now - 10 && p.year <= now - 5;
+    return p.year <= now - 11;
+  }).length;
+  const chipContent = (label, count) => `<span class="filter-chip-label">${label}</span><span class="filter-chip-count" aria-hidden="true">${count}</span>`;
   const dateSection = `<div class="filter-section">
   <span class="filter-section-label" id="filter-label-date">Date</span>
   <div class="filter-chips" role="group" aria-labelledby="filter-label-date">
-    <button class="filter-chip" data-daterange="recent" aria-pressed="false">${now}–${now - 4}</button>
-    <button class="filter-chip" data-daterange="mid" aria-pressed="false">${now - 5}–${now - 10}</button>
-    <button class="filter-chip" data-daterange="older" aria-pressed="false">${now - 11} &amp; earlier</button>
+    <button class="filter-chip" data-daterange="recent" aria-pressed="false">${chipContent(`${now}–${now - 4}`, dateCount('recent'))}</button>
+    <button class="filter-chip" data-daterange="mid" aria-pressed="false">${chipContent(`${now - 5}–${now - 10}`, dateCount('mid'))}</button>
+    <button class="filter-chip" data-daterange="older" aria-pressed="false">${chipContent(`${now - 11} &amp; earlier`, dateCount('older'))}</button>
   </div>
 </div>`;
 
   const catChips = ALL_CATEGORIES.map(c =>
-    `<button class="filter-chip" data-category="${c}" aria-pressed="false">${c}</button>`
+    `<button class="filter-chip" data-category="${c}" aria-pressed="false">${chipContent(c, ARCHIVE_PROJECTS.filter(p => p.category.includes(c)).length)}</button>`
   ).join('');
   const catSection = `<div class="filter-section">
   <span class="filter-section-label" id="filter-label-type">Project type</span>
@@ -1862,7 +1869,7 @@ function buildFilterMenu() {
 </div>`;
 
   const indChips = ALL_INDUSTRIES.map(i =>
-    `<button class="filter-chip" data-industry="${i}" aria-pressed="false">${i}</button>`
+    `<button class="filter-chip" data-industry="${i}" aria-pressed="false">${chipContent(i, ARCHIVE_PROJECTS.filter(p => p.industry.includes(i)).length)}</button>`
   ).join('');
   const indSection = `<div class="filter-section">
   <span class="filter-section-label" id="filter-label-industry">Industry</span>
