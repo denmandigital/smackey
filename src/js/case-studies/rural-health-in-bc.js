@@ -32,7 +32,7 @@ export const blocks = [
     span: 12,
     center: true,
     variant: 'callout',
-    body: '<p>RCCbc approached us to address significant design and technical concerns they had with their website and identify areas for improvement. We joined with the organization’s communications team to understand their strategic objectives and after a full design, content, and technology audit, we created and implemented a website refresh roadmap that aligned with their goals.</p>',
+    body: '<p>RCCbc approached us to address significant design and technical concerns they had with their website and identify areas for improvement. We joined with the organization’s communications team to understand their strategic objectives and after a full design, content, and technology audit, we created and implemented on a website refresh roadmap that aligned with their goals.</p>',
     
   },
 
@@ -58,16 +58,19 @@ export const blocks = [
 
   { type: 'image', span: 8, spanSm: 12, offset: 2, offsetSm: 0, src: 'assets/projects/rccbc/RTVS-HHN-lockup.png', alt: 'Real-Time Virtual Support / HHN Sub-brand lockup' },
 
+
   {
     type: 'text',
     span: 6,
+    spanSm: 12,
     variant: 'callout',
-    body: '<h2>RTVS Sub-Brand Refresh</h2><p>The refreshed identity anchors Real-Time Virtual Support (RTVS) under the Rural Coordination Centre of BC (RCCbc) as it evolves into the Health Hybrid Network (HHN). It keeps RCCbc’s hummingbird symbol, created by Coast Salish artist Douglas “Bear,” which is familiar to the RTVS community and rich in meaning. The palette extends RCCbc’s primary colours with nature-infused tones drawn from land, water, and natural systems, and each peer pathway has its own unique colour.</p>',
+    body: '<h2>RTVS Sub-Brand Refresh</h2><p>Real-Time Virtual Support (RTVS) peer pathways are for physicians, residents, nurse practitioners, nurses, midwives—and other health care providers—in rural, remote, and First Nations communities in BC. The refreshed identity anchors RTVS under the parent brand as it slowly evolves into the Health Hybrid Network (HHN). It keeps RCCbc’s hummingbird symbol, created by Coast Salish artist Douglas “Bear,” and extends RCCbc’s palette with nature-infused tones, giving each peer pathway its own colour.</p>',
   },
   
   {
     type: 'imageGallery',
     span: 6,
+    spanSm: 12,
     aspect: '4/3',
     duration: 3000,
     images: [
@@ -79,6 +82,7 @@ export const blocks = [
   {
     type: 'imageGallery',
     span: 6,
+    spanSm: 12,
     aspect: '4/3',
     duration: 3000,
     images: [
@@ -93,11 +97,18 @@ export const blocks = [
   {
     type: 'text',
     span: 6,
+    spanSm: 12,
     variant: 'callout',
     body: '<h2>RTVS Peer Pathways</h2><p>The hexagon is widely seen as a symbol of balance, harmony, and structure. Its six equal sides convey stability and equilibrium, qualities that mirror how the RTVS peer pathways connect to one another. Building on this, we developed a flexible design system for the Instant Access, Quick Access, and Consultation to Conversation pathways, one that adapts to a range of formats across every touchpoint.</p>',
   },
 
-
+  {
+    type: 'text',
+    span: 12,
+    variant: 'callout',
+    body: '<p>A proposal for BC’s Ministry of Health helped secure new funding for 24/7 coverage for the CHARLiE and MaBAL pediatric and maternity pathways as of July 1, 2026, stabilizing round-the-clock support for rural and remote providers.</p>',
+  },
   { type: 'image', span: 12, src: 'assets/projects/rccbc/RTVS-comms-package.png', alt: 'RCCbc Communications Package' },
+
 
 ];
