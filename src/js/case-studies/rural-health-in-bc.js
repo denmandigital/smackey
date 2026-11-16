@@ -64,7 +64,7 @@ export const blocks = [
     span: 6,
     spanSm: 12,
     variant: 'callout',
-    body: '<h2>RTVS Sub-Brand Refresh</h2><p>Real-Time Virtual Support (RTVS) peer pathways are for physicians, residents, nurse practitioners, nurses, midwives—and other health care providers—in rural, remote, and First Nations communities in BC. The refreshed identity anchors RTVS under the parent brand as it slowly evolves into the Health Hybrid Network (HHN). It keeps RCCbc’s hummingbird symbol, created by Coast Salish artist Douglas “Bear,” and extends RCCbc’s palette with nature-infused tones, giving each peer pathway its own colour.</p>',
+    body: '<h2>RTVS Rebrand</h2><p>Real-Time Virtual Support (RTVS) peer pathways are for physicians, residents, nurse practitioners, nurses, midwives—and other health care providers—in rural, remote, and First Nations communities in BC. The refreshed identity anchors RTVS under the parent brand as it slowly evolves into the Health Hybrid Network (HHN). It keeps RCCbc’s hummingbird symbol, created by Coast Salish artist Douglas “Bear,” and extends RCCbc’s palette with nature-infused tones, giving each peer pathway its own colour.</p>',
   },
   
   {
