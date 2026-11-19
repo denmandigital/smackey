@@ -39,6 +39,16 @@ export const blocks = [
     heading: 'Solution',
     body: '<p>A mobile culture training app called <em>Cool or Tool?</em> was created to help crew workers understand what is acceptable worksite behaviour through fun, light-hearted game play. Its 20 real-life workplace scenarios depicted model behavior or actions that compromised safety and productivity. Players judged the action and decided if the behaviour exhibited was “cool” or if the character at the center of the scene was acting like a “tool.”</p>',
   },
+  { type: 'spacer', span: 12, height: 40 },
+  {
+    type: 'text',
+    span: 12,
+    variant: 'callout',
+    body: '<h2>User Journey Mapping</h2><p>Depending on the user’s role and engagement level, the journey through the app varied. For instance, after signup employers navigated to a dashboard to manage employees and monitor progress, while employees focused on completing scenarios and tracking their scores.</p>',
+  },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/coolortool/cool-or-tool-user-journey-1.png', alt: 'User Journey Map - Employer' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/coolortool/cool-or-tool-user-journey-2.png', alt: 'User Journey Map - Employeee' },
+  { type: 'image', span: 4, spanSm: 12, src: 'assets/projects/coolortool/cool-or-tool-user-journey-3.png', alt: 'User Journey Map - Public' },
 
   { type: 'spacer', span: 12, height: 40 },
   { type: 'image', span: 12, src: 'assets/projects/coolortool/cool-or-tool-screens.png', alt: '' },

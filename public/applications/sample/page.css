@@ -33,27 +33,65 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24px;
   border-bottom: 1px solid var(--line);
 }
 
-.wordmark {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.08em;
+.brand-lockup {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark { flex: 0 0 auto; }
+
+.brand-icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  opacity: 0.75;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.brand-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.brand-role {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.035em;
+}
+
+.header-links {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: clamp(16px, 3vw, 38px);
+}
+
+.header-links a {
+  font-size: 11px;
+  font-weight: 600;
   text-decoration: none;
 }
 
-.wordmark span { color: var(--accent); }
+.header-links a span { padding-left: 4px; color: var(--accent); }
 
-.back-link,
 .contact-link,
 .site-footer a {
   font-size: 12px;
   font-weight: 600;
   text-decoration: none;
 }
-
-.back-link span { margin-right: 8px; color: var(--accent); }
 
 main { padding-top: clamp(64px, 10vw, 142px); }
 
@@ -242,7 +280,11 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
 @media (max-width: 600px) {
   body { padding-right: 22px; padding-left: 22px; }
-  .site-header { min-height: 68px; }
+  .site-header { min-height: 68px; gap: 12px; }
+  .brand-lockup { gap: 8px; }
+  .brand-role { max-width: 180px; font-size: 9px; }
+  .header-links { gap: 12px; }
+  .header-links a { font-size: 10px; }
   main { padding-top: 72px; }
   h1 { max-width: 540px; font-size: clamp(52px, 15vw, 78px); }
   .intro-bottom { align-items: flex-start; flex-direction: column; gap: 20px; }
