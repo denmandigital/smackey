@@ -192,6 +192,7 @@
 	position: relative;
 	color: var(--ink);
 	flex-shrink: 0;
+	transform: rotate(90deg);
 
 	circle {
 		fill: var(--bg);
