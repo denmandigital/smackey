@@ -71,6 +71,7 @@ export const blocks = [
   {
     type: 'text',
     span: 6,
+    spanSm: 12,
     variant: 'callout',
     center: true,
     body: 'BCCA’s trainers are at the centre of the experience. We worked with them to script, art direct, and rehearse each video segment, capturing the intimacy of in-person learning while delivering key takeaways in a clear, supportive way.',

@@ -6,7 +6,7 @@ export const blocks = [
     spanMd: 7,
     spanSm: 12,
     variant: 'intro',
-    body: 'Foran Mining is a copper-zinc-gold-silver exploration and development company focused on sustainable mining, community partnership and circular economies. They are developing the world’s first carbon neutral copper mine at McIlvenna Bay in Saskatchewan, Canada.',
+    body: 'Foran Mining is a copper-zinc-gold-silver exploration and development company focused on sustainable mining. They are developing the world’s first carbon neutral copper mine at McIlvenna Bay in Saskatchewan, Canada.',
   },
   {
     type: 'container',
@@ -28,7 +28,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Challenge',
-    body: 'In a traditionally staid resource sector, Foran wanted to distinguish itself and communicate its vision for sustainable mining to investors, stakeholders, prospective employees, and Indigenous partners. Foran needed a website that balanced bold ambition with the technical detail investors rely on.',
+    body: 'In a traditionally staid resource sector, Foran wanted to distinguish itself and communicate its vision for sustainable mining to investors, stakeholders, prospective employees, and Indigenous partners. Foran needed a brand, communications collateral, and website that balanced bold ambition with the technical detail investors rely on.',
   },
   // Approach text + UI screenshot — 4 + 8
   {
@@ -37,7 +37,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Approach',
-    body: 'Foran’s approach to mining is built on sustainable value chains and circular economies. Working with Foran’s appointed steering committee, our strategy centred on key concepts of strength, commitment, and the infinite.',
+    body: 'Foran’s approach to mining is built on sustainable value chains, community engagement, and circular economies. Working with Foran’s appointed steering committee, to establish the brand and visual identity,our strategy centred on key concepts of strength, commitment, and the infinite.',
   },
 
   {
@@ -46,7 +46,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Solution',
-    body: '<p>A ring symbol was designed to express Foran’s brand ideas and the future the company is working to create. Flexible enough for many uses, it finds its principal expression as the “o” in Foran’s wordmark.</p><p>I directed the brand identity, user experience, and visual design of the website. Hands-on, I designed and built an interactive scrollytelling experience for the Ethos section, and created an illustrated, interactive map explaining Foran’s mining infrastructure.</p>',
+    body: '<p>A ring symbol was chosen to express Foran’s brand ideas and the future the company is working to create. Flexible enough for many uses, it finds its principal expression as the “o” in Foran’s wordmark.</p><p>I directed the brand identity design, user experience, and visual design of the website. Hands-on, I designed and built an interactive scrollytelling experience for the Ethos section, and created an illustrated, interactive, 3d isometric map explaining Foran’s mining infrastructure.</p>',
   },
 
   // Outcome callout
