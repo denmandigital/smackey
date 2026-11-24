@@ -327,8 +327,10 @@
 
 .accessibility-toggle {
 	position: fixed;
-	top: 49px;
-	right: 48px;
+	bottom: 32px;
+	left: 50%;
+	transform: translateX(-50%);
+	margin: 0 auto;
 	z-index: 9;
 	display: inline-flex;
 	align-items: center;

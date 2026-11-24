@@ -1448,6 +1448,7 @@ window.addEventListener('resize', () => {
 updateAboutFade();
 
 function setAccessibleListMode(enabled, updateUrl = false) {
+  console.log('setAccessibleListMode');
   enabled = mobileAccessibleOnly() || enabled;
   const isEnabling = enabled && !accessibleListMode;
   const closingAboutPanel = isEnabling && menuOpen;
@@ -2436,6 +2437,7 @@ function observeProjectEntrances() {
 }
 
 function renderProjectList() {
+  console.log('renderProjectList');
   if (document.body.classList.contains('case-studies-page')) {
     const projectsBySlug = new Map(activeProjects.map(project => [project.slug, project]));
     const featured = FEATURED_CASE_STUDIES
