@@ -46,7 +46,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Solution',
-    body: '<p>A ring symbol was chosen to express Foran’s brand ideas and the future the company is working to create. Flexible enough for many uses, it finds its principal expression as the “o” in Foran’s wordmark.</p><p>I directed the brand identity design, user experience, and visual design of the website. Hands-on, I designed and built an interactive scrollytelling experience for the Ethos section, and created an illustrated, interactive, 3d isometric map explaining Foran’s mining infrastructure.</p>',
+    body: '<p>A ring symbol was chosen to express Foran’s brand ideas and the future the company is working to create. Flexible enough for many uses, it finds its principal expression as the “o” in Foran’s wordmark.</p><p>I directed the brand identity design, user experience, and visual design of the website. Hands-on, I designed and built an interactive scrollytelling experience for the Ethos section, and created an illustrated, interactive, 3D isometric map explaining Foran’s mining infrastructure.</p>',
   },
 
   // Outcome callout
