@@ -1481,7 +1481,7 @@ function setAccessibleListMode(enabled, updateUrl = false) {
 }
 
 window.addEventListener('resize', () => {
-  setAccessibleListMode(accessibleParamEnabled() || routeDefaultsToAccessibleList());
+  //setAccessibleListMode(accessibleParamEnabled() || routeDefaultsToAccessibleList());
 });
 
 accessibleViewToggle.addEventListener('click', () => setAccessibleListMode(!accessibleListMode, true));
@@ -2435,6 +2435,8 @@ function observeProjectEntrances() {
 
   cards.forEach(card => projectEntranceObserver.observe(card));
 }
+
+
 
 function renderProjectList() {
   if (document.body.classList.contains('case-studies-page')) {
