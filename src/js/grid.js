@@ -1365,7 +1365,8 @@ function updateFadeTargets(targets, topEdge, fadeStart = 20) {
 
 function updateAboutFade() {
   const panelRect = navMenu.getBoundingClientRect();
-  updateFadeTargets(aboutFadeTargets, panelRect.top, 20);
+  //updateFadeTargets(aboutFadeTargets, panelRect.top, 20);
+  updateFadeTargets(aboutFadeTargets, 20, 20);
 
   const experienceBand = navMenu.querySelector('.about-experience-band');
   if (!experienceBand) return;
@@ -1416,8 +1417,8 @@ function observeAboutEntrances() {
 
 function refreshHomepageFadeTargets() {
   homepageFadeTargets = [...document.querySelectorAll([
-    '#intro .case-hero-heading',
-    '#intro .case-hero-copy',
+    //'#intro .case-hero-heading',
+    //'#intro .case-hero-copy',
     '#intro .intro-content--archive',
   ].join(', '))];
   scheduleHomepageFade();

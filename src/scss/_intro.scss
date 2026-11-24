@@ -97,7 +97,7 @@
 
 .intro-desc {
 	//font-size: 15px;
-	color: rgba(0, 0, 0, 0.5);
+	color: var(--ink); // rgba(0, 0, 0, 0.5);
 	letter-spacing: -0.015em;
 	// margin: 0 0 20px;
 	font-weight: 400;
@@ -106,7 +106,7 @@
 	font-size: clamp(0.81rem, calc(0.664rem + 0.592vw), 1.38rem);
 
 	@include mobile { 
-		font-size: 0.95rem;
+		font-size: 17px;
 	}
 	@media (orientation: portrait) {
 		@include tablet-down {
@@ -269,6 +269,9 @@
 		text-wrap: pretty;
 		text-align: center;
 		padding: 0 4%;
+		@include mobile { 
+			padding: 0;
+		}
 	}
 }
 
