@@ -12,7 +12,7 @@ body {
 }
 
 body {
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: var(--ink);
 	-webkit-font-smoothing: antialiased;
 	cursor: grab;
@@ -48,7 +48,7 @@ body {
 	border: 0;
 }
 
-:focus-visible {
+:where(a, button, input, select, textarea, [tabindex]):not([tabindex="-1"]):focus-visible {
   outline: 1px solid var(--bg);
   outline-offset: 3px;
   border-radius: 10px;
@@ -67,7 +67,7 @@ body {
 	}
 }
 
-#nav *:focus-visible, 
+#nav :where(a, button, input, select, textarea, [tabindex]):not([tabindex="-1"]):focus-visible,
 #introAboutBtn:focus-visible {
 	outline: 1px solid var(--muted);
 }

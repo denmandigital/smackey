@@ -38,7 +38,7 @@
 
 @include desktop {
 	#nav.filter-open {
-		width: min(900px, calc(100vw - 72px));
+		width: min(1400px, calc(100vw - 72px));
 	}
 
 	#nav.filter-open #filterMenu {
@@ -192,7 +192,7 @@
 	position: relative;
 	color: var(--ink);
 	flex-shrink: 0;
-	transform: rotate(90deg);
+	transition: opacity 0.2s ease, visibility 0s linear;
 
 	circle {
 		fill: var(--bg);
@@ -209,6 +209,13 @@
 		display: block;
 		overflow: visible;
 	}
+}
+
+#navFilterBtn.is-hidden {
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity 0.2s ease, visibility 0s linear 0.2s;
 }
 
 /* Active filter count badge */
@@ -335,12 +342,20 @@
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+	transition: opacity 0.2s ease, visibility 0s linear;
 
 	> img {
 		width: 20px;
 		height: 20px;
 		display: block;
 	}
+}
+
+.accessibility-toggle.is-hidden {
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity 0.2s ease, visibility 0s linear 0.2s;
 }
 
 .switch-track {

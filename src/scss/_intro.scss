@@ -42,14 +42,11 @@
 
 .intro-divider {
 	display: block;
-	width: 45%;
-	height: 0.5px;
+	width: 35px;
+	height: 1px;
 	margin: 1vw auto;
-	background: var(--grey-light);
-	-webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-	mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-	border-radius: 3px;
-	opacity: 0.25;
+	object-fit: contain;
+	opacity: 1;
 	@include mobile {
 		margin: 2vw auto;
 	}
@@ -103,7 +100,8 @@
 	color: rgba(0, 0, 0, 0.5);
 	letter-spacing: -0.015em;
 	// margin: 0 0 20px;
-	font-weight: 500;
+	font-weight: 400;
+	line-height: 1.4;
 	margin-bottom: 1.2vw;
 	font-size: clamp(0.81rem, calc(0.664rem + 0.592vw), 1.38rem);
 
@@ -116,6 +114,19 @@
 		}
 	}
 	
+}
+
+.intro-byline {
+	margin-bottom: 0.5vw;
+	font-size: clamp(0.72rem, calc(0.65rem + 0.3vw), 0.95rem);
+	letter-spacing: 0.015em;
+}
+
+.intro-summary {
+	max-width: 42ch;
+	margin-bottom: 0;
+	font-size: clamp(0.78rem, calc(0.68rem + 0.4vw), 1.05rem);
+	line-height: 1.4;
 }
 
 #introAboutBtn {
@@ -168,9 +179,14 @@
 	to   { opacity: 1; }
 }
 
+@keyframes introWordBlur {
+	from { filter: blur(3px); }
+	to   { filter: blur(0); }
+}
+
 @keyframes introDividerFade {
 	from { opacity: 0; }
-	to   { opacity: 0.25; }
+	to   { opacity: 1; }
 }
 
 // All animated elements start hidden
@@ -178,19 +194,21 @@
 #intro.intro-animating .intro-title .light,
 #intro.intro-animating .intro-divider,
 #intro.intro-animating .intro-desc,
+#intro.intro-animating .case-hero-eyebrow,
 #intro.intro-animating #introAboutBtn {
 	opacity: 0;
 }
 
 // Dark words — stagger immediately one after the other (case studies)
-#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(2) {
+#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(1) {
 	animation: introWordFade 0.3s ease 0.3s both;
 }
-#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(4) {
+#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(3) {
 	animation: introWordFade 0.3s ease 0.6s both;
 }
-#intro.intro-animating.show .intro-content--casestudies .intro-title .dark:nth-child(6) {
-	animation: introWordFade 0.3s ease 0.9s both;
+
+#intro.intro-animating.show .case-hero-eyebrow {
+	animation: introWordFade 0.5s ease 0.9s both;
 }
 
 // Dark words — stagger immediately one after the other (archive)
@@ -203,7 +221,7 @@
 
 // Light text — starts at the same time as dark, fades in slowly
 #intro.intro-animating.show .intro-title .light {
-	animation: introWordFade 6s ease 0.3s both;
+	animation: introWordFade 6s ease 0.3s both, introWordBlur 0.4s ease 0.3s both;
 }
 
 // Divider, desc, CTA — after the title text
@@ -222,6 +240,11 @@
 	display: none; 
 	// max-width: 80%;
 	max-width: 640px;
+	.intro-divider {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
 	.archive-chip {
 		display: inline-block;
 		font-size: 11px;

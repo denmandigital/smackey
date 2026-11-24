@@ -5,7 +5,7 @@
 	top: 36px;
 	left: 50%;
 	transform: translateX(-50%);
-	width: var(--card-w, 480px);
+	width: min(1400px, calc(100vw - 72px));
 	z-index: 10;
 	display: flex;
 	flex-direction: column;
@@ -59,28 +59,71 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0 25px 0 22px;
+	padding: 0 25px 0 25px;
 	height: 62px;
 	flex-shrink: 0;
 }
 
 #navMenu {
+	--nav-panel-gutter: 60px;
+	--nav-scrollbar-width: 8px;
+	--experience-track-start: 0px;
+	--experience-track-end: 0px;
+	--experience-track-color: transparent;
+	--nav-scrollbar-thumb: rgba(0, 0, 0, 0.28);
 	flex: 1;
 	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: thin;
+	scrollbar-color: var(--nav-scrollbar-thumb) var(--experience-track-color);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 0 60px;
+	// padding: 0 var(--nav-panel-gutter);
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
+
+	&::-webkit-scrollbar { width: var(--nav-scrollbar-width); }
+	&::-webkit-scrollbar-track {
+		background: linear-gradient(
+			to bottom,
+			transparent 0,
+			transparent var(--experience-track-start),
+			#191a1d var(--experience-track-start),
+			#191a1d var(--experience-track-end),
+			transparent var(--experience-track-end),
+			transparent 100%
+		);
+	}
+	&::-webkit-scrollbar-thumb {
+		background: var(--nav-scrollbar-thumb);
+		border-radius: 8px;
+	}
 	
 }
 
-#navFilter {
+@supports selector(#navMenu::-webkit-scrollbar-track) {
+	#navMenu { scrollbar-color: auto; }
+}
+
+.nav-controls {
+	--nav-controls-gap: 10px;
+	--nav-filter-center-offset: 16px;
 	position: absolute;
 	left: 50%;
-	transform: translateX(-50%);
+	// The hidden archive filter button keeps its layout slot in Select Work.
+	// Offset by half that slot so the Select Work / Archive toggle stays centered.
+	transform: translateX(calc(-50% + var(--nav-filter-center-offset)));
+	display: flex;
+	align-items: center;
+	gap: var(--nav-controls-gap);
+}
+
+#navFilter {
+	position: relative;
+	left: auto;
+	transform: none;
 	display: flex;
 	align-items: center;
 	gap: 2px;
@@ -161,22 +204,33 @@
 
 .brand {
 	transition: opacity 0.4s ease;
-	font-size: 13px;
-	letter-spacing: 0.3em;
-	text-transform: uppercase;
-
-	#brandCanvas {
-		display: block;
-		opacity: 0.75;
-		cursor: pointer;
+	.brand-link {
+		display: flex;
+		align-items: baseline;
+		gap: 7px;
+		color: var(--ink);
+		text-decoration: none;
+		white-space: nowrap;
 	}
 
-	small {
-		display: block;
-		color: var(--muted);
-		letter-spacing: 0.16em;
-		font-size: 10px;
-		margin-top: 6px;
+	.brand-name {
+		font-family: var(--serif-font);
+		font-size: 22px;
+		font-style: italic;
+		line-height: 1;
+	}
+
+	.brand-role {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1;
+		opacity: 0.6;
+	}
+
+	.brand-link:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 5px;
+		border-radius: 2px;
 	}
 }
 

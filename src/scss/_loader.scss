@@ -19,6 +19,18 @@
 	height: 56px;
 }
 
+#smPreloader {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 200px;
+	height: 169px;
+	display: block;
+	opacity: 0.75;
+	transform: translate(-50%, -50%);
+	mix-blend-mode: darken;
+}
+
 #loaderCanvas {
 	position: absolute;
 	top: 50%;
@@ -36,7 +48,7 @@
 	transform: rotate(-90deg);
 	overflow: visible;
 	fill: none;
-	opacity: 0.5;
+	opacity: 0;
 }
 
 .loader-ring-track,

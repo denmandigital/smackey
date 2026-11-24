@@ -32,7 +32,7 @@
   <title>Steve Mackey — Design Leadership and Digital Strategy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <meta id="metaDesc" name="description"
     content="Steve Mackey — Design Leadership and Digital Strategy. A portfolio of work spanning product and experience design primarily for nonprofit, media, cultural, and public-sector organizations." />
@@ -88,7 +88,8 @@
 
   <div id="loader">
     <div class="loader-mark">
-      <canvas id="loaderCanvas" aria-hidden="true"></canvas>
+      <!-- <canvas id="loaderCanvas" aria-hidden="true"></canvas> -->
+      <img src="sm-preloader.svg" id="smPreloader" alt="" aria-hidden="true">
       <svg class="loader-ring" viewBox="0 0 56 56" aria-hidden="true">
         <circle class="loader-ring-track" cx="28" cy="28" r="25" />
         <circle id="loaderProgress" class="loader-ring-progress" cx="28" cy="28" r="25" />
@@ -99,15 +100,18 @@
   <nav id="nav">
     <div id="navTop">
       <div class="brand">
-        <canvas id="brandCanvas" aria-hidden="true"></canvas>
+        <a class="brand-link" href="/" aria-label="Steve Mackey — Select Work">
+          <span class="brand-name">Steve Mackey <span aria-hidden="true">—</span></span>
+          <span class="brand-role">Design Leadership and Digital Strategy</span>
+        </a>
       </div>
-      <div id="navFilter">
-        <span id="navFilterIndicator" aria-hidden="true"></span>
-        <a class="filter-btn active" href="/" data-filter="casestudies">Case Studies</a>
-        <a class="filter-btn" href="/archive" data-filter="all">Archive</a>
-      </div>
-      <div class="nav-actions">
-        <button id="navFilterBtn" aria-label="Filter projects" aria-expanded="false" aria-controls="filterMenu" data-tooltip="Filter Projects">
+      <div class="nav-controls">
+        <div id="navFilter">
+          <span id="navFilterIndicator" aria-hidden="true"></span>
+          <a class="filter-btn active" href="/" data-filter="casestudies">Select Work</a>
+          <a class="filter-btn" href="/archive" data-filter="all">Archive</a>
+        </div>
+        <button id="navFilterBtn" class="is-hidden" aria-label="Filter projects" aria-expanded="false" aria-controls="filterMenu" aria-hidden="true" tabindex="-1" data-tooltip="Filter Projects">
           <svg width="22" height="15" viewBox="0 0 22 15" fill="none" aria-hidden="true">
             <line x1="0" y1="0.75" x2="22" y2="0.75" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
             <circle cx="7" cy="0.75" r="2.5" stroke="currentColor" stroke-width="1" />
@@ -118,6 +122,8 @@
           </svg>
           <span id="filterBadge" aria-hidden="true"></span>
         </button>
+      </div>
+      <div class="nav-actions">
         <button id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu" data-tooltip="About Me">
           <span></span>
           <span></span>
@@ -129,180 +135,179 @@
       <!-- populated by grid.js -->
     </div>
     <div id="navMenu" aria-hidden="true">
-      <div class="about-inner">
-        <div class="about-bio">
-          <h2 class="about-name">Steve Mackey</h2>
-
-          <p class="about-text">I work at the intersection of digital strategy, user experience design and technology, building digital experiences for growing companies and organizations navigating complex change. I shape product direction, align stakeholders, and lead cross-functional teams to deliver purposeful, high-impact work.</p>
-
-          <p class="about-text">For 10 years, as co-owner and partner at <a href="https://www.denmandigital.com/" target="_blank" rel="noopener">Denman Digital</a>, I set the creative standard, connected design to business goals, and built and led a team working primarily with nonprofit, education, healthcare, media, cultural, and public-sector organizations. Following Denman’s acquisition in early 2026, I’m looking for a new opportunity to lead a team doing meaningful work.</p>
-
-          <p class="about-text">Projects I’ve led or contributed to have won Webby, One Show Interactive, Communication Arts, Canadian Screen, FWA, Applied Arts, and Summit Awards, among others. Recent Anthem Awards include <em>Adornment & Identity</em> (2026), and <em>My Refugee Claim</em> (2025).</p>
-
-          <p class="about-text">See select <a href="/">case studies</a> or explore the <a href="/archive">archive</a> of my work history.</p>
-        </div>
-        <div class="about-connect">
-          <div class="about-photo">
-            <img src="/assets/steve-mackey-2.png" alt="Steve Mackey" fetchpriority=high>
+      <section class="about-hero" aria-label="About Steve Mackey">
+        <div class="about-avatar-row">
+          <div class="about-avatar">
+            <img src="/assets/steve-mackey-2.png" alt="Steve Mackey" fetchpriority="high">
           </div>
-          <div class="about-contact hide-sm">
-            <h3 class="about-heading about-role">Connect with me</h3>
+          <p class="about-greeting">Hey, I’m Steve <span aria-hidden="true">👋</span></p>
+        </div>
+        <div class="about-title-column">
+          <h2 class="about-name about-title">About me</h2>
+          <div class="about-contact">
+            <h3 class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Connect</h3>
             <ul>
               <li><a class="js-email" data-u="steve" data-d="smackey.ca">steve&#64;smackey&#46;ca</a></li>
               <li><a href="https://www.linkedin.com/in/smackey" target="_blank" rel="noopener">LinkedIn</a></li>
             </ul>
           </div>
         </div>
-      </div>
-      <div class="about-clients">
-        <h3 class="about-heading">Clients</h3>
-        <div class="clients-grid">
-          <img src="/assets/clients/bch.png" alt="BC Hydro Power Smart">
-          <img src="/assets/clients/reel-canada.png" alt="Reel Canada">
-          <img src="/assets/clients/docorg.png" alt="Documentary Organization of Canada">
-          <img src="/assets/clients/bcca.png" alt="BCCA">
-          <img src="/assets/clients/cbc-news.png" alt="CBC News">
-          <img src="/assets/clients/iso.png" alt="Indigenous Screen Office">
-          <img src="/assets/clients/nfb.png" alt="National Film Board of Canada">
-          <img src="/assets/clients/volleyball-canada.png" alt="Volleyball Canada">
-          <img src="/assets/clients/discovery.png" alt="Discovery Channel">
-          <img src="/assets/clients/bc.png" alt="BC Government">
-          <img src="/assets/clients/iscbc.png" alt="Invasive Species Council of BC">
-          <img src="/assets/clients/coquitlam.png" alt="City of Coquitlam">
-          <img src="/assets/clients/foran.png" alt="Foran Mining">
-          <img src="/assets/clients/aptn.png" alt="APTN">
-          <img src="/assets/clients/kinbrace.png" alt="Kinbrace Community Society">
-          <img src="/assets/clients/knowledge.png" alt="Knowledge Network">
-          <img src="/assets/clients/realworld.png" alt="Real World Films">
-          <img src="/assets/clients/hub.png" alt="The Hub"> 
-          <img src="/assets/clients/telus.png" alt="Telus">
-          <img src="/assets/clients/documentary.png" alt="Documentary">
+        <div class="about-story-scroll" aria-label="About Steve">
+          <section class="about-story-section">
+            <div class="about-story-copy">
+              <h3 class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">A foundation in creative technology.</h3>
+              <p>I began my career as a hybrid designer and developer, specializing in interactive storytelling at CBC Radio 3, NFB Interactive, and several independent digital agencies. Working across creative and technical disciplines shaped my approach to problem-solving and laid the groundwork for the multidisciplinary leadership roles that followed.</p>
+            </div>
+          </section>
+          <section class="about-story-section">
+            <div class="about-story-copy">
+              <h3 class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Building and leading a digital agency.</h3>
+              <p>As co-owner and Director of Design &amp; Technology at <a href="https://denman.digital" target="_blank" rel="noopener noreferrer">Denman&nbsp;Digital</a>, I spent a decade helping build and lead an award-winning agency acquired in 2026. I led digital strategy, experience design, and technical direction, setting the creative standard for work delivered to more than 50 organizations across the nonprofit, education, healthcare, media, cultural, and public sectors.</p>
+            </div>
+          </section>
+          <section class="about-story-section">
+            <div class="about-story-copy">
+              <h3 class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Simplifying complex challenges.</h3>
+              <p>I work closely with clients and stakeholders to understand their goals, drawing on research and data to identify opportunities, inform design decisions, and measure success. From discovery and experience strategy to design systems and technical delivery, I connect big-picture thinking with practical execution.</p>
+            </div>
+          </section>
+          <section class="about-story-section">
+            <div class="about-story-copy">
+              <h3 class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Creating the conditions for great work.</h3>
+              <p>I believe great work happens when talented people share a clear sense of purpose and direction. I bring cross-functional teams together around a common vision, fostering a collaborative culture where people feel supported, take ownership, and contribute their strengths. Through mentorship, clear direction, and constructive feedback, I help teams grow and deliver their best work.</p>
+            </div>
+          </section>
+          <section class="about-story-section">
+            <div class="about-story-copy">
+              <h3 class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Purpose beyond the work.</h3>
+              <p>What motivates me most is helping organizations that do meaningful work succeed. I enjoy tackling complex challenges and finding ways to advance their goals, inspire their audiences, and better serve their communities. When those organizations succeed, everyone benefits.</p>
+            </div>
+          </section>
         </div>
+      </section>
+      <div class="about-clients">
+        <h2 class="about-heading" id="about-clients-heading">Select Clients</h2>
+
+          <section class="client-group" aria-labelledby="client-group-mission">
+            <h3 class="pg-section-heading client-group-title" id="client-group-mission"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Nonprofit, Mission-Driven &amp; Public Sector</h3>
+            <div class="clients-grid clients-grid--five">
+              <div class="client-logo"><img src="/assets/clients/bc.png" alt="Province of British Columbia"></div>
+              <div class="client-logo"><img src="/assets/clients/bch.png" alt="BC Hydro"></div>
+              <div class="client-logo"><img src="/assets/clients/bcca.png" alt="BC Construction Association"></div>
+              <div class="client-logo"><img src="/assets/clients/volleyball-canada.png" alt="Volleyball Canada"></div>
+              <div class="client-logo"><img src="/assets/clients/kinbrace.png" alt="Kinbrace Refugee Housing and Support"></div>
+              <div class="client-logo"><img src="/assets/clients/iso.png" alt="Indigenous Screen Office"></div>
+              <div class="client-logo"><img src="/assets/clients/uwc.png" alt="Ukrainian World Congress Foundation - Canada"></div>
+              <div class="client-logo"><img src="/assets/clients/foran.png" alt="Foran Mining"></div>
+              <div class="client-logo"><img src="/assets/clients/coquitlam.png" alt="City of Coquitlam"></div>
+            </div>
+          </section>
+
+          <section class="client-group" aria-labelledby="client-group-cultural">
+            <h3 class="pg-section-heading client-group-title" id="client-group-cultural"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Cultural, Educational &amp; Healthcare</h3>
+            <div class="clients-grid clients-grid--five">
+              <div class="client-logo"><img src="/assets/clients/parks-canada.png" alt="Parks Canada"></div>
+              <div class="client-logo"><img src="/assets/clients/dmc.png" alt="Digital Museums Canada"></div>
+              <div class="client-logo"><img src="/assets/clients/ubc.png" alt="University of British Columbia"></div>
+              <div class="client-logo"><img src="/assets/clients/manitoba-museum.png" alt="The Manitoba Museum"></div>
+              <div class="client-logo"><img src="/assets/clients/spf.png" alt="St. Paul’s Foundation"></div>
+              <div class="client-logo"><img src="/assets/clients/rccbc.png" alt="Rural Coordination Centre of BC"></div>
+              <div class="client-logo"><img src="/assets/clients/smoc.png" alt="BC Society for the Museum of Original Costume"></div>
+              <div class="client-logo"><img src="/assets/clients/iso.png" alt="Indigenous Screen Office"></div>
+              <div class="client-logo"><img src="/assets/clients/reel-canada.png" alt="Reel Canada"></div>
+            </div>
+          </section>
+
+          <section class="client-group" aria-labelledby="client-group-media">
+            <h3 class="pg-section-heading client-group-title" id="client-group-media"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Media</h3>
+            <div class="clients-grid clients-grid--five">
+              <div class="client-logo"><img src="/assets/clients/nfb.png" alt="National Film Board of Canada"></div>
+              <div class="client-logo"><img src="/assets/clients/knowledge.png" alt="Knowledge Network"></div>
+              <div class="client-logo"><img src="/assets/clients/cbc-news.png" alt="CBC"></div>
+              <div class="client-logo"><img src="/assets/clients/aptn.png" alt="APTN"></div>
+              <div class="client-logo"><img src="/assets/clients/docorg.png" alt="Documentary Organization of Canada"></div>
+              <div class="client-logo"><img src="/assets/clients/discovery.png" alt="Discovery Network"></div>
+              <div class="client-logo"><img src="/assets/clients/realworld.png" alt="Real World Media"></div>
+              <div class="client-logo"><img src="/assets/clients/hub.png" alt="The Hub"></div>
+            </div>
+          </section>
+          
       </div>
+      <div class="about-experience-band">
       <div class="about-inner">
-        <div class="about-experience">
-          <h3 class="about-heading">Experience</h3>
+        <section class="about-experience" aria-labelledby="about-work-heading">
+          <h2 class="about-heading" id="about-work-heading">Work Experience</h2>
           <div class="about-experience-items">
             <div class="exp-item">
-              <div class="exp-logo"><img src="/assets/logos/logo-denman.svg" alt="Denman Digital"></div>
+              <div class="exp-logo exp-logo--denman"><img src="/assets/logos/logo-denman.svg" alt="Denman Digital"></div>
               <div class="exp-detail">
-                <span class="exp-dates">2016–2026</span>
                 <h4 class="exp-title">Partner & Director, Design &amp; Technology</h4>
                 <p class="exp-company">Denman Digital</p>
               </div>
+              <span class="exp-dates">2016–2026</span>
             </div>
 
             <div class="exp-item">
               <div class="exp-logo"><img src="/assets/logos/logo-NIC.svg" alt="North Island College"></div>
               <div class="exp-detail">
-                <span class="exp-dates">2013–2020</span>
                 <h4 class="exp-title">Sessional Interactive Media Instructor</h4>
                 <p class="exp-company">North Island College</p>
               </div>
+              <span class="exp-dates">2013–2020</span>
             </div>
 
             <div class="exp-item">
               <div class="exp-logo"><img src="/assets/logos/logo-unshift.svg" alt="Unshift Interactive"></div>
               <div class="exp-detail">
-                <span class="exp-dates">2010–2016</span>
                 <h4 class="exp-title">Freelance Designer and Frontend Developer</h4>
                 <p class="exp-company">Unshift Interactive</p>
               </div>
+              <span class="exp-dates">2010–2016</span>
             </div>
 
             <div class="exp-item">
               <div class="exp-logo"><img src="/assets/logos/logo-NFB.svg" alt="National Film Board of Canada"></div>
               <div class="exp-detail">
-                <span class="exp-dates">2009–2010</span>
                 <h4 class="exp-title">Creative Consultant</h4>
                 <p class="exp-company">National Film Board of Canada</p>
               </div>
+              <span class="exp-dates">2009–2010</span>
             </div>
 
             <div class="exp-item">
               <div class="exp-logo"><img src="/assets/logos/logo-burnkit.svg" alt="Burnkit"></div>
               <div class="exp-detail">
-                <span class="exp-dates">2005–2009</span>
-                <h4 class="exp-title">Senior Designer</h4>
+                <h4 class="exp-title">Senior Designer → Associate Creative Director</h4>
                 <p class="exp-company">Burnkit</p>
               </div>
+              <span class="exp-dates">2005–2009</span>
             </div>
 
             <div class="exp-item">
               <div class="exp-logo"><img src="/assets/logos/logo-CBC.svg" alt="CBC"></div>
               <div class="exp-detail">
-                <span class="exp-dates">2002–2004</span>
                 <h4 class="exp-title">Producer</h4>
                 <p class="exp-company">CBC Radio 3</p>
               </div>
+              <span class="exp-dates">2002–2004</span>
             </div>
 
             <div class="exp-item">
               <div class="exp-logo"><img src="/assets/logos/logo-ICE.svg" alt="CBC"></div>
               <div class="exp-detail">
-                <span class="exp-dates">2000–2002</span>
                 <h4 class="exp-title">Web Designer</h4>
                 <p class="exp-company">ICE Inc.</p>
               </div>
+              <span class="exp-dates">2000–2002</span>
             </div>
 
           </div>
-        </div>
-        <div class="about-skills">
-          <h3 class="about-heading">Skills</h3>
-
-          <div class="about-experience-items">
-            <div class="about-item">
-              <h3 class="about-role">Leadership</h3>
-              <ul>
-                <li>Bridge design and technology</li>
-                <li>Connect strategy to execution</li>
-                <li>Solve complex UX problems</li>
-                <li>Recruit, build and mentor multidisciplinary teams</li>
-                <li>Facilitate strategic and creative workshops</li>
-                <li>Manage client relationships with candour and trust</li>
-                <li>Listen actively and communicate with clarity</li>
-              </ul>
-            </div>
-            <div class="about-item">
-              <h3 class="about-role">Product / UX</h3>
-              <ul>
-                <li>User experience & interface design</li>
-                <li>Design systems, tokens & responsive web design</li>
-                <li>Brand & communication design</li>
-                <li>Motion & animation</li>
-                <li>Rapid prototyping & desktop apps</li>
-                <li>WCAG 2.2 AA accessible design, development, testing</li>
-                <li>GenAI-assisted design and research (prototyping with Claude, Figma Make, synthesizing research with ChatGPT)</li>
-              </ul>
-            </div>
-            <div class="about-item">
-              <h3 class="about-role">Tools / Technology</h3>
-              <ul>
-                <li>Design: Figma (auto layout, components, variants, variables); Photoshop, Illustrator</li>
-                <li>Video & audio: Premiere, Audition</li>
-                <li>Animation: GSAP, Three.js, Anime.js</li>
-                <li>Frontend code: HTML, CSS, JavaScript, TypeScript</li>
-                <li>LMS & e-learning: Thinkific, LearnDash, SCORM, Articulate Storyline/Rise</li>
-                <li>AI-Assisted Development: Claude Code, Codex, GitHub Copilot, Figma MCP
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        </section>
       </div>
-
-      <div class="about-contact hide-md">
-        <h3 class="about-heading about-role">Connect with me</h3>
-        <ul>
-          <li><a class="js-email" data-u="steve" data-d="smackey.ca">steve&#64;smackey&#46;ca</a></li>
-          <li><a href="https://www.linkedin.com/in/smackey" target="_blank" rel="noopener">LinkedIn</a></li>
-        </ul>
       </div>
-
     </div>
   </nav>
-  <button id="accessibleViewToggle" class="accessibility-toggle" type="button" role="switch" aria-checked="false" aria-controls="project-grid-html" aria-label="Accessible project list" data-tooltip="Accessible project list">
+  <button id="accessibleViewToggle" class="accessibility-toggle is-hidden" type="button" role="switch" aria-checked="false" aria-controls="project-grid-html" aria-label="Accessible project list" aria-hidden="true" tabindex="-1" data-tooltip="Accessible project list">
     <img src="/assets/accessability-icon.svg" alt="" aria-hidden="true">
     <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
   </button>
@@ -322,19 +327,21 @@
   <div id="intro" aria-hidden="true">
 
     <div class="intro-content intro-content--casestudies">
-      <p class="intro-title"><span class="light">I</span> <span class="dark">design</span> <span class="light">&</span> <span class="dark">build</span> <span class="light">digital experiences,
-        and</span> <span class="dark">lead</span> <span class="light">the teams who ship them.</span></p>
-      <span class="intro-divider"></span>
-      <p class="intro-desc"><span class="dark">Steve Mackey</span> — Design Leadership and Digital&nbsp;Strategy</p>
-      <button id="introAboutBtn">About Me</button>
+      <div class="case-hero-heading">
+        <h1 class="intro-title"><span class="dark">Impact</span> <span class="light">by design.</span></h1>
+      </div>
+      <div class="case-hero-copy">
+        <p class="case-hero-eyebrow">25 years in digital. A decade building and leading an agency.</p>
+        <p class="intro-desc intro-summary">I connect strategy, design, technology, and people to help mission-focused organizations solve complex problems and create experiences that matter.</p>
+        <button id="introAboutBtn"><img src="favicon.svg" alt="About" aria-hidden="true"> — About &amp; Experience</button>
+      </div>
     </div>
 
     <div class="intro-content intro-content--archive">
       <div id="archiveChip" class="archive-chip"></div>
       <p class="intro-title"><span class="dark">Explore</span> <span class="light">the</span> <span class="dark">back</span> <span class="light">catalogue.</span></p>
-      <span class="intro-divider"></span>
-      <p class="intro-desc ta-left pl-10">Digital work is ephemeral. Technology changes, platforms disappear, campaigns
-        end. This is a record of the work I've made over the years, some of which no longer exists.</p>
+      <img class="intro-divider" src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">
+      <p class="intro-desc ta-left pl-10">Digital work is ephemeral. Technology changes, platforms disappear, campaigns end. This is a record of projects I've helped bring to life over the years, some of which no longer exist.</p>
     </div>
 
     <!-- <p class="intro-scroll">Scroll any direction to explore.</p> -->

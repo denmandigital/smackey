@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { PROJECTS as _PROJECTS } from './projects.js';
+import { FEATURED_CASE_STUDIES, ADDITIONAL_PROJECTS } from './select-work.js';
 import { createSMBlock } from './SMBlock.js';
 
 document.body.classList.add('js');
@@ -160,12 +161,12 @@ function makeCover(p, w = 1024, img = null) {
   let ty = ch / 2 - totalH / 2;
   x.textAlign = 'center'; x.textBaseline = 'top';
   x.fillStyle = '#fff';
-  x.font = `800 ${titleSize}px "Open Sans", Helvetica, Arial`;
+  x.font = `800 ${titleSize}px "Inter", Helvetica, Arial`;
   x.fillText(p.title, cw / 2, ty);
   ty += titleSize + titleClientGap;
   if (p.client) {
     x.fillStyle = 'rgba(255,255,255,0.9)';
-    x.font = `500 ${clientSize}px "Open Sans", Helvetica, Arial`;
+    x.font = `500 ${clientSize}px "Inter", Helvetica, Arial`;
     x.letterSpacing = '1px';
     x.fillText(p.client.toUpperCase(), cw / 2, ty);
     x.letterSpacing = '0px';
@@ -673,7 +674,15 @@ const ctaCategories = document.getElementById('ctaCategories');
 const introEl = document.getElementById('intro');
 const mobileAccessibleOnly = () => innerWidth <= 1024;
 const accessibleParamEnabled = () => ['true', '1', 'yes'].includes(new URLSearchParams(location.search).get('accessible'));
-let accessibleListMode = mobileAccessibleOnly() || accessibleParamEnabled();
+function routeDefaultsToAccessibleList() {
+  const path = location.pathname.replace(/\/+$/, '') || '/';
+  if (path === '/archive') return false;
+  if (path === '/') return true;
+  const routeProject = PROJECTS.find(project => project.slug === path.slice(1));
+  return !routeProject || routeProject.casestudy;
+}
+
+let accessibleListMode = mobileAccessibleOnly() || accessibleParamEnabled() || routeDefaultsToAccessibleList();
 if (accessibleListMode) {
   document.documentElement.classList.add('accessible-list');
   document.body.classList.add('accessible-list');
@@ -681,7 +690,7 @@ if (accessibleListMode) {
 
 function withAccessibleParam(path) {
   const url = new URL(path, location.origin);
-  if (accessibleListMode) url.searchParams.set('accessible', 'true');
+  if (accessibleListMode && !filterCaseStudies) url.searchParams.set('accessible', 'true');
   else url.searchParams.delete('accessible');
   return url.pathname + url.search + url.hash;
 }
@@ -711,11 +720,8 @@ function updateMobilePortraitLayout() {
 }
 
 (function () {
-  const years = PROJECTS.map(p => p.year).filter(Boolean);
-  const minYear = Math.min(...years);
-  const maxYear = Math.max(...years);
   const chip = document.getElementById('archiveChip');
-  if (chip) chip.textContent = PROJECTS.length + ' projects | ' + maxYear + '–' + minYear;
+  if (chip) chip.textContent = PROJECTS.length + ' projects';
 })();
 
 const zoom = document.getElementById('zoom');
@@ -763,6 +769,7 @@ function renderBlock(b) {
   if (b.type === 'text') {
     const mod = b.variant === 'callout' ? ' cs-block--callout' : b.variant === 'intro' ? ' cs-block--intro' : '';
     const center = (b.variant === 'callout' && b.center) ? ' cs-block--v-center' : '';
+    const transparent = (b.variant === 'callout' && b.transparent) ? ' cs-block--callout-transparent' : '';
     const bodyHtml = /^\s*</.test(b.body) ? b.body : `<p>${b.body}</p>`;
     const projectLinks = b.variant === 'intro'
       ? [
@@ -775,7 +782,7 @@ function renderBlock(b) {
           `<a class="cs-project-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`
         ).join('')}</div>`
       : '';
-    return `<div class="cs-block${mod}${center}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}${btnHtml}</div>`;
+    return `<div class="cs-block${mod}${center}${transparent}"${span}>${b.heading ? `<h3>${b.heading}</h3>` : ''}${bodyHtml}${btnHtml}</div>`;
   }
   if (b.type === 'image') {
     const contain = b.contain ? ' cs-block--image-contain' : '';
@@ -1297,16 +1304,148 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 
 // Burger menu toggle
 const nav = document.getElementById('nav');
+const navTop = nav.querySelector('#navTop');
 const navMenu = document.getElementById('navMenu');
 const navBurger = document.getElementById('navBurger');
 const accessibleViewToggle = document.getElementById('accessibleViewToggle');
 const projectGridSection = document.getElementById('project-grid-html');
 const projectGridEl = projectGridSection.querySelector('.pg-grid');
+let projectEntranceObserver;
 let menuOpen = false;
 navMenu.setAttribute('inert', '');
 let aboutTriggerEl = null;
 const aboutHeading = navMenu.querySelector('.about-name');
 aboutHeading.setAttribute('tabindex', '-1');
+
+let aboutEntranceObserver;
+const clientLogoTargets = [...navMenu.querySelectorAll('.client-logo')];
+const experienceItemTargets = [...navMenu.querySelectorAll('.about-experience .exp-item')];
+
+navMenu.querySelectorAll('.client-group').forEach((group) => {
+  group.querySelectorAll('.client-logo').forEach((target, index) => {
+    target.classList.add('about-reveal');
+    target.style.setProperty('--about-reveal-delay', `${Math.min(index * 65, 260)}ms`);
+  });
+});
+experienceItemTargets.forEach((target, index) => {
+  target.classList.add('about-reveal');
+  target.style.setProperty('--about-reveal-delay', `${index * 80}ms`);
+});
+
+const aboutFadeTargets = [...navMenu.querySelectorAll([
+  '.about-title-column',
+  '.about-story-copy',
+  '.about-avatar-row',
+  '.about-clients > .about-heading',
+  '.client-group-title',
+  '.client-logo',
+  '.about-experience > .about-heading',
+  '.about-experience .exp-item',
+  '.about-inner > .about-contact',
+].join(', '))];
+let homepageFadeTargets = [];
+let aboutFadeFrame = 0;
+let homepageFadeFrame = 0;
+
+function updateFadeTargets(targets, topEdge, fadeStart = 20) {
+  const fadeDistance = 120;
+  const opacityUpdates = targets.map((target) => {
+    const distanceFromTop = target.getBoundingClientRect().top - topEdge;
+    const fadePosition = distanceFromTop - fadeStart + fadeDistance;
+    const scrollOpacity = Math.max(0, Math.min(1, fadePosition / fadeDistance));
+    const entranceOpacity = target.classList.contains('about-reveal') && !target.classList.contains('is-visible') ? 0 : 1;
+    return [target, scrollOpacity * entranceOpacity];
+  });
+
+  opacityUpdates.forEach(([target, opacity]) => {
+    target.style.opacity = String(opacity);
+  });
+}
+
+function updateAboutFade() {
+  const panelRect = navMenu.getBoundingClientRect();
+  updateFadeTargets(aboutFadeTargets, panelRect.top, 20);
+
+  const experienceBand = navMenu.querySelector('.about-experience-band');
+  if (!experienceBand) return;
+  const experienceRect = experienceBand.getBoundingClientRect();
+  const experienceStart = experienceRect.top - panelRect.top;
+  const experienceEnd = experienceRect.bottom - panelRect.top;
+  const visibleStart = Math.max(0, Math.min(navMenu.clientHeight, experienceStart));
+  const visibleEnd = Math.max(0, Math.min(navMenu.clientHeight, experienceEnd));
+  const darkSectionVisible = experienceEnd > 0 && experienceStart < navMenu.clientHeight;
+
+  navMenu.style.setProperty('--experience-track-start', `${visibleStart}px`);
+  navMenu.style.setProperty('--experience-track-end', `${visibleEnd}px`);
+  navMenu.style.setProperty('--experience-track-color', darkSectionVisible ? '#191a1d' : 'transparent');
+  navMenu.style.setProperty('--nav-scrollbar-thumb', darkSectionVisible ? 'rgba(255, 255, 255, 0.78)' : 'rgba(0, 0, 0, 0.28)');
+}
+
+function scheduleAboutFade() {
+  if (aboutFadeFrame) return;
+  aboutFadeFrame = requestAnimationFrame(() => {
+    aboutFadeFrame = 0;
+    updateAboutFade();
+  });
+}
+
+function observeAboutEntrances() {
+  const targets = [...clientLogoTargets, ...experienceItemTargets];
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    targets.forEach(target => target.classList.add('is-visible'));
+    scheduleAboutFade();
+    return;
+  }
+
+  if (!aboutEntranceObserver) {
+    aboutEntranceObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+      scheduleAboutFade();
+    }, { root: navMenu, threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
+  }
+
+  targets.forEach(target => {
+    if (!target.classList.contains('is-visible')) aboutEntranceObserver.observe(target);
+  });
+}
+
+function refreshHomepageFadeTargets() {
+  homepageFadeTargets = [...document.querySelectorAll([
+    '#intro .case-hero-heading',
+    '#intro .case-hero-copy',
+    '#intro .intro-content--archive',
+  ].join(', '))];
+  scheduleHomepageFade();
+}
+
+function updateHomepageFade() {
+  if (!document.body.classList.contains('accessible-list')) {
+    homepageFadeTargets.forEach((target) => { target.style.opacity = '1'; });
+    return;
+  }
+  const fadeTop = nav.getBoundingClientRect().top + navTop.offsetHeight;
+  updateFadeTargets(homepageFadeTargets, fadeTop, 20);
+}
+
+function scheduleHomepageFade() {
+  if (homepageFadeFrame) return;
+  homepageFadeFrame = requestAnimationFrame(() => {
+    homepageFadeFrame = 0;
+    updateHomepageFade();
+  });
+}
+
+navMenu.addEventListener('scroll', scheduleAboutFade, { passive: true });
+window.addEventListener('scroll', scheduleHomepageFade, { passive: true });
+window.addEventListener('resize', () => {
+  scheduleAboutFade();
+  scheduleHomepageFade();
+});
+updateAboutFade();
 
 function setAccessibleListMode(enabled, updateUrl = false) {
   enabled = mobileAccessibleOnly() || enabled;
@@ -1318,9 +1457,14 @@ function setAccessibleListMode(enabled, updateUrl = false) {
     if (filterPanelOpen) closeFilterPanel();
   }
   accessibleViewToggle.setAttribute('aria-checked', String(accessibleListMode));
-  accessibleViewToggle.hidden = mobileAccessibleOnly();
+  const hideAccessibleToggle = mobileAccessibleOnly() || filterCaseStudies;
+  accessibleViewToggle.classList.toggle('is-hidden', hideAccessibleToggle);
+  accessibleViewToggle.setAttribute('aria-hidden', String(hideAccessibleToggle));
+  accessibleViewToggle.tabIndex = hideAccessibleToggle ? -1 : 0;
   document.documentElement.classList.toggle('accessible-list', accessibleListMode);
   document.body.classList.toggle('accessible-list', accessibleListMode);
+  document.body.classList.toggle('case-studies-page', accessibleListMode && filterCaseStudies);
+  renderProjectList();
   projectGridSection.inert = !accessibleListMode || menuOpen || (zoomed && zoomFromAccessibleList);
   introEl.inert = accessibleListMode && (menuOpen || (zoomed && zoomFromAccessibleList));
   introAboutBtn.setAttribute('tabindex', accessibleListMode ? '0' : '-1');
@@ -1335,10 +1479,11 @@ function setAccessibleListMode(enabled, updateUrl = false) {
   }
 }
 
-accessibleViewToggle.addEventListener('click', () => setAccessibleListMode(!accessibleListMode, true));
 window.addEventListener('resize', () => {
-  setAccessibleListMode(mobileAccessibleOnly() || accessibleParamEnabled());
+  setAccessibleListMode(accessibleParamEnabled() || routeDefaultsToAccessibleList());
 });
+
+accessibleViewToggle.addEventListener('click', () => setAccessibleListMode(!accessibleListMode, true));
 
 function openMenu(skipHistory = false) {
   aboutTriggerEl = document.activeElement;
@@ -1355,11 +1500,13 @@ function openMenu(skipHistory = false) {
   navBurger.setAttribute('aria-label', 'Close menu');
   navBurger.setAttribute('aria-expanded', 'true');
   navMenu.scrollTop = 0;
+  observeAboutEntrances();
+  updateAboutFade();
   aboutHeading.focus({ preventScroll: true });
   if (!skipHistory) { history.pushState({ menu: true }, '', withAccessibleParam('/about')); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
 }
 
-function closeMenu(skipHistory = false) {
+function closeMenu(skipHistory = false, onClosed = null) {
   const restoreFocus = navMenu.contains(document.activeElement);
   menuOpen = false;
   document.body.classList.remove('accessible-about-open');
@@ -1380,6 +1527,23 @@ function closeMenu(skipHistory = false) {
   }
   aboutTriggerEl = null;
   if (!skipHistory) { history.pushState(null, '', withAccessibleParam(filterCaseStudies ? '/' : '/archive' + filterQueryString())); setPageMeta(DEFAULT_TITLE, DEFAULT_DESC); }
+
+  if (onClosed) {
+    let completed = false;
+    let fallbackTimer;
+    const finish = () => {
+      if (completed) return;
+      completed = true;
+      clearTimeout(fallbackTimer);
+      nav.removeEventListener('transitionend', handleTransitionEnd);
+      if (!menuOpen) onClosed();
+    };
+    const handleTransitionEnd = (event) => {
+      if (event.target === nav && event.propertyName === 'height') finish();
+    };
+    nav.addEventListener('transitionend', handleTransitionEnd);
+    fallbackTimer = setTimeout(finish, 650);
+  }
 }
 
 navBurger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
@@ -1389,30 +1553,11 @@ document.querySelectorAll('a.js-email').forEach(a => {
   a.href = `mailto:${a.dataset.u}@${a.dataset.d}`;
 });
 
-// Brand cube — Three.js SM monogram, spins only on hover
-const brandCanvas = document.getElementById('brandCanvas');
-const brandRenderer = new THREE.WebGLRenderer({ canvas: brandCanvas, antialias: true, alpha: true });
-brandRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-brandRenderer.setSize(30, 30);
-
-const brandScene = new THREE.Scene();
-const brandCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-brandCamera.position.set(0, 0, 2.2);
-brandScene.add(new THREE.AmbientLight(0xffffff, 1.4));
-const brandLight = new THREE.DirectionalLight(0xffffff, 1.2);
-brandLight.position.set(2, 3, 3);
-brandScene.add(brandLight);
-
-const brandCube = createSMBlock({ size: 1 });
-brandCube.rotation.y = -Math.PI / 4;  // S+M corner facing forward at rest
-brandScene.add(brandCube);
-brandRenderer.render(brandScene, brandCamera);  // draw static frame immediately
-
-// Loading mark — the same SM block as the navbar, rotating while the page starts.
-const loaderCanvas = document.getElementById('loaderCanvas');
-const loaderRenderer = new THREE.WebGLRenderer({ canvas: loaderCanvas, antialias: true, alpha: true });
-loaderRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-loaderRenderer.setSize(29, 29);
+// Loading mark rotates while the page starts.
+//const loaderCanvas = document.getElementById('loaderCanvas');
+//const loaderRenderer = new THREE.WebGLRenderer({ canvas: loaderCanvas, antialias: true, alpha: true });
+//loaderRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+//loaderRenderer.setSize(29, 29);
 const loaderScene = new THREE.Scene();
 loaderScene.add(new THREE.AmbientLight(0xffffff, 1.4));
 const loaderLight = new THREE.DirectionalLight(0xffffff, 1.2);
@@ -1420,9 +1565,9 @@ loaderLight.position.set(2, 3, 3);
 loaderScene.add(loaderLight);
 const loaderCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
 loaderCamera.position.set(0, 0, 2.2);
-const loaderCube = createSMBlock({ size: 1 });
-loaderCube.rotation.y = -Math.PI / 4;
-loaderScene.add(loaderCube);
+//const loaderCube = createSMBlock({ size: 1 });
+//loaderCube.rotation.y = -Math.PI / 4;
+//loaderScene.add(loaderCube);
 const loaderProgress = document.getElementById('loaderProgress');
 function setLoaderProgress(value) {
   loaderProgress.style.strokeDashoffset = String(157.08 * (1 - value / 100));
@@ -1430,11 +1575,11 @@ function setLoaderProgress(value) {
 setLoaderProgress(18);
 function spinLoader() {
   if (document.getElementById('loader').classList.contains('hidden')) {
-    loaderRenderer.dispose();
+    //loaderRenderer.dispose();
     return;
   }
-  loaderCube.rotation.y -= 0.05 * (1 + 0.70 * Math.cos(4 * loaderCube.rotation.y));
-  loaderRenderer.render(loaderScene, loaderCamera);
+  //loaderCube.rotation.y -= 0.05 * (1 + 0.70 * Math.cos(4 * loaderCube.rotation.y));
+  //loaderRenderer.render(loaderScene, loaderCamera);
   requestAnimationFrame(spinLoader);
 }
 spinLoader();
@@ -1463,63 +1608,14 @@ wmStamp = (() => {
 
 let wmOpacity = 0;
 
-let brandRaf = null, brandReturnRaf = null, brandYRaf = null, brandTargetY = 0, brandTargetX = 0;
-
-function brandDrift() {
-  const dy = brandTargetY - brandCube.position.y;
-  const dx = brandTargetX - brandCube.position.x;
-  brandCube.position.y += dy * 0.12;
-  brandCube.position.x += dx * 0.12;
-  if (!brandRaf && !brandReturnRaf) brandRenderer.render(brandScene, brandCamera);
-  brandYRaf = (Math.abs(dy) > 0.0002 || Math.abs(dx) > 0.0002) ? requestAnimationFrame(brandDrift) : null;
-}
-
-addEventListener('pointermove', e => {
-  if (e.pointerType !== 'mouse') return;
-  brandTargetY = (0.5 - e.clientY / innerHeight) * 0.28;
-  brandTargetX = (e.clientX / innerWidth - 0.5) * 0.28;
-  if (!brandRaf && !brandReturnRaf && !brandYRaf) brandDrift();
-});
-
-function brandSpin() {
-  brandRaf = requestAnimationFrame(brandSpin);
-  brandCube.rotation.y -= 0.015 * (1 + 0.70 * Math.cos(4 * brandCube.rotation.y));
-  brandCube.position.y += (brandTargetY - brandCube.position.y) * 0.12;
-  brandCube.position.x += (brandTargetX - brandCube.position.x) * 0.12;
-  brandRenderer.render(brandScene, brandCamera);
-}
-
-function brandReturn() {
-  // S-left M-right orientation repeats every π — find the nearest one
-  const n = Math.round((brandCube.rotation.y + Math.PI / 4) / Math.PI);
-  const target = -Math.PI / 4 + n * Math.PI;
-  const from = brandCube.rotation.y;
-  const dist = target - from;
-  let t = 0;
-  (function step() {
-    t = Math.min(t + 0.055, 1);
-    brandCube.rotation.y = from + dist * (1 - Math.pow(1 - t, 3));
-    brandCube.position.y += (brandTargetY - brandCube.position.y) * 0.06;
-    brandCube.position.x += (brandTargetX - brandCube.position.x) * 0.06;
-    brandRenderer.render(brandScene, brandCamera);
-    brandReturnRaf = t < 1 ? requestAnimationFrame(step) : null;
-  })();
-}
-
-brandCanvas.addEventListener('mouseenter', () => {
-  if (brandReturnRaf) { cancelAnimationFrame(brandReturnRaf); brandReturnRaf = null; }
-  if (!brandRaf) brandSpin();
-});
-brandCanvas.addEventListener('mouseleave', () => {
-  if (brandRaf) { cancelAnimationFrame(brandRaf); brandRaf = null; }
-  brandReturn();
-});
-brandCanvas.addEventListener('click', () => {
+document.querySelector('.brand-link').addEventListener('click', e => {
+  e.preventDefault();
   if (zoomed) closeZoom();
   if (menuOpen) closeMenu(true);
   if (filterPanelOpen) closeFilterPanel();
   clearChipFilters();
   activateFilter('casestudies');
+  setAccessibleListMode(true);
   history.pushState(null, '', withAccessibleParam('/'));
   setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
 });
@@ -1567,7 +1663,16 @@ function applyFilters(flashScene = false) {
   gridFade = 0;
   if (!hasActiveFilters() && !filterCaseStudies) {
     rawScroll.x = 0; rawScroll.y = 0;
-    startTween(0, 0);
+    if (flashScene) {
+      scroll.x = 0; scroll.y = 0;
+      tween.active = false;
+      coasting = false;
+      wheeling = false;
+      clearTimeout(wheelTimer);
+      vel.x = vel.y = velSmooth.x = velSmooth.y = 0;
+    } else {
+      startTween(0, 0);
+    }
   } else if (filterCaseStudies) {
     const intro = getCaseStudyIntroCell();
     rawScroll.x = -intro.cx * PITCH_X;
@@ -1604,6 +1709,14 @@ function triggerIntroAnimation() {
   introAnimTimeout = setTimeout(() => introEl.classList.remove('intro-animating'), 6500);
 }
 
+function introContentIsVisible() {
+  if (!introShown || Number(getComputedStyle(introEl).opacity) <= 0.01) return false;
+  const visibleTargets = introEl.classList.contains('mode-archive')
+    ? [introEl.querySelector('.intro-content--archive')]
+    : [introEl.querySelector('.case-hero-heading'), introEl.querySelector('.case-hero-copy')];
+  return visibleTargets.every(target => target && getComputedStyle(target).display !== 'none' && Number(getComputedStyle(target).opacity) > 0.01);
+}
+
 const navFilterEl = document.getElementById('navFilter');
 
 function positionFilterIndicator(instant = false) {
@@ -1619,21 +1732,34 @@ function activateFilter(filter) {
   filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
   const modeChanged = filterCaseStudies !== (filter === 'casestudies');
   filterCaseStudies = (filter === 'casestudies');
+  document.body.classList.toggle('case-studies-page', accessibleListMode && filterCaseStudies);
+  const hideAccessibleToggle = mobileAccessibleOnly() || filterCaseStudies;
+  accessibleViewToggle.classList.toggle('is-hidden', hideAccessibleToggle);
+  accessibleViewToggle.setAttribute('aria-hidden', String(hideAccessibleToggle));
+  accessibleViewToggle.tabIndex = hideAccessibleToggle ? -1 : 0;
+  navFilterBtn.classList.toggle('is-hidden', filterCaseStudies);
+  navFilterBtn.setAttribute('aria-hidden', String(filterCaseStudies));
+  navFilterBtn.tabIndex = filterCaseStudies ? -1 : 0;
+  if (filterCaseStudies && filterPanelOpen) closeFilterPanel();
   introEl.classList.toggle('mode-archive', !filterCaseStudies);
   applyFilters(modeChanged);
   positionFilterIndicator();
-  if (modeChanged && introShown) triggerIntroAnimation();
+  if (modeChanged && introShown && !menuOpen) triggerIntroAnimation();
 }
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
     clearChipFilters();
     activateFilter(btn.dataset.filter);
-    if (!filterCaseStudies) startTween(0, 0);
+    setAccessibleListMode(btn.dataset.filter === 'casestudies');
     const url = btn.dataset.filter === 'all' ? '/archive' : '/';
     history.pushState({ filter: btn.dataset.filter }, '', withAccessibleParam(url));
     setPageMeta(DEFAULT_TITLE, DEFAULT_DESC);
-    if (menuOpen) closeMenu(true);
+    const introWasVisible = introContentIsVisible();
+    if (menuOpen) closeMenu(true, () => {
+      scheduleHomepageFade();
+      if (!introWasVisible && introShown) triggerIntroAnimation();
+    });
   });
 });
 
@@ -1643,18 +1769,21 @@ document.addEventListener('click', (e) => {
   if (!a) return;
   e.preventDefault();
   activateFilter('casestudies');
+  setAccessibleListMode(true);
   history.pushState({ filter: 'casestudies' }, '', withAccessibleParam('/'));
   if (menuOpen) closeMenu(true);
 });
 
 // Back/forward navigation
 addEventListener('popstate', () => {
-  setAccessibleListMode(accessibleParamEnabled());
   const path = location.pathname.slice(1); // e.g. '' | 'archive' | 'about' | 'project-slug'
   const isArchive = path === 'archive';
   const isAbout = path === 'about';
   const slug = (!isArchive && !isAbout && path) ? path : '';
   const project = slug ? PROJECTS.find(proj => proj.slug === slug) : null;
+  setAccessibleListMode(
+    accessibleParamEnabled() || (!isArchive && (!project || project.casestudy))
+  );
 
   if (isAbout) {
     if (!menuOpen) openMenu(true);
@@ -1680,6 +1809,7 @@ addEventListener('popstate', () => {
   clearChipFilters();
   if (isArchive) applyUrlFilters();
   activateFilter(isArchive ? 'all' : 'casestudies');
+  setAccessibleListMode(accessibleListMode);
 });
 
 // ── Filter panel ────────────────────────────────────────────
@@ -1814,6 +1944,7 @@ function filterNavHeight() {
 function openFilterPanel() {
   if (menuOpen) closeMenu(true);
   filterPanelOpen = true;
+  document.body.classList.add('filter-panel-open');
   navFilterBtn.setAttribute('aria-expanded', 'true');
   activeFiltersEl.classList.add('panel-open');
   filterMenuEl.removeAttribute('inert');
@@ -1838,6 +1969,7 @@ function openFilterPanel() {
 
 function closeFilterPanel() {
   filterPanelOpen = false;
+  document.body.classList.remove('filter-panel-open');
   navFilterBtn.setAttribute('aria-expanded', 'false');
   nav.classList.remove('filter-open');
   activeFiltersEl.classList.remove('panel-open');
@@ -1897,6 +2029,7 @@ function buildFilterMenu() {
         filterCaseStudies = false;
         filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
         introEl.classList.add('mode-archive');
+        setAccessibleListMode(false);
         history.pushState({ filter: 'all' }, '', withAccessibleParam('/archive'));
         positionFilterIndicator();
       }
@@ -2201,6 +2334,7 @@ function animate() {
   const tweenTargetCcx = Math.round(-tween.x1 / PITCH_X);
   const tweenTargetCcy = Math.round(-tween.y1 / PITCH_Y);
   const tweenChangesCell = tween.active && (tweenTargetCcx !== ccx || tweenTargetCcy !== ccy);
+  const tweeningToIntro = tween.active && isIntroCell(tweenTargetCcx, tweenTargetCcy);
   const tweeningAway = tween.active
     && isIntroCell(ccx, ccy)
     && !isIntroCell(tweenTargetCcx, tweenTargetCcy);
@@ -2220,7 +2354,7 @@ function animate() {
     }
   }
 
-  const introSettled = accessibleListMode || (!(drag.active && drag.moved > 3) && !coasting && !tweeningAway && !zoomed && !wheeling && isIntroCell(ccx, ccy));
+  const introSettled = accessibleListMode || (!(drag.active && drag.moved > 3) && !coasting && !tweeningAway && !zoomed && !wheeling && (isIntroCell(ccx, ccy) || tweeningToIntro));
   if (introSettled !== introShown) {
     introShown = introSettled;
     introEl.setAttribute('aria-hidden', String(!introSettled));
@@ -2281,7 +2415,66 @@ setTimeout(() => {
 }, 300);
 
 // Semantic project list mirrors the active case-study/archive and filter state.
+function observeProjectEntrances() {
+  const cards = projectGridEl.querySelectorAll('.pg-case-studies .pg-reveal');
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    cards.forEach(card => card.classList.add('is-visible'));
+    return;
+  }
+
+  if (!projectEntranceObserver) {
+    projectEntranceObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+  }
+
+  cards.forEach(card => projectEntranceObserver.observe(card));
+}
+
 function renderProjectList() {
+  if (document.body.classList.contains('case-studies-page')) {
+    const projectsBySlug = new Map(activeProjects.map(project => [project.slug, project]));
+    const featured = FEATURED_CASE_STUDIES
+      .map(details => ({ ...details, project: projectsBySlug.get(details.slug) }))
+      .filter(details => details.project);
+    const secondary = ADDITIONAL_PROJECTS
+      .map(details => ({ ...details, project: PROJECTS.find(project => project.slug === details.slug) }))
+      .filter(details => details.project);
+    const renderTags = project => project.category.map(category => `<span class="pg-editorial-tag">${escapeHtml(category)}</span>`).join('');
+    const renderFeature = ({ project, image, description }, index) => `<article class="pg-feature-card pg-reveal" style="--pg-reveal-delay:${index * 90}ms">
+      <a class="pg-editorial-link" href="#${project.slug}" aria-label="View ${escapeHtml(project.title)} case study">
+        <img class="pg-editorial-image" src="${image}" alt="${escapeHtml(project.alt || `${project.title} project artwork`)}" loading="lazy">
+        <span class="pg-editorial-client">${escapeHtml(project.client || '')}</span>
+        <span class="pg-feature-title">${escapeHtml(project.title)}</span>
+        <span class="pg-editorial-tags">${renderTags(project)}</span>
+        <span class="pg-feature-description">${escapeHtml(description)}</span>
+      </a>
+    </article>`;
+    const renderSecondary = ({ project, image }, index) => `<article class="pg-secondary-card pg-reveal" style="--pg-reveal-delay:${index * 75}ms">
+      <a class="pg-editorial-link" href="#${project.slug}" aria-label="View ${escapeHtml(project.title)} project">
+        <img class="pg-editorial-image" src="${image || project.src}" alt="${escapeHtml(project.alt || `${project.title} project artwork`)}" loading="lazy">
+        <span class="pg-editorial-client">${escapeHtml(project.client || '')}</span>
+        <span class="pg-secondary-title">${escapeHtml(project.title)}</span>
+        <span class="pg-editorial-tags">${renderTags(project)}</span>
+      </a>
+    </article>`;
+
+    projectGridEl.innerHTML = `<div class="pg-case-studies">
+      <section class="pg-featured-section" aria-labelledby="pg-featured-title">
+        <h2 id="pg-featured-title" class="pg-section-heading">Case Studies<img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true"></h2>
+        <div class="pg-featured-grid">${featured.map(renderFeature).join('')}</div>
+      </section>
+      <section class="pg-secondary-section" aria-labelledby="pg-secondary-title">
+        <h2 id="pg-secondary-title" class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Additional Projects</h2>
+        <div class="pg-secondary-grid">${secondary.map(renderSecondary).join('')}</div>
+      </section>
+    </div>`;
+    observeProjectEntrances();
+  } else {
   projectGridEl.innerHTML = activeProjects.length ? activeProjects.map(p => {
     const catTags = p.category.map(c => `<span class="pg-card-cat">${c}</span>`).join('');
     const clientHtml = p.client ? `<p class="pg-card-client">${p.client}</p>` : '';
@@ -2296,21 +2489,21 @@ function renderProjectList() {
   </a>
 </article>`;
   }).join('') : '<p class="pg-empty">No projects match these filters.</p>';
+  }
 
-  const yearProjects = activeProjects.filter(p => p.year !== null);
-  const maxYear = yearProjects.length ? Math.max(...yearProjects.map(p => p.year)) : '';
-  const minYear = yearProjects.length ? Math.min(...yearProjects.map(p => p.year)) : '';
   const archiveChip = document.getElementById('archiveChip');
   if (archiveChip) {
-    const range = maxYear && minYear ? ` | ${maxYear}–${minYear}` : '';
-    archiveChip.textContent = `${activeProjects.length} project${activeProjects.length === 1 ? '' : 's'}${range}`;
+    archiveChip.textContent = `${activeProjects.length} project${activeProjects.length === 1 ? '' : 's'}`;
   }
+
+  refreshHomepageFadeTargets();
 }
 
 projectGridEl.addEventListener('click', e => {
   const link = e.target.closest('a[href^="#"]');
   if (!link) return;
   e.preventDefault();
+  if (!window.getSelection()?.isCollapsed) return;
   const slug = link.getAttribute('href').slice(1);
   const p = PROJECTS.find(project => project.slug === slug);
   if (p) openZoom(p);

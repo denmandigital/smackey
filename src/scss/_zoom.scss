@@ -213,7 +213,7 @@
 		display: block;
 		font-size: clamp(1.5rem, 2.5vw, 2.25rem);
 		font-weight: 700;
-		font-family: "Open Sans", sans-serif;
+		font-family: "Inter", sans-serif;
 		line-height: 1.2;
 		color: #fff;
 		margin-bottom: 0.75rem;
@@ -477,6 +477,8 @@
 		background: rgba(255, 255, 255, 0.04);
 		border-radius: var(--border-radius-cs-block);
 		padding: 48px 56px;
+
+		&.cs-block--callout-transparent { background: transparent; }
 
 		@include mobile {
 			padding: 38px 24px;
