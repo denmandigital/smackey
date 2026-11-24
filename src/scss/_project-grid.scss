@@ -194,7 +194,7 @@ body.case-studies-page {
 	.case-hero-heading .light {
 		display: block;
 		color: var(--grey-light);
-		font-style: italic;
+		font-style: italic;		
 	}
 
 	.case-hero-copy {
@@ -425,14 +425,18 @@ body.case-studies-page {
 		#intro {
 			width: calc(100% - var(--editorial-grid-gutter) - var(--editorial-grid-gutter));
 			max-width: none;
-			margin-top: 150px;
+			margin-top: 180px;
 			height: auto;
 		}
 
 		.intro-content--casestudies {
 			display: flex;
 			flex-direction: column;
-			gap: 22px;
+			gap: 32px;
+
+		}
+		.case-hero-heading .light {
+			display: inline-block;
 		}
 
 		.case-hero-heading { padding-top: 0; }
