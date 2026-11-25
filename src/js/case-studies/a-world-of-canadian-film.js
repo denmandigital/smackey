@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Solutions',
-    body: '<h2>User centred design.</h2><ul><li>Introduced an audience-based information architecture and mega menu navigation system, making it quick to reach any page within each section</li><li>Led overall design direction and transformation of inherited brand elements into a Figma design system of components, styles, and variables that streamlined developer handoff and kept the brand consistent across products</li><li>Rebuilt a custom outdated plugin that syncs data from Salesforce to their websites establishing a single source of truth for all film and event data</li><li>Led the design and development of a block-based content management system, giving Reel Canada’s team the flexibility to build and update pages in English and French without developer support</li></ul>',
+    body: '<h2>User centred design.</h2><ul><li>Introduced an audience-based information architecture and mega menu navigation system, making it quick to reach any page within each section.</li><li>Led overall design direction and transformation of inherited brand elements into a Figma design system of components, styles, and variables that streamlined developer handoff and kept the brand consistent across products.</li><li>Rebuilt a custom outdated plugin that syncs data from Salesforce to their websites establishing a single source of truth for all film and event data.</li><li>Led the design and development of a block-based content management system, giving Reel Canada’s team the flexibility to build and update pages in English and French without developer support.</li></ul>',
   },
 
   // Outcome callout — full width
@@ -57,7 +57,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<h2>A lasting partnership.</h2><p>Following a well-received 2023 launch, we became Reel Canada’s agency of record, supporting the continued evolution of their flagship website and the National Canadian Film Day event site.</p><ul><li>145% website traffic increase and 500,000+ students reached in the first year</li><li>40% increase in educator sign-ups</li><li>National media partnership with CBC</li></ul><br><p>The most notable success was <em>Reel Opportunities</em>, a digital workforce initiative that attracts young adults to careers in Canada’s film industry and accounted for two-thirds of total website traffic in the first year. It includes an interactive career-pathway tool, a career-planning quiz, and a searchable, filterable directory of film-related job profiles.</p>',
+    body: '<h2>A lasting partnership.</h2><p>Following a well-received 2023 launch, we became Reel Canada’s agency of record, supporting the continued evolution of their flagship website and the National Canadian Film Day event site.</p><ul><li>145% website traffic increase and 500,000+ students reached in the first year.</li><li>40% increase in educator sign-ups.</li><li>National media partnership with CBC.</li></ul><br><p>The most notable success was <em>Reel Opportunities</em>, a digital workforce initiative that attracts young adults to careers in Canada’s film industry and accounted for two-thirds of total website traffic in the first year. It includes an interactive career-pathway tool, a career-planning quiz, and a searchable, filterable directory of film-related job profiles.</p>',
   },
 
   { type: 'spacer', span: 12, height: 40 },

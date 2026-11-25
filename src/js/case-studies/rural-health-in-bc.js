@@ -32,6 +32,7 @@ export const blocks = [
     span: 12,
     center: true,
     variant: 'callout',
+    transparent: true,
     body: '<p>RCCbc approached us to address significant design and technical concerns they had with their website and identify areas for improvement. We joined with the organization’s communications team to understand their strategic objectives and after a full design, content, and technology audit, we created and implemented on a website refresh roadmap that aligned with their goals.</p>',
     
   },
@@ -49,6 +50,7 @@ export const blocks = [
     span: 12,
     center: true,
     variant: 'callout',
+    transparent: true,
     body: '<h2>Partnership Framework</h2><p>We helped RCCbc clarify messaging around their complex partnership framework called Partnership Pentagram Plus, that brings together six essential partner perspectives to create socially accountable health system transformation. It was adapted from an existing World Health Organization model to include First Nations and other relevant community partners. We then designed an interactive infographic to explain the partnership model and convey its key ideas step by step.</p>',
   },
 
@@ -59,14 +61,6 @@ export const blocks = [
   { type: 'image', span: 8, spanSm: 12, offset: 2, offsetSm: 0, src: 'assets/projects/rccbc/RTVS-HHN-lockup.png', alt: 'Real-Time Virtual Support / HHN Sub-brand lockup' },
 
 
-  {
-    type: 'text',
-    span: 6,
-    spanSm: 12,
-    variant: 'callout',
-    body: '<h2>RTVS Rebrand</h2><p>Real-Time Virtual Support (RTVS) peer pathways are for physicians, residents, nurse practitioners, nurses, midwives—and other health care providers—in rural, remote, and First Nations communities in BC. The refreshed identity anchors RTVS under the parent brand as it slowly evolves into the Health Hybrid Network (HHN). It keeps RCCbc’s hummingbird symbol, created by Coast Salish artist Douglas “Bear,” and extends RCCbc’s palette with nature-infused tones, giving each peer pathway its own colour.</p>',
-  },
-  
   {
     type: 'imageGallery',
     span: 6,
@@ -79,6 +73,25 @@ export const blocks = [
       { src: 'assets/projects/rccbc/p.3-2.png', alt: 'RTVS Visual Identity System Guidelines - Typography' }
     ],
   },
+
+  {
+    type: 'text',
+    span: 6,
+    spanSm: 12,
+    variant: 'callout',
+    transparent: true,
+    body: '<h2>RTVS Rebrand</h2><p>Real-Time Virtual Support (RTVS) peer pathways are for physicians, residents, nurse practitioners, nurses, midwives—and other health care providers—in rural, remote, and First Nations communities in BC. The refreshed identity anchors RTVS under the parent brand as it slowly evolves into the Health Hybrid Network (HHN). It keeps RCCbc’s hummingbird symbol, created by Coast Salish artist Douglas “Bear,” and extends RCCbc’s palette with nature-infused tones, giving each peer pathway its own colour.</p>',
+  },
+
+  {
+    type: 'text',
+    span: 6,
+    spanSm: 12,
+    variant: 'callout',
+    transparent: true,
+    body: '<h2>RTVS Peer Pathways</h2><p>The hexagon is widely seen as a symbol of balance, harmony, and structure. Its six equal sides convey stability and equilibrium, qualities that mirror how the RTVS peer pathways connect to one another. Building on this, we developed a flexible design system for the Instant Access, Quick Access, and Consultation to Conversation pathways, one that adapts to a range of formats across every touchpoint.</p>',
+  },
+  
   {
     type: 'imageGallery',
     span: 6,
@@ -94,18 +107,12 @@ export const blocks = [
       { src: 'assets/projects/rccbc/p.4-7.png', alt: 'RTVS Visual Identity System Guidelines - Peer Pathways pills' },
     ],
   },
-  {
-    type: 'text',
-    span: 6,
-    spanSm: 12,
-    variant: 'callout',
-    body: '<h2>RTVS Peer Pathways</h2><p>The hexagon is widely seen as a symbol of balance, harmony, and structure. Its six equal sides convey stability and equilibrium, qualities that mirror how the RTVS peer pathways connect to one another. Building on this, we developed a flexible design system for the Instant Access, Quick Access, and Consultation to Conversation pathways, one that adapts to a range of formats across every touchpoint.</p>',
-  },
 
   {
     type: 'text',
     span: 12,
     variant: 'callout',
+    transparent: true,
     body: '<p>A proposal for BC’s Ministry of Health helped secure new funding for 24/7 coverage for the CHARLiE and MaBAL pediatric and maternity pathways as of July 1, 2026, stabilizing round-the-clock support for rural and remote providers.</p>',
   },
   { type: 'image', span: 12, src: 'assets/projects/rccbc/RTVS-comms-package.png', alt: 'RCCbc Communications Package' },

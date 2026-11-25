@@ -47,7 +47,7 @@ export const blocks = [
     spanSm: 12,
     variant: 'callout',
     heading: 'Outcomes',
-    body: '<ul><li>A plain-language, eight section guide for claimants in thirteen languages, used nationwide</li><li>Wiki style glossary popovers for quick reference to unfamiliar terms</li><li>HubSpot integration with multi-stepped <em>Ready Tour</em> form to automate communications for virtual hearing preparation workshops</li><li>AI text to speech integration, available in eleven languages</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner (Silver)</a> – Education Platform</li></ul>',
+    body: '<ul><li>A plain-language, eight section guide for claimants in thirteen languages, used nationwide.</li><li>Wiki style glossary popovers for quick reference to unfamiliar terms.</li><li>HubSpot integration with multi-stepped <em>Ready Tour</em> form to automate communications for virtual hearing preparation workshops.</li><li>AI text to speech integration, available in eleven languages.</li><li><a href="https://www.anthemawards.com/winners/list/entry/#!humanitarian-action-services/education-or-literacy-platform/my-refugee-claim/0/kinbrace/453645" target="_blank">Anthem Award winner (Silver)</a> – Education Platform.</li></ul>',
   },
 
   { type: 'spacer', span: 12, height: 40 },

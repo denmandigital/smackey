@@ -62,6 +62,7 @@ export const blocks = [
     type: 'text',
     span: 12,
     variant: 'callout',
+    transparent: true,
     body: 'BCCA’s multiple audiences required different approaches to learning. After defining how particular learners would approach the training we created unique user pathways, determined key communication touch points for each, and customized the content at each stage to meet their individual requirements.',
   },
   { type: 'image', span: 6, spanSm: 12, src: 'assets/projects/builderscodetraining/future-of-construction-journey.png', alt: 'User journey map and user flow.' },
@@ -73,6 +74,7 @@ export const blocks = [
     span: 6,
     spanSm: 12,
     variant: 'callout',
+    transparent: true,
     center: true,
     body: 'BCCA’s trainers are at the centre of the experience. We worked with them to script, art direct, and rehearse each video segment, capturing the intimacy of in-person learning while delivering key takeaways in a clear, supportive way.',
   },
@@ -83,6 +85,7 @@ export const blocks = [
     span: 12,
     variant: 'callout',
     center: true,
+    transparent: true,
     body: 'In the third and fourth modules, we changed things up by adding scenario-based storytelling. Simple illustrations and voice-over show fictional characters handling situations poorly, then well. The contrast gave learners a visual break and sparked their imagination.',
   },
 

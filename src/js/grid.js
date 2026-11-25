@@ -2470,11 +2470,11 @@ function renderProjectList() {
 
     projectGridEl.innerHTML = `<div class="pg-case-studies">
       <section class="pg-featured-section" aria-labelledby="pg-featured-title">
-        <h2 id="pg-featured-title" class="pg-section-heading">Case Studies<img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true"></h2>
+        <h2 id="pg-featured-title" class="pg-section-heading">Case Studies<img src="/assets/case-studies/section-rule.svg" alt="" aria-hidden="true"></h2>
         <div class="pg-featured-grid">${featured.map(renderFeature).join('')}</div>
       </section>
       <section class="pg-secondary-section" aria-labelledby="pg-secondary-title">
-        <h2 id="pg-secondary-title" class="pg-section-heading"><img src="/assets/figma-case-studies/section-rule.svg" alt="" aria-hidden="true">Additional Projects</h2>
+        <h2 id="pg-secondary-title" class="pg-section-heading"><img src="/assets/case-studies/section-rule.svg" alt="" aria-hidden="true">Additional Projects</h2>
         <div class="pg-secondary-grid">${secondary.map(renderSecondary).join('')}</div>
       </section>
     </div>`;
