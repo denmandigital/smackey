@@ -89,6 +89,10 @@ body.accessible-list {
 		opacity: 1;
 		transition: none;
 
+		@include mobile {
+			margin-top: 140px;
+		}
+
 	}
 
 	#project-grid-html {

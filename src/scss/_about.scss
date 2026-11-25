@@ -217,7 +217,8 @@
 		border-radius: 50%;
 		object-fit: cover;
 		object-position: center 35%;
-		filter: grayscale(100%);
+		mix-blend-mode: luminosity;
+		//filter: grayscale(100%);
 	}
 }
 
